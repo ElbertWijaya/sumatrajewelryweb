@@ -82,10 +82,9 @@
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button href="{{ route('checkout.show', $product->id) }}"
-                    class="btn btn-gold btn-lg text-uppercase fw-bold shadow">
+                    <a href="{{ route('checkout.show', $product->id) }}" class="btn btn-gold btn-lg text-uppercase fw-bold shadow">
                         Beli Sekarang
-                    </button>
+                    </a>
                     
                     <a href="https://wa.me/628123456789?text=Halo admin, saya mau tanya tentang produk {{ $product->name }} ({{ $product->sku }})" target="_blank" class="btn btn-outline-success">
                         Chat WhatsApp
