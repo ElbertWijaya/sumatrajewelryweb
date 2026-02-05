@@ -62,21 +62,31 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
-            <a class="navbar-brand text-gold fs-3" href="#">Toko Mas Sumatra</a>
+            <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">Toko Mas Sumatra</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Koleksi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Cek Pesanan</a></li>
-                    <li class="nav-item ms-3">
-                        <a href="{{ url('/admin/dashboard') }}" class="btn btn-outline-light btn-sm">Staff Login</a>
-                    </li>
-                </ul>
+                    <li class="nav-item"><a class="nav-link active" href="{{ route('home') }}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#katalog">Koleksi</a></li>
+                    
+                    @if(Auth::check())
+                        <li class="nav-item ms-3">
+                            <a href="{{ route('customer.dashboard') }}" class="btn btn-gold btn-sm text-white fw-bold">
+                                <i class="bi bi-person-circle"></i> Dashboard Saya
+                            </a>
+                        </li>
+                    @else
+                        <li class="nav-item ms-3">
+                            <a href="{{ url('/admin/dashboard') }}" class="btn btn-outline-light btn-sm">
+                                Staff Login
+                            </a>
+                        </li>
+                    @endif
+                    </ul>
             </div>
         </div>
     </nav>

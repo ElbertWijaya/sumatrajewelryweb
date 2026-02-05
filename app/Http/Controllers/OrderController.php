@@ -8,8 +8,9 @@ use App\Models\GoldPrice;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -85,6 +86,7 @@ class OrderController extends Controller
 
         // G. Arahkan ke Halaman Pembayaran
         return redirect()->route('order.success', $order->id);
+        Auth::login($user);
     }
 
     // 3. Tampilkan Halaman Sukses & Instruksi Transfer
@@ -92,5 +94,30 @@ class OrderController extends Controller
     {
         $order = Order::with('items.product')->findOrFail($id);
         return view('order_success', compact('order'));
+    }
+
+    public function uploadProof(Request $request, $id)
+    {
+        // Validasi Foto
+        $request->validate([
+            'payment_proof' => 'required|image|max:2048' // Maksimal 2MB
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        // Proses Upload File
+        if ($request->hasFile('payment_proof')) {
+            $image = $request->file('payment_proof');
+            $imageName = 'proof_' . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/proofs'), $imageName);
+
+            // Simpan nama file ke database
+            $order->update([
+                'payment_proof' => $imageName,
+                // Opsional: Kita bisa ubah status jadi 'processing' atau biarkan 'pending'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim!');
     }
 }

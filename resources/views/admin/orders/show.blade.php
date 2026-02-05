@@ -54,11 +54,35 @@
                         </tfoot>
                     </table>
 
-                    <div class="mt-4 d-flex justify-content-between">
+<div class="mb-4 p-3 bg-light border rounded">
+                        <h6 class="fw-bold">Metode Pembayaran: <span class="text-uppercase text-primary">{{ $order->payment_method }}</span></h6>
+                        
+                        @if($order->payment_method == 'transfer')
+                            @if($order->payment_proof)
+                                <div class="mt-2">
+                                    <p class="mb-1">Bukti Transfer:</p>
+                                    <img src="{{ asset('uploads/proofs/' . $order->payment_proof) }}" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                                    <div class="mt-2">
+                                        <a href="{{ asset('uploads/proofs/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-secondary">Lihat Full Size</a>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-warning mt-2 mb-0">
+                                    <i class="bi bi-exclamation-triangle"></i> Pembeli belum mengupload bukti transfer.
+                                </div>
+                            @endif
+                        @else
+                            <div class="alert alert-info mt-2 mb-0">
+                                <i class="bi bi-info-circle"></i> Pembayaran Cash (Bayar di Toko). Pastikan uang diterima fisik.
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex justify-content-between">
                         <a href="{{ url('/admin/dashboard') }}" class="btn btn-secondary">Kembali</a>
 
                         @if($order->payment_status == 'unpaid')
-                            <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran sudah diterima? Stok akan berubah jadi SOLD.');">
+                            <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID? Stok akan berubah jadi SOLD.');">
                                 @csrf
                                 <button type="submit" class="btn btn-success fw-bold">
                                     ✅ Verifikasi Pembayaran (LUNAS)

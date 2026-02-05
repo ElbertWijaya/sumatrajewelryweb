@@ -1,13 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CustomerController;
+
 
 // Halaman Depan (Homepage)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-use App\Http\Controllers\AdminController;
+// Group Route untuk Customer (Harus Login Dulu)
+Route::middleware(['auth'])->group(function () {
+    // Dashboard Customer
+    Route::get('/my-dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+    // Logout
+    Route::post('/logout', function () {
+        Illuminate\Support\Facades\Auth::logout();
+        return redirect('/');
+    })->name('logout');
+});
 
 // Rute untuk membuka Dashboard Admin
 Route::get('/admin/dashboard', [AdminController::class, 'index']);
@@ -29,10 +40,10 @@ use App\Http\Controllers\OrderController;
 
 // 1. Halaman Form Checkout (Beli Barang Ini)
 Route::get('/checkout/{id}', [OrderController::class, 'showCheckout'])->name('checkout.show');
-
 // 2. Proses Checkout (Tombol Submit)
 Route::post('/checkout/process', [OrderController::class, 'processOrder'])->name('checkout.process');
-
 // 3. Halaman Sukses / Instruksi Bayar
 Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
 
+// Upload Bukti Bayar
+Route::post('/order/upload/{id}', [OrderController::class, 'uploadProof'])->name('payment.upload');
