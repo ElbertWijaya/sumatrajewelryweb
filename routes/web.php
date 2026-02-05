@@ -12,6 +12,10 @@ use App\Http\Controllers\AdminController;
 // Rute untuk membuka Dashboard Admin
 Route::get('/admin/dashboard', [AdminController::class, 'index']);
 
+// Admin Order Management
+Route::get('/admin/order/{id}', [AdminController::class, 'showOrder'])->name('admin.order.show');
+Route::post('/admin/order/{id}/confirm', [AdminController::class, 'confirmPayment'])->name('admin.order.confirm');
+
 // Rute untuk memproses update harga (Method POST)
 Route::post('/admin/gold-price/update', [AdminController::class, 'updatePrice']);
 
@@ -31,3 +35,4 @@ Route::post('/checkout/process', [OrderController::class, 'processOrder'])->name
 
 // 3. Halaman Sukses / Instruksi Bayar
 Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
+

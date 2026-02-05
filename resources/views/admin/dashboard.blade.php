@@ -53,6 +53,56 @@
             </div>
         </div>
 
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <span>Pesanan Masuk (Incoming Orders)</span>
+                <span class="badge bg-warning text-dark">{{ $orders->where('payment_status', 'unpaid')->count() }} Belum Dibayar</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Pembeli</th>
+                            <th>Total Harga</th>
+                            <th>Status Bayar</th>
+                            <th>Status Order</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($orders as $order)
+                        <tr>
+                            <td class="fw-bold text-primary">{{ $order->invoice_number }}</td>
+                            <td>
+                                {{ $order->user->name ?? 'Guest' }}<br>
+                                <small class="text-muted">{{ $order->user->phone_number ?? '-' }}</small>
+                            </td>
+                            <td class="fw-bold">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                            <td>
+                                @if($order->payment_status == 'paid')
+                                    <span class="badge bg-success">LUNAS</span>
+                                @else
+                                    <span class="badge bg-danger">BELUM BAYAR</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ $order->order_status }}</span>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Belum ada pesanan masuk hari ini.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="card shadow">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <span>Daftar Inventaris Perhiasan</span>
@@ -94,7 +144,17 @@
                                 @endphp
                                 Rp {{ number_format($total, 0, ',', '.') }}
                             </td>
-                            <td><span class="badge bg-success">{{ $product->stock_status }}</span></td>
+                            <td>
+                                @if($product->stock_status == 'ready')
+                                    <span class="badge bg-success">READY</span>
+                                @elseif($product->stock_status == 'booked')
+                                    <span class="badge bg-warning text-dark">BOOKED</span>
+                                @elseif($product->stock_status == 'sold')
+                                    <span class="badge bg-danger">SOLD</span>
+                                @else
+                                    <span class="badge bg-secondary">{{ $product->stock_status }}</span>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -131,7 +191,8 @@
     </div>
 
     <div class="modal fade" id="addProductModal" tabindex="-1">
-        <div class="modal-dialog modal-lg"> <div class="modal-content">
+        <div class="modal-dialog modal-lg"> 
+            <div class="modal-content">
                 <form action="{{ url('/admin/product/store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">

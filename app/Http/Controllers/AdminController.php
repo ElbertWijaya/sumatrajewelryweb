@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;      // Panggil Model Produk
 use App\Models\GoldPrice;    // Panggil Model Harga Emas
+use App\Models\Order;        // Panggil Model Order
 
 class AdminController extends Controller
 {
@@ -16,8 +17,11 @@ class AdminController extends Controller
         // 2. Ambil semua produk yang ada di database
         $products = Product::all();
 
-        // 3. Kirim data tersebut ke View (halaman HTML)
-        return view('admin.dashboard', compact('goldPrice24k', 'products'));
+        // 3. (TAMBAHAN PENTING) Ambil data pesanan agar tidak error "Undefined variable $orders"
+        $orders = Order::with('user')->latest()->get();
+
+        // 4. Kirim data tersebut ke View (halaman HTML), JANGAN LUPA sertakan 'orders'
+        return view('admin.dashboard', compact('goldPrice24k', 'products', 'orders'));
     }
 
     public function updatePrice(Request $request)
@@ -71,5 +75,32 @@ class AdminController extends Controller
         // 4. Kembali ke dashboard
         return redirect()->back()->with('success', 'Produk baru berhasil ditambahkan!');
     }
-}
 
+    // 1. Tampilkan Detail Order
+    public function showOrder($id)
+    {
+        // Ambil order beserta item produknya
+        $order = Order::with(['user', 'items.product'])->findOrFail($id);
+        return view('admin.orders.show', compact('order'));
+    }
+
+    // 2. Proses Konfirmasi Pembayaran (JADI DUIT!)
+    public function confirmPayment($id)
+    {
+        $order = Order::with('items.product')->findOrFail($id);
+
+        // A. Ubah Status Pesanan jadi PAID
+        $order->update([
+            'payment_status' => 'paid',
+            'order_status' => 'processing' // Sedang dikemas
+        ]);
+
+        // B. Ubah Status Barang jadi SOLD (Terjual Permanen)
+        foreach($order->items as $item) {
+            // Update tabel products
+            $item->product->update(['stock_status' => 'sold']);
+        }
+
+        return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Stok produk resmi terjual.');
+    }
+}

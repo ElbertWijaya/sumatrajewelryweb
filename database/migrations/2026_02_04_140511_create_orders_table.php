@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('invoice_number')->unique();
             $table->foreignId('user_id')->constrained('users');
             $table->decimal('total_price', 15, 2);
+            $table->enum('payment_method', ['transfer', 'cash'])->default('transfer');
             $table->enum('payment_status', ['unpaid', 'paid', 'verified', 'failed'])->default('unpaid');
             $table->enum('order_status', ['pending', 'processing', 'production', 'ready_to_ship', 'completed', 'cancelled'])->default('pending');
             $table->string('payment_proof')->nullable();

@@ -41,6 +41,22 @@
                             <label class="form-label">Alamat Lengkap</label>
                             <textarea name="address" class="form-control" rows="3" required placeholder="Jalan, Nomor Rumah, Kecamatan, Kota..."></textarea>
                         </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Metode Pembayaran</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="transfer" id="bayarTransfer" checked>
+                                <label class="form-check-label" for="bayarTransfer">
+                                    Transfer Bank (BCA/Mandiri)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" value="cash" id="bayarCash">
+                                <label class="form-check-label" for="bayarCash">
+                                    Cash / Bayar di Toko (Ambil Sendiri)
+                                </label>
+                            </div>
+                        </div>
 
                         <button type="submit" class="btn btn-warning w-100 fw-bold py-3 mt-2">
                             BUAT PESANAN SEKARANG

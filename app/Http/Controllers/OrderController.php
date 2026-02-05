@@ -48,6 +48,7 @@ class OrderController extends Controller
             [
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
+                'address' => $request->address,
                 'password' => Hash::make('12345678'), // Password default sementara
                 'role' => 'customer'
             ]
