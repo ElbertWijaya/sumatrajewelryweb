@@ -70,6 +70,7 @@ class OrderController extends Controller
             'total_price' => $totalHarga,
             'payment_status' => 'unpaid', // Belum bayar
             'order_status' => 'pending',  // Menunggu transfer
+            'payment_method' => $request->payment_method // Default metode
         ]);
 
         // E. Simpan Detail Barang (Order Items)
