@@ -100,7 +100,7 @@ class OrderController extends Controller
     {
         // Validasi Foto
         $request->validate([
-            'payment_proof' => 'required|image|max:2048' // Maksimal 2MB
+            'payment_proof' => 'required|image|max:10240' // Maksimal 10MB
         ]);
 
         $order = Order::findOrFail($id);

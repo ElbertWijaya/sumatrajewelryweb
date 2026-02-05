@@ -6,8 +6,7 @@
     <title>Toko Mas Sumatra - Official Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    
-    <style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"> <style>
         /* --- CUSTOM CSS FOR LUXURY LOOK --- */
         body { font-family: 'Lato', sans-serif; background-color: #f8f9fa; }
         h1, h2, h3, .navbar-brand { font-family: 'Playfair Display', serif; }
@@ -62,7 +61,7 @@
         </div>
     </div>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
             <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">Toko Mas Sumatra</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -75,14 +74,14 @@
                     
                     @if(Auth::check())
                         <li class="nav-item ms-3">
-                            <a href="{{ route('customer.dashboard') }}" class="btn btn-gold btn-sm text-white fw-bold">
-                                <i class="bi bi-person-circle"></i> Dashboard Saya
+                            <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}" class="btn btn-gold btn-sm text-white fw-bold">
+                                <i class="bi bi-person-circle"></i> Dashboard {{ Auth::user()->role == 'admin' ? 'Admin' : 'Saya' }}
                             </a>
                         </li>
                     @else
                         <li class="nav-item ms-3">
-                            <a href="{{ url('/admin/dashboard') }}" class="btn btn-outline-light btn-sm">
-                                Staff Login
+                            <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm fw-bold">
+                                Masuk / Daftar
                             </a>
                         </li>
                     @endif
