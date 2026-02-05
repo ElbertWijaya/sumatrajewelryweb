@@ -120,7 +120,7 @@
                             Rp {{ number_format($estimasiHarga, 0, ',', '.') }}
                         </div>
                         
-                        <a href="#" class="btn btn-dark w-100">Detail Produk</a>
+                        <a href="{{ route('product.detail', $product->id) }}" class="btn btn-dark w-100">Detail Produk</a>
                     </div>
                 </div>
             </div>
