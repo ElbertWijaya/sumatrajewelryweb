@@ -103,4 +103,21 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Stok produk resmi terjual.');
     }
+
+    #Input Nomor Resi dan Ubah Status Pesanan jadi DIKIRIM
+    public function inputResi(Request $request, $id)
+    {
+        $request->validate([
+            'tracking_number' => 'required|string|max:50'
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        $order->update([
+            'tracking_number' => $request->tracking_number,
+            'order_status'    => 'shipped' // Ubah status jadi DIKIRIM
+        ]);
+
+        return redirect()->back()->with('success', 'Nomor Resi berhasil diinput. Status pesanan berubah menjadi DIKIRIM.');
+    }
 }

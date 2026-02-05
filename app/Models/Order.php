@@ -17,7 +17,8 @@ class Order extends Model
         'payment_status',
         'order_status',
         'payment_method', 
-        'payment_proof'
+        'payment_proof',
+        'tracking_number',
     ];
 
     // Relasi ke User (Pemilik Pesanan)

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Saya - Toko Mas Sumatra</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
 
@@ -35,8 +36,7 @@
                                     <th>Tanggal</th>
                                     <th>Barang</th>
                                     <th>Total Harga</th>
-                                    <th>Status Pembayaran</th>
-                                    <th>Aksi</th>
+                                    <th>Status Pesanan</th> <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,18 +50,35 @@
                                         @endforeach
                                     </td>
                                     <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                    
                                     <td>
-                                        @if($order->payment_status == 'paid')
-                                            <span class="badge bg-success">LUNAS</span>
+                                        @if($order->order_status == 'shipped')
+                                            <span class="badge bg-primary mb-1">SEDANG DIKIRIM</span>
+                                            <div class="small fw-bold text-dark">
+                                                <i class="bi bi-truck"></i> Resi: {{ $order->tracking_number }}
+                                            </div>
+
+                                        @elseif($order->payment_status == 'paid')
+                                            <span class="badge bg-success">DIPROSES</span>
+                                            <div class="small text-muted">Sedang dikemas</div>
+
                                         @else
                                             <span class="badge bg-danger">BELUM LUNAS</span>
                                             @if($order->payment_proof)
-                                                <br><small class="text-success">(Menunggu Verifikasi)</small>
+                                                <div class="small text-success mt-1 fst-italic">
+                                                    <i class="bi bi-clock-history"></i> Menunggu Verifikasi
+                                                </div>
                                             @endif
                                         @endif
                                     </td>
+
                                     <td>
-                                        @if($order->payment_status == 'unpaid' && $order->payment_method == 'transfer')
+                                        @if($order->order_status == 'shipped')
+                                            <button class="btn btn-outline-primary btn-sm" disabled>
+                                                Dalam Pengiriman
+                                            </button>
+
+                                        @elseif($order->payment_status == 'unpaid' && $order->payment_method == 'transfer')
                                             <a href="{{ route('order.success', $order->id) }}" class="btn btn-primary btn-sm">
                                                 @if($order->payment_proof)
                                                     Lihat / Ganti Bukti
@@ -69,10 +86,12 @@
                                                     Upload Bukti Bayar
                                                 @endif
                                             </a>
+
                                         @elseif($order->payment_method == 'cash')
                                             <span class="badge bg-secondary">Bayar di Toko</span>
+
                                         @else
-                                            <button class="btn btn-outline-secondary btn-sm" disabled>Selesai</button>
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>Pesanan Selesai</button>
                                         @endif
                                     </td>
                                 </tr>

@@ -33,6 +33,7 @@ Route::get('/admin/dashboard', [AdminController::class, 'index']);
 // Admin Order Management
 Route::get('/admin/order/{id}', [AdminController::class, 'showOrder'])->name('admin.order.show');
 Route::post('/admin/order/{id}/confirm', [AdminController::class, 'confirmPayment'])->name('admin.order.confirm');
+Route::post('/admin/order/{id}/resi', [AdminController::class, 'inputResi'])->name('admin.order.resi');
 
 // Admin Produk & Harga
 Route::post('/admin/gold-price/update', [AdminController::class, 'updatePrice']);

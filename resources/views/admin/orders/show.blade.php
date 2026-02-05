@@ -93,6 +93,48 @@
                         @endif
                     </div>
 
+                    <div class="card mt-4">
+                        <div class="card-body bg-light">
+                            <h6 class="fw-bold mb-3">Tindakan Admin</h6>
+                            @if($order->payment_status == 'unpaid')
+                                <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID?');">
+                                    @csrf
+                                    <div class="d-flex align-items-center">
+                                        <div class="text-muted small me-3 flex-grow-1">
+                                            Pastikan bukti transfer sudah dicek dan uang masuk ke rekening sebelum verifikasi.
+                                        </div>
+                                        <button type="submit" class="btn btn-success fw-bold">
+                                            ✅ Verifikasi Lunas
+                                        </button>
+                                    </div>
+                                </form>
+                            @elseif($order->order_status == 'processing')
+                                <form action="{{ route('admin.order.resi', $order->id) }}" method="POST">
+                                    @csrf
+                                    <label class="form-label fw-bold">Input Nomor Resi Pengiriman</label>
+                                    <div class="input-group">
+                                        <input type="text" name="tracking_number" class="form-control" placeholder="Contoh: JP1234567890" required>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-truck"></i> Update Status Dikirim
+                                        </button>
+                                    </div>
+                                    <small class="text-muted">Masukkan nomor resi JNE/J&T/SiCepat.</small>
+                                </form>
+                            @elseif($order->order_status == 'shipped')
+                                <div class="alert alert-primary mb-0 d-flex align-items-center">
+                                    <i class="bi bi-truck fs-4 me-3"></i>
+                                    <div>
+                                        <strong>Sedang Dikirim</strong><br>
+                                        No. Resi: <span class="fw-bold">{{ $order->tracking_number }}</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ url('/admin/dashboard') }}" class="text-decoration-none text-muted">&larr; Kembali ke Dashboard</a>
+                    </div>                    
+
                 </div>
             </div>
         </div>
