@@ -1,15 +1,28 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Toko Mas Sumatra</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+@extends('layouts.app')
 
+@section('title', 'Checkout - Toko Mas Sumatra')
+@section('nav_home_active', '') 
+
+@section('navbar_right')
+    @if(Auth::check())
+        <li class="nav-item ms-3">
+            <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}" class="btn btn-gold btn-sm text-white fw-bold">
+                <i class="bi bi-person-circle"></i> Dashboard {{ Auth::user()->role == 'admin' ? 'Admin' : 'Saya' }}
+            </a>
+        </li>
+    @else
+        <li class="nav-item ms-3">
+            <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm fw-bold">
+                Masuk / Daftar
+            </a>
+        </li>
+    @endif
+@endsection
+
+@section('content')
 <div class="container py-5">
     <div class="row">
+        {{-- Form checkout --}}
         <div class="col-md-7">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-dark text-white">
@@ -45,27 +58,23 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold">Metode Pembayaran</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="transfer" id="bayarTransfer" checked>
-                                <label class="form-check-label" for="bayarTransfer">
-                                    Transfer Bank (BCA/Mandiri)
+                                <input class="form-check-input" type="radio" name="payment_method" id="transfer" value="transfer" checked>
+                                <label class="form-check-label" for="transfer">
+                                    Transfer Bank (Upload bukti pembayaran setelah ini)
                                 </label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" value="cash" id="bayarCash">
-                                <label class="form-check-label" for="bayarCash">
-                                    Cash / Bayar di Toko (Ambil Sendiri)
-                                </label>
-                            </div>
+                            {{-- Tambahkan opsi lain nanti bila perlu --}}
                         </div>
 
-                        <button type="submit" class="btn btn-warning w-100 fw-bold py-3 mt-2">
-                            BUAT PESANAN SEKARANG
+                        <button type="submit" class="btn btn-gold px-4">
+                            Lanjutkan & Buat Pesanan
                         </button>
                     </form>
                 </div>
             </div>
         </div>
 
+        {{-- Ringkasan pesanan --}}
         <div class="col-md-5">
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
@@ -74,32 +83,45 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         @if($product->image_url)
-                            <img src="{{ asset('uploads/' . $product->image_url) }}" width="80" class="rounded me-3">
+                            <img src="{{ asset('uploads/' . $product->image_url) }}" width="80" class="rounded me-3" alt="{{ $product->name }}">
                         @else
                             <div class="bg-secondary rounded me-3" style="width:80px; height:80px;"></div>
                         @endif
                         <div>
                             <h6 class="mb-0">{{ $product->name }}</h6>
-                            <small class="text-muted">{{ $product->karat_type }} | {{ $product->weight }} gr</small>
+                            <small class="text-muted">
+                                {{ $product->karat_type }} | {{ $product->weight }} gr
+                            </small>
                         </div>
                     </div>
                     <hr>
                     @php
-                        $hargaDasar = ($product->karat_type == '24K') ? $goldPrice24k->sell_price_per_gram : ($goldPrice24k->sell_price_per_gram * 0.8);
-                        $totalHarga = ($product->weight * $hargaDasar) + $product->labor_cost + $product->stone_price;
+                        $hargaDasar = ($product->karat_type == '24K')
+                            ? $goldPrice24k->sell_price_per_gram
+                            : ($goldPrice24k->sell_price_per_gram * 0.8);
+                        $estimasiHarga = ($product->weight * $hargaDasar)
+                            + $product->labor_cost
+                            + $product->stone_price;
                     @endphp
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Total Harga Barang</span>
-                        <span class="fw-bold">Rp {{ number_format($totalHarga, 0, ',', '.') }}</span>
+                        <span>Harga Perkiraan</span>
+                        <span>Rp {{ number_format($estimasiHarga, 0, ',', '.') }}</span>
                     </div>
-                    <div class="alert alert-info small mt-3">
-                        <i class="bi bi-info-circle"></i> Biaya ongkos kirim akan diinformasikan admin via WhatsApp setelah pesanan dibuat.
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Ongkir (Perkiraan)</span>
+                        <span>Rp 0</span>
                     </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total Pembayaran</span>
+                        <span>Rp {{ number_format($estimasiHarga, 0, ',', '.') }}</span>
+                    </div>
+                    <small class="text-muted d-block mt-2">
+                        *Total final bisa berbeda sedikit saat admin melakukan konfirmasi.
+                    </small>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-</body>
-</html>
+@endsection
