@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\HomeController;
+
+// Halaman Depan (Homepage)
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 use App\Http\Controllers\AdminController;
 
