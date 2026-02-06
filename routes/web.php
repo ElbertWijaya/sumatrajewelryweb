@@ -48,4 +48,4 @@ Route::post('/checkout/process', [OrderController::class, 'processOrder'])->name
 // 3. Halaman Sukses
 Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
 // 4. Upload Bukti Bayar
-Route::post('/order/upload/{id}', [OrderController::class, 'uploadProof'])->name('payment.upload');
+Route::post('/orders/{id}/upload-proof', [OrderController::class, 'uploadProof'])->name('payment.upload');

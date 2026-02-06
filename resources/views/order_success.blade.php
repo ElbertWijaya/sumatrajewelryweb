@@ -21,17 +21,24 @@
 
 @section('content')
 <div class="container py-5">
+    {{-- ALERT NOTIFIKASI SETELAH KIRIM BUKTI --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div class="card shadow-sm">
                 <div class="card-body text-center p-4">
                     @php
-                        $isPaid   = $order->payment_status === 'paid';
+                        $isPaid    = $order->payment_status === 'paid';
                         $isShipped = $order->order_status === 'ready_to_ship';
 
-                        // Tentukan emoji & judul utama
                         if ($isShipped) {
-                            $statusEmoji = '🚚';  // atau ganti '🚢' kalau mau kapal
+                            $statusEmoji = '🚚';  // atau '🚢'
                             $statusTitle = 'Pesanan Sedang Dikirim';
                         } elseif ($isPaid) {
                             $statusEmoji = '✅';
@@ -54,7 +61,7 @@
                     {{-- Pesan berbeda tipis paid vs unpaid vs shipped --}}
                     @if($isShipped)
                         <p class="text-muted mb-3">
-                            Pesanan Anda sudah dikirim. Silakan pantau proses pengiriman melalui Dashboard Customer.
+                            Pesanan Anda sudah dikirim. Nomor resi dapat digunakan untuk melacak paket di aplikasi ekspedisi.
                         </p>
                     @elseif($isPaid)
                         <p class="text-muted mb-3">
@@ -89,14 +96,27 @@
                     </div>
 
                     @if($isShipped)
-                        {{-- Sudah dikirim: hanya info + tombol ke dashboard --}}
-                        <div class="alert alert-info">
-                            Pesanan Anda sedang dalam proses pengiriman. Terima kasih sudah berbelanja di Toko Mas Sumatra.
+                        {{-- Sudah dikirim: informasi pengiriman sederhana --}}
+                        <div class="text-start mb-3">
+                            <h5 class="mb-2"><i class="bi bi-truck"></i> Status Pengiriman</h5>
+                            <ul class="list-unstyled ms-1 mb-0">
+                                <li class="mb-1">
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                    <strong>Pembayaran diterima</strong>
+                                </li>
+                                <li class="mb-1">
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                    <strong>Pesanan dikemas & diserahkan ke kurir</strong>
+                                </li>
+                                <li class="mb-1">
+                                    <i class="bi bi-dot me-1"></i>
+                                    <strong>Dalam perjalanan ke alamat Anda</strong>
+                                    <div class="small text-muted">
+                                        Silakan gunakan nomor resi di atas untuk memantau detail lokasi paket di website / aplikasi ekspedisi.
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-
-                        <a href="{{ route('customer.dashboard') }}" class="btn btn-primary mt-3">
-                            Cek Status Pengiriman
-                        </a>
                     @elseif($isPaid)
                         {{-- Sudah dibayar: info + tombol ke dashboard --}}
                         <div class="alert alert-success">
