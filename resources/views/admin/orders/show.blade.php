@@ -125,7 +125,7 @@
                                     </div>
                                     <small class="text-muted">Masukkan nomor resi JNE/J&T/SiCepat.</small>
                                 </form>
-                            @elseif($order->order_status == 'shipped')
+                            @elseif($order->order_status == 'ready_to_ship')
                                 <div class="alert alert-primary mb-0 d-flex align-items-center">
                                     <i class="bi bi-truck fs-4 me-3"></i>
                                     <div>
