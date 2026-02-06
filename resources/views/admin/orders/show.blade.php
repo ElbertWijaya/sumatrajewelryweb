@@ -54,8 +54,11 @@
                         </tfoot>
                     </table>
 
-<div class="mb-4 p-3 bg-light border rounded">
-                        <h6 class="fw-bold">Metode Pembayaran: <span class="text-uppercase text-primary">{{ $order->payment_method }}</span></h6>
+                    <div class="mb-4 p-3 bg-light border rounded">
+                        <h6 class="fw-bold">
+                            Metode Pembayaran:
+                            <span class="text-uppercase text-primary">{{ $order->payment_method }}</span>
+                        </h6>
                         
                         @if($order->payment_method == 'transfer')
                             @if($order->payment_proof)
@@ -63,7 +66,9 @@
                                     <p class="mb-1">Bukti Transfer:</p>
                                     <img src="{{ asset('uploads/proofs/' . $order->payment_proof) }}" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
                                     <div class="mt-2">
-                                        <a href="{{ asset('uploads/proofs/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-secondary">Lihat Full Size</a>
+                                        <a href="{{ asset('uploads/proofs/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                            Lihat Full Size
+                                        </a>
                                     </div>
                                 </div>
                             @else
@@ -78,37 +83,37 @@
                         @endif
                     </div>
 
+                    {{-- Baris aksi utama: hanya tombol kembali --}}
                     <div class="d-flex justify-content-between">
                         <a href="{{ url('/admin/dashboard') }}" class="btn btn-secondary">Kembali</a>
 
                         @if($order->payment_status == 'unpaid')
-                            <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID? Stok akan berubah jadi SOLD.');">
-                                @csrf
-                                <button type="submit" class="btn btn-success fw-bold">
-                                    ✅ Verifikasi Pembayaran (LUNAS)
-                                </button>
-                            </form>
+                            <span class="badge bg-danger align-self-center">Belum Lunas</span>
                         @else
-                            <button class="btn btn-secondary" disabled>Pesanan Selesai</button>
+                            <span class="badge bg-success align-self-center">Sudah Lunas</span>
                         @endif
                     </div>
 
+                    {{-- Seksi Tindakan Admin: satu-satunya tempat verifikasi pembayaran --}}
                     <div class="card mt-4">
                         <div class="card-body bg-light">
                             <h6 class="fw-bold mb-3">Tindakan Admin</h6>
+
                             @if($order->payment_status == 'unpaid')
-                                <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID?');">
+                                {{-- SATU-SATUNYA form verifikasi pembayaran --}}
+                                <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID? Stok akan berubah jadi SOLD.');">
                                     @csrf
                                     <div class="d-flex align-items-center">
                                         <div class="text-muted small me-3 flex-grow-1">
                                             Pastikan bukti transfer sudah dicek dan uang masuk ke rekening sebelum verifikasi.
                                         </div>
                                         <button type="submit" class="btn btn-success fw-bold">
-                                            ✅ Verifikasi Lunas
+                                            ✅ Verifikasi Pembayaran (LUNAS)
                                         </button>
                                     </div>
                                 </form>
                             @elseif($order->order_status == 'processing')
+                                {{-- Input resi setelah pembayaran terverifikasi --}}
                                 <form action="{{ route('admin.order.resi', $order->id) }}" method="POST">
                                     @csrf
                                     <label class="form-label fw-bold">Input Nomor Resi Pengiriman</label>
@@ -131,8 +136,11 @@
                             @endif
                         </div>
                     </div>
+
                     <div class="mt-3">
-                        <a href="{{ url('/admin/dashboard') }}" class="text-decoration-none text-muted">&larr; Kembali ke Dashboard</a>
+                        <a href="{{ url('/admin/dashboard') }}" class="text-decoration-none text-muted">
+                            &larr; Kembali ke Dashboard
+                        </a>
                     </div>                    
 
                 </div>

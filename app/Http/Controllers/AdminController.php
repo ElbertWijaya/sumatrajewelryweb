@@ -95,9 +95,8 @@ class AdminController extends Controller
             'order_status' => 'processing' // Sedang dikemas
         ]);
 
-        // B. Ubah Status Barang jadi SOLD (Terjual Permanen)
+        // B. Ubah Status Barang jadi SOLD
         foreach($order->items as $item) {
-            // Update tabel products
             $item->product->update(['stock_status' => 'sold']);
         }
 
