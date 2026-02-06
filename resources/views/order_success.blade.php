@@ -27,7 +27,7 @@
                 <div class="card-body text-center p-4">
                     @php
                         $isPaid   = $order->payment_status === 'paid';
-                        $isShipped = $order->order_status === 'shipped';
+                        $isShipped = $order->order_status === 'ready_to_ship';
 
                         // Tentukan emoji & judul utama
                         if ($isShipped) {
@@ -117,9 +117,17 @@
                             <form action="{{ route('payment.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="form-label">Upload Foto Bukti Transfer</label>
+                                    <label class="form-label">
+                                        @if($order->payment_proof)
+                                            Foto Ulang / Ganti Bukti Pembayaran
+                                        @else
+                                            Upload Foto Bukti Pembayaran
+                                        @endif
+                                    </label>
                                     <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
-                                    <small class="text-muted">Format: JPG/PNG. Maks 10MB.</small>
+                                    <small class="text-muted">
+                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti jika foto sebelumnya kurang jelas.
+                                    </small>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
                                     Kirim Bukti Pembayaran

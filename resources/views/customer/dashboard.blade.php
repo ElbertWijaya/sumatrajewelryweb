@@ -36,65 +36,131 @@
                                     <th>Tanggal</th>
                                     <th>Barang</th>
                                     <th>Total Harga</th>
-                                    <th>Status Pesanan</th> <th>Aksi</th>
+                                    <th>Status Pesanan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($myOrders as $order)
-                                <tr>
-                                    <td class="fw-bold">{{ $order->invoice_number }}</td>
-                                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                                    <td>
-                                        @foreach($order->items as $item)
-                                            <div>{{ $item->product->name }} ({{ $item->product->weight }}gr)</div>
-                                        @endforeach
-                                    </td>
-                                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                                    
-                                    <td>
-                                        @if($order->order_status == 'shipped')
-                                            <span class="badge bg-primary mb-1">SEDANG DIKIRIM</span>
-                                            <div class="small fw-bold text-dark">
-                                                <i class="bi bi-truck"></i> Resi: {{ $order->tracking_number }}
-                                            </div>
+                                    @php
+                                        $paymentStatus = $order->payment_status;   // unpaid, paid, verified, failed
+                                        $orderStatus   = $order->order_status;     // pending, processing, production, ready_to_ship, completed, cancelled
 
-                                        @elseif($order->payment_status == 'paid')
-                                            <span class="badge bg-success">DIPROSES</span>
-                                            <div class="small text-muted">Sedang dikemas</div>
+                                        // Ringkasan barang: ambil item pertama
+                                        $firstItem = $order->items->first();
 
-                                        @else
-                                            <span class="badge bg-danger">BELUM LUNAS</span>
-                                            @if($order->payment_proof)
-                                                <div class="small text-success mt-1 fst-italic">
-                                                    <i class="bi bi-clock-history"></i> Menunggu Verifikasi
-                                                </div>
-                                            @endif
-                                        @endif
-                                    </td>
+                                        // Mapping badge & teks status
+                                        $badgeClass = 'bg-secondary';
+                                        $badgeText  = 'UNKNOWN';
+                                        $statusText = '';
 
-                                    <td>
-                                        @if($order->order_status == 'shipped')
-                                            <button class="btn btn-outline-primary btn-sm" disabled>
-                                                Dalam Pengiriman
-                                            </button>
+                                        if ($paymentStatus === 'unpaid') {
+                                            $badgeClass = 'bg-danger';
+                                            $badgeText  = 'BELUM LUNAS';
+                                            if ($order->payment_proof) {
+                                                $statusText = 'Menunggu verifikasi pembayaran';
+                                            } else {
+                                                $statusText = 'Menunggu pembayaran';
+                                            }
+                                        } elseif ($paymentStatus === 'paid') {
+                                            $badgeClass = 'bg-success';
+                                            if ($orderStatus === 'processing') {
+                                                $badgeText  = 'DIPROSES';
+                                                $statusText = 'Sedang dikemas';
+                                            } elseif ($orderStatus === 'production') {
+                                                $badgeText  = 'DIPROSES';
+                                                $statusText = 'Sedang diproduksi';
+                                            } elseif ($orderStatus === 'ready_to_ship') {
+                                                $badgeText  = 'DIKIRIM';
+                                                $statusText = 'Sedang dikirim ke alamat Anda';
+                                            } elseif ($orderStatus === 'completed') {
+                                                $badgeText  = 'SELESAI';
+                                                $statusText = 'Pesanan telah diterima';
+                                            } else {
+                                                $badgeText  = 'DIPROSES';
+                                                $statusText = 'Sedang diproses';
+                                            }
+                                        } elseif ($paymentStatus === 'failed') {
+                                            $badgeClass = 'bg-danger';
+                                            $badgeText  = 'GAGAL';
+                                            $statusText = 'Pembayaran gagal / dibatalkan';
+                                        } else {
+                                            // 'verified' atau status lain jika digunakan
+                                            $badgeClass = 'bg-success';
+                                            $badgeText  = strtoupper($paymentStatus);
+                                            $statusText = 'Status pesanan: ' . $orderStatus;
+                                        }
 
-                                        @elseif($order->payment_status == 'unpaid' && $order->payment_method == 'transfer')
-                                            <a href="{{ route('order.success', $order->id) }}" class="btn btn-primary btn-sm">
-                                                @if($order->payment_proof)
-                                                    Lihat / Ganti Bukti
-                                                @else
-                                                    Upload Bukti Bayar
-                                                @endif
+                                        // Flags untuk aksi
+                                        $canUploadProof = ($paymentStatus === 'unpaid' && $order->payment_method === 'transfer');
+                                        $canViewDetail  = in_array($orderStatus, ['pending', 'processing', 'production', 'ready_to_ship']);
+                                        $isCompleted    = ($orderStatus === 'completed');
+                                        $isCancelled    = ($orderStatus === 'cancelled');
+                                    @endphp
+
+                                    <tr>
+                                        <td class="fw-bold">
+                                            <a href="{{ route('order.success', $order->id) }}" class="text-decoration-none">
+                                                {{ $order->invoice_number }}
                                             </a>
+                                        </td>
+                                        <td>{{ $order->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            @if($firstItem)
+                                                {{ $firstItem->product->name }} ({{ $firstItem->product->weight }}gr)
+                                                @if($order->items->count() > 1)
+                                                    <div class="small text-muted">
+                                                        + {{ $order->items->count() - 1 }} item lainnya
+                                                    </div>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+                                        <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                        
+                                        <td>
+                                            <span class="badge {{ $badgeClass }}">{{ $badgeText }}</span><br>
+                                            <small class="text-muted">
+                                                {{ $statusText }}
+                                                @if($orderStatus === 'ready_to_ship' && $order->tracking_number)
+                                                    <br>
+                                                    <span class="fw-semibold text-dark">
+                                                        <i class="bi bi-truck"></i> Resi: {{ $order->tracking_number }}
+                                                    </span>
+                                                @endif
+                                            </small>
+                                        </td>
 
-                                        @elseif($order->payment_method == 'cash')
-                                            <span class="badge bg-secondary">Bayar di Toko</span>
+                                        <td>
+                                            @if($canUploadProof)
+                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-primary btn-sm mb-1">
+                                                    @if($order->payment_proof)
+                                                        Foto Ulang Bukti Pembayaran
+                                                    @else
+                                                        Upload Bukti Pembayaran
+                                                    @endif
+                                                </a>
+                                            @elseif($canViewDetail)
+                                                {{-- Bisa lihat detail/tracking --}}
+                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-outline-primary btn-sm mb-1">
+                                                    @if($orderStatus === 'ready_to_ship')
+                                                        Lihat Tracking
+                                                    @else
+                                                        Lihat Detail
+                                                    @endif
+                                                </a>
+                                            @endif
 
-                                        @else
-                                            <button class="btn btn-outline-secondary btn-sm" disabled>Pesanan Selesai</button>
-                                        @endif
-                                    </td>
-                                </tr>
+                                            @if($order->payment_method == 'cash' && $paymentStatus === 'unpaid')
+                                                <span class="badge bg-secondary">Bayar di Toko</span>
+                                            @elseif($isCompleted)
+                                                <button class="btn btn-secondary btn-sm" disabled>Pesanan Selesai</button>
+                                            @elseif($isCancelled)
+                                                <button class="btn btn-outline-secondary btn-sm" disabled>Pesanan Dibatalkan</button>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

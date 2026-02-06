@@ -63,6 +63,24 @@ class DatabaseSeeder extends Seeder
                 'stock_status' => 'ready',
                 'description' => 'Cincin elegan dengan ukiran halus khas Sumatra.'
             ]
+            
         );
+
+        // 5. Tambahkan 19 variasi produk lain (total 20 produk)
+        for ($i = 2; $i <= 20; $i++) {
+            Product::updateOrCreate(
+                ['sku' => 'CM-' . str_pad($i, 3, '0', STR_PAD_LEFT)],
+                [
+                    'name' => 'Cincin Emas Varian ' . $i,
+                    'category_id' => $kategoriCincin->id,
+                    'weight' => 3 + ($i * 0.1), // sedikit variasi berat
+                    'karat_type' => '17K',
+                    'stone_price' => 150000 + ($i * 5000),
+                    'labor_cost' => 120000 + ($i * 3000),
+                    'stock_status' => 'ready',
+                    'description' => 'Cincin emas varian ke-' . $i . ' dari koleksi Sumatra.'
+                ]
+            );
+        }
     }
 }

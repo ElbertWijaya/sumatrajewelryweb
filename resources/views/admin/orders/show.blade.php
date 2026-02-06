@@ -97,11 +97,10 @@
                     {{-- Seksi Tindakan Admin: satu-satunya tempat verifikasi pembayaran --}}
                     <div class="card mt-4">
                         <div class="card-body bg-light">
-                            <h6 class="fw-bold mb-3">Tindakan Admin</h6>
-
                             @if($order->payment_status == 'unpaid')
-                                {{-- SATU-SATUNYA form verifikasi pembayaran --}}
-                                <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID? Stok akan berubah jadi SOLD.');">
+                                <h6 class="fw-bold mb-3">Tindakan Admin</h6>
+                                {{-- HANYA di sini ada tombol aksi --}}
+                                <form action="{{ route('admin.order.confirm', $order->id) }}" method="POST" onsubmit="return confirm('Yakin pembayaran VALID?');">
                                     @csrf
                                     <div class="d-flex align-items-center">
                                         <div class="text-muted small me-3 flex-grow-1">
@@ -112,11 +111,12 @@
                                         </button>
                                     </div>
                                 </form>
+
                             @elseif($order->order_status == 'processing')
-                                {{-- Input resi setelah pembayaran terverifikasi --}}
+                                <h6 class="fw-bold mb-3">Input Nomor Resi Pengiriman</h6>
                                 <form action="{{ route('admin.order.resi', $order->id) }}" method="POST">
                                     @csrf
-                                    <label class="form-label fw-bold">Input Nomor Resi Pengiriman</label>
+                                    <label class="form-label fw-bold">Nomor Resi</label>
                                     <div class="input-group">
                                         <input type="text" name="tracking_number" class="form-control" placeholder="Contoh: JP1234567890" required>
                                         <button type="submit" class="btn btn-primary">
@@ -125,11 +125,13 @@
                                     </div>
                                     <small class="text-muted">Masukkan nomor resi JNE/J&T/SiCepat.</small>
                                 </form>
+
                             @elseif($order->order_status == 'ready_to_ship')
+                                <h6 class="fw-bold mb-3">Status Pengiriman</h6>
                                 <div class="alert alert-primary mb-0 d-flex align-items-center">
                                     <i class="bi bi-truck fs-4 me-3"></i>
                                     <div>
-                                        <strong>Sedang Dikirim</strong><br>
+                                        <strong>Sedang Dikirim ke Customer</strong><br>
                                         No. Resi: <span class="fw-bold">{{ $order->tracking_number }}</span>
                                     </div>
                                 </div>
