@@ -114,7 +114,7 @@ class AdminController extends Controller
 
         $order->update([
             'tracking_number' => $request->tracking_number,
-            'order_status'    => 'shipped' // Ubah status jadi DIKIRIM
+            'order_status'    => 'ready_to_ship' // Ubah status jadi DIKIRIM
         ]);
 
         return redirect()->back()->with('success', 'Nomor Resi berhasil diinput. Status pesanan berubah menjadi DIKIRIM.');
