@@ -21,7 +21,7 @@
 
 @section('content')
 <div class="container py-5">
-    {{-- ALERT NOTIFIKASI SETELAH KIRIM BUKTI --}}
+    {{-- Alert flash message (upload bukti, dll) --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -36,13 +36,21 @@
                     @php
                         $isPaid    = $order->payment_status === 'paid';
                         $isShipped = $order->order_status === 'ready_to_ship';
+                        $hasProof  = !empty($order->payment_proof);
 
+                        // unpaid + sudah kirim bukti
+                        $isWaitingVerification = !$isPaid && !$isShipped && $hasProof;
+
+                        // Tentukan emoji & judul utama
                         if ($isShipped) {
                             $statusEmoji = '🚚';  // atau '🚢'
                             $statusTitle = 'Pesanan Sedang Dikirim';
                         } elseif ($isPaid) {
                             $statusEmoji = '✅';
                             $statusTitle = 'Pembayaran Berhasil Diterima';
+                        } elseif ($isWaitingVerification) {
+                            $statusEmoji = '⏳';
+                            $statusTitle = 'Pembayaran Anda Sedang Diverifikasi';
                         } else {
                             $statusEmoji = '💰';
                             $statusTitle = 'Pesanan Berhasil Dibuat';
@@ -58,18 +66,26 @@
 
                     <h3 class="mb-2">{{ $statusTitle }}</h3>
 
-                    {{-- Pesan berbeda tipis paid vs unpaid vs shipped --}}
+                    {{-- Pesan utama sesuai state --}}
                     @if($isShipped)
                         <p class="text-muted mb-3">
-                            Pesanan Anda sudah dikirim. Nomor resi dapat digunakan untuk melacak paket di aplikasi ekspedisi.
+                            Pesanan Anda sudah dikirim. Nomor resi dapat digunakan untuk melacak paket melalui
+                            situs atau aplikasi ekspedisi.
                         </p>
                     @elseif($isPaid)
                         <p class="text-muted mb-3">
                             Terima kasih, pembayaran Anda sudah kami terima dan pesanan sedang kami proses.
                         </p>
+                    @elseif($isWaitingVerification)
+                        <p class="text-muted mb-3">
+                            Anda telah mengirimkan bukti pembayaran. Harap menunggu proses verifikasi oleh pihak toko.
+                            Apabila Anda merasa bukti yang sebelumnya kurang jelas atau keliru, Anda dipersilakan
+                            untuk mengirimkan ulang bukti pembayaran yang baru.
+                        </p>
                     @else
                         <p class="text-muted mb-3">
-                            Terima kasih, pesanan Anda sudah kami terima. Silakan selesaikan pembayaran sesuai instruksi di bawah ini.
+                            Terima kasih, pesanan Anda sudah kami terima. Silakan selesaikan pembayaran sesuai
+                            instruksi di bawah ini.
                         </p>
                     @endif
 
@@ -112,7 +128,7 @@
                                     <i class="bi bi-dot me-1"></i>
                                     <strong>Dalam perjalanan ke alamat Anda</strong>
                                     <div class="small text-muted">
-                                        Silakan gunakan nomor resi di atas untuk memantau detail lokasi paket di website / aplikasi ekspedisi.
+                                        Silakan gunakan nomor resi di atas untuk memantau detail lokasi paket.
                                     </div>
                                 </li>
                             </ul>
@@ -127,28 +143,18 @@
                             Cek Status di Dashboard
                         </a>
                     @else
-                        {{-- Belum dibayar: instruksi transfer + upload bukti --}}
+                        {{-- Belum dibayar (dengan atau tanpa bukti): instruksi transfer + upload bukti --}}
                         <div class="text-start">
                             <div class="bg-warning bg-opacity-10 p-3 rounded border border-warning mb-3">
                                 <p class="mb-1 fw-bold">Silakan Transfer ke:</p>
                                 <h5 class="mb-0">BCA 123-456-7890 (Toko Mas Sumatra)</h5>
                             </div>
 
-                            {{-- INFORMASI TAMBAHAN JIKA SUDAH PERNAH MENGIRIM BUKTI --}}
-                            @if($order->payment_proof)
-                                <div class="alert alert-info mb-3">
-                                    Anda telah mengirimkan bukti pembayaran.  
-                                    Harap menunggu proses verifikasi oleh pihak toko.  
-                                    Apabila Anda merasa bukti yang sebelumnya kurang jelas atau keliru,  
-                                    Anda dipersilakan untuk mengirimkan ulang bukti pembayaran yang baru.
-                                </div>
-                            @endif
-
                             <form action="{{ route('payment.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">
-                                        @if($order->payment_proof)
+                                        @if($hasProof)
                                             Foto Ulang / Ganti Bukti Pembayaran
                                         @else
                                             Upload Foto Bukti Pembayaran
@@ -156,7 +162,8 @@
                                     </label>
                                     <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
                                     <small class="text-muted">
-                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti apabila foto sebelumnya kurang jelas atau kurang tepat.
+                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti apabila foto sebelumnya
+                                        kurang jelas atau kurang tepat.
                                     </small>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
