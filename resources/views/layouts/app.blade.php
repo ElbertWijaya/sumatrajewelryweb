@@ -181,8 +181,8 @@
                     </p>
                     <p class="small mb-1">
                         <span class="text-light-50">WhatsApp:</span><br>
-                        <a href="https://wa.me/6281234567890" target="_blank" class="text-decoration-none text-light-50 fw-semibold">
-                            +62 812-3456-7890
+                        <a href="https://wa.me/6282164836268" target="_blank" class="text-decoration-none text-light-50 fw-semibold">
+                            +62 821-6483-6268
                         </a>
                     </p>
                     <p class="small text-light-50 mb-0">
