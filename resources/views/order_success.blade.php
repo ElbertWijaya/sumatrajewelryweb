@@ -134,6 +134,16 @@
                                 <h5 class="mb-0">BCA 123-456-7890 (Toko Mas Sumatra)</h5>
                             </div>
 
+                            {{-- INFORMASI TAMBAHAN JIKA SUDAH PERNAH MENGIRIM BUKTI --}}
+                            @if($order->payment_proof)
+                                <div class="alert alert-info mb-3">
+                                    Anda telah mengirimkan bukti pembayaran.  
+                                    Harap menunggu proses verifikasi oleh pihak toko.  
+                                    Apabila Anda merasa bukti yang sebelumnya kurang jelas atau keliru,  
+                                    Anda dipersilakan untuk mengirimkan ulang bukti pembayaran yang baru.
+                                </div>
+                            @endif
+
                             <form action="{{ route('payment.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
@@ -146,7 +156,7 @@
                                     </label>
                                     <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
                                     <small class="text-muted">
-                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti jika foto sebelumnya kurang jelas.
+                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti apabila foto sebelumnya kurang jelas atau kurang tepat.
                                     </small>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
