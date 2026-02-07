@@ -43,7 +43,7 @@
                             <tbody>
                                 @foreach($myOrders as $order)
                                     @php
-                                        $paymentStatus = $order->payment_status;   // unpaid, paid, verified, failed
+                                        $paymentStatus = $order->payment_status;   // unpaid, paid, failed, ...
                                         $orderStatus   = $order->order_status;     // pending, processing, production, ready_to_ship, completed, cancelled
 
                                         // Ringkasan barang: ambil item pertama
@@ -57,12 +57,14 @@
                                         if ($paymentStatus === 'unpaid') {
                                             $badgeClass = 'bg-danger';
                                             $badgeText  = 'BELUM LUNAS';
+
                                             if ($order->payment_proof) {
-                                                $statusText = 'Menunggu verifikasi pembayaran';
+                                                $statusText = 'Menunggu verifikasi pembayaran.';
                                             } else {
-                                                $statusText = 'Menunggu pembayaran';
+                                                $statusText = 'Menunggu pembayaran.';
                                             }
-                                        @elseif ($paymentStatus === 'paid') {
+
+                                        } elseif ($paymentStatus === 'paid') {
                                             $badgeClass = 'bg-success';
 
                                             if ($orderStatus === 'processing') {
@@ -86,12 +88,14 @@
                                                 $badgeText  = 'DIPROSES';
                                                 $statusText = 'Pesanan sedang diproses.';
                                             }
+
                                         } elseif ($paymentStatus === 'failed') {
                                             $badgeClass = 'bg-danger';
                                             $badgeText  = 'GAGAL';
-                                            $statusText = 'Pembayaran gagal / dibatalkan';
+                                            $statusText = 'Pembayaran gagal atau dibatalkan.';
+
                                         } else {
-                                            // 'verified' atau status lain jika digunakan
+                                            // 'verified' atau status lain jika suatu saat digunakan
                                             $badgeClass = 'bg-success';
                                             $badgeText  = strtoupper($paymentStatus);
                                             $statusText = 'Status pesanan: ' . $orderStatus;
@@ -102,7 +106,7 @@
                                         $canViewDetail  = in_array($orderStatus, ['pending', 'processing', 'production', 'ready_to_ship']);
                                         $isCompleted    = ($orderStatus === 'completed');
                                         $isCancelled    = ($orderStatus === 'cancelled');
-                                    @endphp
+                                    @endphp                                    
 
                                     <tr>
                                         <td class="fw-bold">

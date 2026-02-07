@@ -89,10 +89,128 @@
     </main>
 
     {{-- Footer global --}}
-    <footer class="bg-black text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; {{ date('Y') }} Toko Mas Sumatra. All Rights Reserved.</p>
-            <small class="text-muted">Jl. Jendral Sudirman No. 123, Medan, Sumatra Utara</small>
+    <footer class="bg-dark text-light pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row gy-4">
+                {{-- Kolom 1: Tentang Toko --}}
+                <div class="col-md-3">
+                    <h6 class="text-uppercase small fw-bold mb-3">Tentang Toko Mas Sumatra</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1">
+                            <a href="{{ url('#tentang-toko') }}" class="text-decoration-none text-light-50">
+                                Profil Singkat
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="{{ url('#katalog') }}" class="text-decoration-none text-light-50">
+                                Katalog Perhiasan
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="{{ url('#lokasi-kontak') }}" class="text-decoration-none text-light-50">
+                                Lokasi & Kontak
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="#" class="text-decoration-none text-light-50">
+                                Layanan Custom
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {{-- Kolom 2: Informasi --}}
+                <div class="col-md-3">
+                    <h6 class="text-uppercase small fw-bold mb-3">Informasi</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1">
+                            <a href="#" class="text-decoration-none text-light-50">
+                                Syarat & Ketentuan
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="#" class="text-decoration-none text-light-50">
+                                Kebijakan Privasi
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="#" class="text-decoration-none text-light-50">
+                                Pertanyaan yang Sering Diajukan
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {{-- Kolom 3: Ikuti Kami / “Feel the Experience” --}}
+                <div class="col-md-3">
+                    <h6 class="text-uppercase small fw-bold mb-3">Ikuti Kami</h6>
+                    <p class="small text-light-50 mb-2">
+                        Dapatkan informasi promo dan koleksi terbaru Toko Mas Sumatra.
+                    </p>
+                    <div class="d-flex gap-2 mb-3">
+                        {{-- GANTI # DENGAN LINK SOSIAL MEDIA ASLI --}}
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                            <i class="bi bi-instagram me-1"></i> Instagram
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                            <i class="bi bi-facebook me-1"></i> Facebook
+                        </a>
+                    </div>
+                    {{-- Jika suatu saat punya aplikasi mobile, bisa ganti jadi badge Play Store / App Store --}}
+                    <p class="small text-light-50 mb-1">Ingin pengalaman yang lebih personal?</p>
+                    <p class="small text-light-50 mb-0">
+                        Segera hadir aplikasi Toko Mas Sumatra untuk kemudahan berbelanja emas dari rumah.
+                    </p>
+                </div>
+
+                {{-- Kolom 4: Kontak & Legal --}}
+                <div class="col-md-3">
+                    <h6 class="text-uppercase small fw-bold mb-3">Kontak & Legal</h6>
+                    <p class="small mb-1">
+                        <strong>Toko Mas Sumatra</strong><br>
+                        {{-- GANTI DENGAN ALAMAT SINGKAT --}}
+                        <span class="text-light-50">
+                            [Alamat singkat toko Anda]
+                        </span>
+                    </p>
+                    <p class="small mb-1">
+                        <span class="text-light-50">Email:</span><br>
+                        <a href="mailto:info@tokomassumatra.com" class="text-decoration-none text-light-50">
+                            info@tokomassumatra.com
+                        </a>
+                    </p>
+                    <p class="small mb-1">
+                        <span class="text-light-50">WhatsApp:</span><br>
+                        <a href="https://wa.me/6281234567890" target="_blank" class="text-decoration-none text-light-50 fw-semibold">
+                            +62 812-3456-7890
+                        </a>
+                    </p>
+                    <p class="small text-light-50 mb-0">
+                        Terdaftar dan diawasi oleh otoritas terkait sesuai ketentuan perdagangan emas yang berlaku.
+                    </p>
+                </div>
+            </div>
+
+            <hr class="border-secondary border-opacity-50 my-4">
+
+            {{-- Baris bawah: marketplace / hak cipta --}}
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="small text-light-50 mb-1">Juga tersedia di:</p>
+                    {{-- Jika belum ada, bisa dibiarkan placeholder --}}
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <span class="small text-light-50">Tokopedia</span>
+                        <span class="small text-light-50">Shopee</span>
+                        <span class="small text-light-50">Blibli</span>
+                        {{-- Nanti bisa diganti logo SVG/PNG --}}
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <p class="small text-light-50 mb-0">
+                        &copy; {{ date('Y') }} Toko Mas Sumatra. Seluruh hak cipta dilindungi.
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
 
