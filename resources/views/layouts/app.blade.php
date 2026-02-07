@@ -151,6 +151,7 @@
             </div>
         </div>
     </nav>
+    
     {{-- Konten utama --}}
     <main>
         @yield('content')
