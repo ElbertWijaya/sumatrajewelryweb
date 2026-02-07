@@ -58,7 +58,7 @@
                         Kami berkomitmen menyediakan emas berkualitas dengan harga yang jelas dan wajar, 
                         ditunjang layanan konsultasi ramah serta proses transaksi yang aman dan nyaman.
                     </p>
-                    <ul class="list-unstyled mb-0">
+                    <ul class="list-unstyled mb-3">
                         <li class="mb-2">
                             <i class="bi bi-check-circle-fill text-success me-2"></i>
                             Emas bersertifikat dengan kadar terukur.
@@ -72,6 +72,10 @@
                             Layanan buyback dan penyesuaian desain tertentu.
                         </li>
                     </ul>
+                    {{-- Link ke halaman Tentang Toko lengkap --}}
+                    <a href="{{ route('about.store') }}" class="small fw-semibold text-decoration-none">
+                        Baca cerita lengkap tentang Toko Mas Sumatra <i class="bi bi-arrow-right-short"></i>
+                    </a>
                 </div>
                 <div class="col-md-6">
                     <div class="border rounded-3 p-4 bg-white shadow-sm h-100">
@@ -123,7 +127,7 @@
         </div>
     </div>
 
-    {{-- Lokasi & Kontak --}}
+    {{-- Lokasi & Kontak (ringkasan, halaman lengkap di /lokasi-kontak) --}}
     <div class="py-5" id="lokasi-kontak">
         <div class="container">
             <div class="text-center mb-4">
@@ -141,7 +145,6 @@
                             <i class="bi bi-geo-alt-fill text-warning me-2"></i>
                             Alamat Toko
                         </h5>
-                        {{-- GANTI TEKS BERIKUT DENGAN ALAMAT TOKO ANDA --}}
                         <p class="mb-1 fw-semibold">
                             Toko Mas Sumatra
                         </p>
@@ -164,7 +167,6 @@
                             <i class="bi bi-telephone-fill text-warning me-2"></i>
                             Kontak & Pemesanan
                         </h5>
-                        {{-- GANTI NOMOR & LINK BERIKUT DENGAN DATA NYATA --}}
                         <p class="mb-2">
                             <strong>Telepon / WhatsApp:</strong><br>
                             <a href="https://wa.me/6282164836268" target="_blank" class="text-decoration-none">
@@ -181,7 +183,6 @@
                             Untuk pemesanan custom, Anda dapat menghubungi kami terlebih dahulu 
                             melalui WhatsApp untuk konsultasi desain, estimasi harga, dan waktu pengerjaan.
                         </p>
-                        {{-- OPSIONAL: tombol CTA --}}
                         <div class="d-flex flex-wrap gap-2">
                             <a href="https://wa.me/6282164836268" target="_blank" class="btn btn-success btn-sm">
                                 <i class="bi bi-whatsapp me-1"></i> Chat via WhatsApp
@@ -189,12 +190,13 @@
                             <a href="#katalog" class="btn btn-outline-dark btn-sm">
                                 Lihat Koleksi di Website
                             </a>
+                            <a href="{{ route('store.locations') }}" class="btn btn-outline-secondary btn-sm">
+                                Lihat Detail Lokasi
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- OPSIONAL: embed maps nantinya bisa ditambahkan di sini --}}
         </div>
     </div>
 

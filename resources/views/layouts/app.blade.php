@@ -24,7 +24,7 @@
         /* Navbar */
         .navbar { padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-        /* Hero Section (bisa dipakai di home) */
+        /* Hero Section */
         .hero-section {
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                 url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=1920&q=80');
@@ -61,7 +61,7 @@
 </head>
 <body>
 
-    {{-- Navbar global sederhana, bisa dikembangkan nanti --}}
+    {{-- Navbar global --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
             <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">Toko Mas Sumatra</a>
@@ -74,9 +74,9 @@
                         <a class="nav-link @yield('nav_home_active')" href="{{ route('home') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#katalog">Koleksi</a>
+                        <a class="nav-link" href="{{ route('home') }}#katalog">Koleksi</a>
                     </li>
-                    {{-- Nanti kita bisa pindahkan logic Auth ke sini kalau mau --}}
+                    {{-- Tambahan kanan navbar --}}
                     @yield('navbar_right')
                 </ul>
             </div>
@@ -97,22 +97,22 @@
                     <h6 class="text-uppercase small fw-bold mb-3">Tentang Toko Mas Sumatra</h6>
                     <ul class="list-unstyled small mb-0">
                         <li class="mb-1">
-                            <a href="{{ url('#tentang-toko') }}" class="text-decoration-none text-light-50">
+                            <a href="{{ route('about.store') }}" class="text-decoration-none text-light-50">
                                 Profil Singkat
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="{{ url('#katalog') }}" class="text-decoration-none text-light-50">
+                            <a href="{{ route('home') }}#katalog" class="text-decoration-none text-light-50">
                                 Katalog Perhiasan
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="{{ url('#lokasi-kontak') }}" class="text-decoration-none text-light-50">
+                            <a href="{{ route('store.locations') }}" class="text-decoration-none text-light-50">
                                 Lokasi & Kontak
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="#" class="text-decoration-none text-light-50">
+                            <a href="{{ route('about.store') }}#custom" class="text-decoration-none text-light-50">
                                 Layanan Custom
                             </a>
                         </li>
@@ -141,7 +141,7 @@
                     </ul>
                 </div>
 
-                {{-- Kolom 3: Ikuti Kami / “Feel the Experience” --}}
+                {{-- Kolom 3: Ikuti Kami --}}
                 <div class="col-md-3">
                     <h6 class="text-uppercase small fw-bold mb-3">Ikuti Kami</h6>
                     <p class="small text-light-50 mb-2">
@@ -156,7 +156,6 @@
                             <i class="bi bi-facebook me-1"></i> Facebook
                         </a>
                     </div>
-                    {{-- Jika suatu saat punya aplikasi mobile, bisa ganti jadi badge Play Store / App Store --}}
                     <p class="small text-light-50 mb-1">Ingin pengalaman yang lebih personal?</p>
                     <p class="small text-light-50 mb-0">
                         Segera hadir aplikasi Toko Mas Sumatra untuk kemudahan berbelanja emas dari rumah.
@@ -168,7 +167,6 @@
                     <h6 class="text-uppercase small fw-bold mb-3">Kontak & Legal</h6>
                     <p class="small mb-1">
                         <strong>Toko Mas Sumatra</strong><br>
-                        {{-- GANTI DENGAN ALAMAT SINGKAT --}}
                         <span class="text-light-50">
                             [Alamat singkat toko Anda]
                         </span>
@@ -193,16 +191,14 @@
 
             <hr class="border-secondary border-opacity-50 my-4">
 
-            {{-- Baris bawah: marketplace / hak cipta --}}
+            {{-- Baris bawah --}}
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <p class="small text-light-50 mb-1">Juga tersedia di:</p>
-                    {{-- Jika belum ada, bisa dibiarkan placeholder --}}
                     <div class="d-flex flex-wrap align-items-center gap-3">
                         <span class="small text-light-50">Tokopedia</span>
                         <span class="small text-light-50">Shopee</span>
                         <span class="small text-light-50">Blibli</span>
-                        {{-- Nanti bisa diganti logo SVG/PNG --}}
                     </div>
                 </div>
                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
