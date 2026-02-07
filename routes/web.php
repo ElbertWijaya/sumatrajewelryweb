@@ -9,6 +9,11 @@ use App\Http\Controllers\LoginController; // <--- PENTING: Tambahkan ini
 
 // --- HALAMAN DEPAN ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
+// Halaman statis informasi toko
+Route::view('/tentang-toko', 'pages.about')->name('about.store');
+// Halaman statis lokasi & kontak
+Route::view('/lokasi-kontak', 'pages.locations')->name('store.locations');
+// Halaman detail produk
 Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.detail');
 
 // --- SISTEM AUTENTIKASI (LOGIN & LOGOUT) ---
