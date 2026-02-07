@@ -89,18 +89,18 @@ class AdminController extends Controller
     {
         $order = Order::with('items.product')->findOrFail($id);
 
-        // A. Ubah Status Pesanan jadi PAID
+        // A. Ubah Status Pesanan: pembayaran lunas, pesanan masuk tahap proses oleh toko
         $order->update([
             'payment_status' => 'paid',
-            'order_status' => 'processing' // Sedang dikemas
+            'order_status'   => 'processing', // Sedang diproses (cek stok / persiapan / antrian produksi)
         ]);
 
-        // B. Ubah Status Barang jadi SOLD
-        foreach($order->items as $item) {
+        // B. Ubah Status Barang jadi SOLD (stok fisik dianggap terjual)
+        foreach ($order->items as $item) {
             $item->product->update(['stock_status' => 'sold']);
         }
 
-        return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Stok produk resmi terjual.');
+        return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Pesanan sedang diproses oleh toko.');
     }
 
     #Input Nomor Resi dan Ubah Status Pesanan jadi DIKIRIM

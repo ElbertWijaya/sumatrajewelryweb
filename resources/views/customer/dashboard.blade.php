@@ -62,23 +62,29 @@
                                             } else {
                                                 $statusText = 'Menunggu pembayaran';
                                             }
-                                        } elseif ($paymentStatus === 'paid') {
+                                        @elseif ($paymentStatus === 'paid') {
                                             $badgeClass = 'bg-success';
+
                                             if ($orderStatus === 'processing') {
-                                                $badgeText  = 'DIPROSES';
-                                                $statusText = 'Sedang dikemas';
+                                                $badgeText  = 'SEDANG DIPROSES';
+                                                $statusText = 'Pesanan sedang diproses oleh toko.';
                                             } elseif ($orderStatus === 'production') {
-                                                $badgeText  = 'DIPROSES';
-                                                $statusText = 'Sedang diproduksi';
+                                                $badgeText  = 'DALAM PRODUKSI';
+                                                $statusText = 'Pesanan sedang diproduksi.';
                                             } elseif ($orderStatus === 'ready_to_ship') {
                                                 $badgeText  = 'DIKIRIM';
-                                                $statusText = 'Sedang dikirim ke alamat Anda';
+                                                $statusText = 'Pesanan sedang dikirim ke alamat Anda.';
                                             } elseif ($orderStatus === 'completed') {
                                                 $badgeText  = 'SELESAI';
-                                                $statusText = 'Pesanan telah diterima';
+                                                $statusText = 'Pesanan telah diterima.';
+                                            } elseif ($orderStatus === 'cancelled') {
+                                                $badgeClass = 'bg-secondary';
+                                                $badgeText  = 'DIBATALKAN';
+                                                $statusText = 'Pesanan dibatalkan.';
                                             } else {
+                                                // fallback jika ada status lain
                                                 $badgeText  = 'DIPROSES';
-                                                $statusText = 'Sedang diproses';
+                                                $statusText = 'Pesanan sedang diproses.';
                                             }
                                         } elseif ($paymentStatus === 'failed') {
                                             $badgeClass = 'bg-danger';
