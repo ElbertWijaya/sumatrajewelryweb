@@ -36,7 +36,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label">Nama Lengkap</label>
-                                <input type="text" name="name" class="form-control" required placeholder="Contoh: Elbert Wijaya">
+                                <input type="text" name="name" class="form-control" required placeholder="Contoh: Nama customer...">
                             </div>
                             <div class="col">
                                 <label class="form-label">Nomor WhatsApp</label>

@@ -44,7 +44,7 @@
     </div>
 
     {{-- Tentang Toko --}}
-    <div class="py-5 bg-light">
+    <div class="py-5 bg-light" id="tentang-toko">
         <div class="container">
             <div class="row align-items-center g-4">
                 <div class="col-md-6">
@@ -124,7 +124,7 @@
     </div>
 
     {{-- Lokasi & Kontak --}}
-    <div class="py-5">
+    <div class="py-5" id="lokasi-kontak">
         <div class="container">
             <div class="text-center mb-4">
                 <h2 class="fw-bold">Lokasi & Kontak</h2>
@@ -167,8 +167,8 @@
                         {{-- GANTI NOMOR & LINK BERIKUT DENGAN DATA NYATA --}}
                         <p class="mb-2">
                             <strong>Telepon / WhatsApp:</strong><br>
-                            <a href="https://wa.me/6281234567890" target="_blank" class="text-decoration-none">
-                                +62 812-3456-7890
+                            <a href="https://wa.me/6282164836268" target="_blank" class="text-decoration-none">
+                                +62 821-6483-6268
                             </a>
                         </p>
                         <p class="mb-3">
@@ -183,7 +183,7 @@
                         </p>
                         {{-- OPSIONAL: tombol CTA --}}
                         <div class="d-flex flex-wrap gap-2">
-                            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success btn-sm">
+                            <a href="https://wa.me/6282164836268" target="_blank" class="btn btn-success btn-sm">
                                 <i class="bi bi-whatsapp me-1"></i> Chat via WhatsApp
                             </a>
                             <a href="#katalog" class="btn btn-outline-dark btn-sm">
