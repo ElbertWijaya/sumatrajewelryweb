@@ -21,18 +21,41 @@
 
         /* Navbar */
         .navbar {
-            padding: 1rem 0.5rem;        /* sedikit lebih tinggi */
+            padding: 1rem 0.75rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
         .navbar-nav .nav-link {
-            font-size: 0.9rem;           /* lebih kecil, minimalis */
-            text-transform: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #ffffff;
         }
 
         /* Language switch */
         .lang-switch a {
             font-size: 0.8rem;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #ffffff; /* default putih */
+        }
+        .lang-switch a.active {
+            color: #c5a059; /* emas ketika terpilih */
+        }
+
+        /* Ikon kanan – beri jarak lebih lega */
+        .nav-icons {
+            gap: 3rem; /* jarak antar ikon */
+        }
+        .nav-icons a {
+            color: rgba(255,255,255,0.75);
+        }
+        .nav-icons a:hover {
+            color: #c5a059; /* emas saat hover */
         }
 
         .hero-section {
@@ -72,22 +95,26 @@
     {{-- Navbar dengan 3 area: kiri (menu), tengah (logo), kanan (ikon + auth) --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
-            {{-- Language switch di pojok kiri atas --}}
-            <div class="lang-switch d-none d-lg-flex align-items-center me-3">
-                {{-- TODO: ganti href ke route perubahan bahasa jika sudah ada --}}
-                <a href="#" class="text-light-50 text-decoration-none me-1">ID</a>
-                <span class="text-light-50">|</span>
-                <a href="#" class="text-light-50 text-decoration-none ms-1">EN</a>
-            </div>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <div class="row w-100 align-items-center">
-                    {{-- Kiri: menu teks --}}
-                    <div class="col-lg-4 d-flex justify-content-center justify-content-lg-start mb-2 mb-lg-0">
+                    {{-- Kiri: bahasa (baris atas) + menu (baris bawah) --}}
+                    <div class="col-lg-4 mb-2 mb-lg-0">
+                        {{-- Baris bahasa --}}
+                        <div class="lang-switch d-flex align-items-center mb-1">
+                            @php
+                                $currentLocale = app()->getLocale() ?? 'id';
+                            @endphp
+                            {{-- TODO: ganti href ke route perubahan bahasa jika sudah siap --}}
+                            <a href="#" class="text-decoration-none me-1 {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
+                            <span class="text-light-50">|</span>
+                            <a href="#" class="text-decoration-none ms-1 {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
+                        </div>
+
+                        {{-- Baris menu --}}
                         <ul class="navbar-nav gap-lg-2">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}" href="{{ route('about.store') }}">
@@ -120,38 +147,58 @@
                     </div>
 
                     {{-- Kanan: ikon + auth --}}
-                    <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
-                        <div class="d-flex align-items-center gap-3">
-                            {{-- Ikon minimalis (sementara non-aktif / placeholder) --}}
-                            <a href="#" class="text-light-50">
-                                <i class="bi bi-heart fs-5"></i>
-                            </a>
-                            <a href="#" class="text-light-50">
-                                <i class="bi bi-bag fs-5"></i>
-                            </a>
-                            <a href="#" class="text-light-50">
-                                <i class="bi bi-bell fs-5"></i>
-                            </a>
+                        <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
+                            <div class="d-flex align-items-center nav-icons">
+                                {{-- Ikon search (placeholder, belum ada fungsi) --}}
+                                <a href="#">
+                                    <i class="bi bi-search fs-8"></i>
+                                </a>
 
-                            {{-- Tombol Login/Register atau Dashboard --}}
-                            @yield('navbar_right')
+                                {{-- Favorite --}}
+                                <a href="#">
+                                    <i class="bi bi-heart fs-8"></i>
+                                </a>
+
+                                {{-- Wishlist / Tas --}}
+                                <a href="#">
+                                    <i class="bi bi-bag fs-8"></i>
+                                </a>
+
+                                {{-- User / Dashboard --}}
+                                <div class="d-flex align-items-center">
+                                    @if(Auth::check())
+                                        <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}"
+                                        class="d-flex align-items-center text-decoration-none"
+                                        style="color: rgba(255,255,255,0.8);">
+                                            <i class="bi bi-person fs-5 me-1"></i>
+                                            <span class="d-none d-md-inline small">Dashboard</span>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('login') }}"
+                                        class="d-flex align-items-center text-decoration-none"
+                                        style="color: rgba(255,255,255,0.8);">
+                                            <i class="bi bi-person fs-5 me-1"></i>
+                                            <span class="d-none d-md-inline small">Login / Register</span>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
 
-                {{-- Language switch ditampilkan di mobile dalam collapsible --}}
+                {{-- Mobile: bahasa tampil di bawah menu --}}
                 <div class="d-lg-none mt-3">
                     <div class="lang-switch d-flex align-items-center">
                         <span class="text-light-50 small me-2">Bahasa:</span>
-                        <a href="#" class="text-light-50 text-decoration-none me-1 small">ID</a>
+                        <a href="#" class="text-decoration-none me-1 small {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
                         <span class="text-light-50 small">|</span>
-                        <a href="#" class="text-light-50 text-decoration-none ms-1 small">EN</a>
+                        <a href="#" class="text-decoration-none ms-1 small {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-    
+
     {{-- Konten utama --}}
     <main>
         @yield('content')
