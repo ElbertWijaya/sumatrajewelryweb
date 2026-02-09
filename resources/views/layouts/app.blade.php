@@ -165,6 +165,65 @@
         }
 
         {{-- =========================================================
+           SLIDER KOLEKSI (Koleksi Berdasarkan Tema)
+           ========================================================= --}}
+        .collection-slider-wrapper {
+            position: relative;
+        }
+
+        /* Container horizontal scroll */
+        .collection-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 1rem;
+            padding-bottom: 8px;
+        }
+
+        /* Sembunyikan scrollbar visual */
+        .collection-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .collection-slider {
+            -ms-overflow-style: none;  /* IE */
+            scrollbar-width: none;     /* Firefox */
+        }
+
+        /* Item: 3 kartu per view di desktop, proporsional saat zoom */
+        /* Setiap item SELALU 1/3 lebar container di segala ukuran layar */
+        .collection-slider-item {
+            flex: 0 0 calc(100% / 3);
+            max-width: calc(100% / 3);
+        }
+
+        /* Tombol panah */
+        .collection-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.9);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .collection-slider-arrow:hover {
+            background-color: #f3e3bf;
+        }
+        .collection-slider-arrow-left {
+            left: -18px;
+        }
+        .collection-slider-arrow-right {
+            right: -18px;
+        }
+
+        {{-- =========================================================
            SLOT TAMBAHAN STYLE PER HALAMAN (opsional)
            ========================================================= --}}
         @yield('styles')
@@ -172,100 +231,60 @@
 </head>
 <body>
 
-    {{-- =========================================================
-       NAVBAR DENGAN 3 AREA: KIRI (BAHASA + MENU), TENGAH (LOGO),
-       KANAN (IKON SEARCH / FAVORITE / BAG / USER)
-       ========================================================= --}}
+    {{-- NAVBAR --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
-            {{-- Tombol toggle untuk tampilan mobile --}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <div class="row w-100 align-items-center">
-                    {{-- ======================== KIRI ======================== --}}
-                    {{-- Baris bahasa + baris menu utama --}}
+                    {{-- Kiri: Bahasa + Menu --}}
                     <div class="col-lg-4 mb-2 mb-lg-0">
-                        {{-- Baris: pilihan bahasa (ID | EN) --}}
                         <div class="lang-switch d-flex align-items-center mb-1">
                             @php
-                                // Bahasa aktif aplikasi (default 'id' jika belum diset)
                                 $currentLocale = app()->getLocale() ?? 'id';
                             @endphp
-                            {{-- TODO: ubah href ke route pengganti bahasa jika fitur sudah dibuat --}}
-                            <a href="#"
-                               class="text-decoration-none me-1 {{ $currentLocale === 'id' ? 'active' : '' }}">
-                                ID
-                            </a>
+                            <a href="#" class="text-decoration-none me-1 {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
                             <span class="text-light-50">|</span>
-                            <a href="#"
-                               class="text-decoration-none ms-1 {{ $currentLocale === 'en' ? 'active' : '' }}">
-                                EN
-                            </a>
+                            <a href="#" class="text-decoration-none ms-1 {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
                         </div>
 
-                        {{-- Baris: menu utama (Tentang, Lokasi, Koleksi, Artikel) --}}
                         <ul class="navbar-nav gap-lg-2">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}"
-                                   href="{{ route('about.store') }}">
-                                    Tentang Kami
-                                </a>
+                                   href="{{ route('about.store') }}">Tentang Kami</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}"
-                                   href="{{ route('store.locations') }}">
-                                    Lokasi & Kontak
-                                </a>
+                                   href="{{ route('store.locations') }}">Lokasi & Kontak</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"
-                                   href="{{ route('home') }}#katalog">
-                                    Koleksi Kami
-                                </a>
+                                <a class="nav-link" href="{{ route('home') }}#katalog">Koleksi Kami</a>
                             </li>
                             <li class="nav-item">
-                                {{-- Belum ada halaman artikel, sementara tetap '#' --}}
-                                <a class="nav-link" href="#">
-                                    Artikel
-                                </a>
+                                <a class="nav-link" href="#">Artikel</a>
                             </li>
                         </ul>
                     </div>
 
-                    {{-- ======================== TENGAH ======================== --}}
-                    {{-- Logo Toko Mas Sumatra --}}
+                    {{-- Tengah: Logo --}}
                     <div class="col-lg-4 d-flex justify-content-center mb-2 mb-lg-0">
                         <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">
                             Toko Mas Sumatra
                         </a>
                     </div>
 
-                    {{-- ======================== KANAN ======================== --}}
-                    {{-- Ikon (search, favorite, bag) + user / dashboard --}}
+                    {{-- Kanan: Ikon --}}
                     <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
                         <div class="d-flex align-items-center nav-icons">
-                            {{-- Ikon search (sementara belum punya fungsi khusus) --}}
-                            <a href="#">
-                                <i class="bi bi-search fs-6"></i>
-                            </a>
+                            <a href="#"><i class="bi bi-search fs-6"></i></a>
+                            <a href="#"><i class="bi bi-heart fs-6"></i></a>
+                            <a href="#"><i class="bi bi-bag fs-6"></i></a>
 
-                            {{-- Ikon favorite --}}
-                            <a href="#">
-                                <i class="bi bi-heart fs-6"></i>
-                            </a>
-
-                            {{-- Ikon tas / wishlist --}}
-                            <a href="#">
-                                <i class="bi bi-bag fs-6"></i>
-                            </a>
-
-                            {{-- Ikon user: login / dashboard --}}
                             <div class="d-flex align-items-center">
                                 @if(Auth::check())
-                                    {{-- Jika sudah login: arahkan ke dashboard (admin/customer) --}}
                                     <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}"
                                        class="d-flex align-items-center text-decoration-none"
                                        style="color: rgba(255,255,255,0.8);">
@@ -273,7 +292,6 @@
                                         <span class="d-none d-md-inline small">Dashboard</span>
                                     </a>
                                 @else
-                                    {{-- Jika belum login: arahkan ke halaman login/register --}}
                                     <a href="{{ route('login') }}"
                                        class="d-flex align-items-center text-decoration-none"
                                        style="color: rgba(255,255,255,0.8);">
@@ -286,88 +304,50 @@
                     </div>
                 </div>
 
-                {{-- Versi mobile: bahasa muncul di bawah menu --}}
+                {{-- Mobile: bahasa di bawah --}}
                 <div class="d-lg-none mt-3">
                     <div class="lang-switch d-flex align-items-center">
                         <span class="text-light-50 small me-2">Bahasa:</span>
-                        <a href="#"
-                           class="text-decoration-none me-1 small {{ $currentLocale === 'id' ? 'active' : '' }}">
-                            ID
-                        </a>
+                        <a href="#" class="text-decoration-none me-1 small {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
                         <span class="text-light-50 small">|</span>
-                        <a href="#"
-                           class="text-decoration-none ms-1 small {{ $currentLocale === 'en' ? 'active' : '' }}">
-                            EN
-                        </a>
+                        <a href="#" class="text-decoration-none ms-1 small {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    {{-- =========================================================
-       KONTEN UTAMA SETIAP HALAMAN
-       ========================================================= --}}
+    {{-- KONTEN UTAMA --}}
     <main>
         @yield('content')
     </main>
 
-    {{-- =========================================================
-       FOOTER GLOBAL
-       ========================================================= --}}
+    {{-- FOOTER --}}
     <footer class="bg-dark text-light pt-5 pb-3 mt-5">
         <div class="container">
             <div class="row gy-4">
-                {{-- Kolom 1: Tentang Toko --}}
+                {{-- Kolom 1 --}}
                 <div class="col-md-3">
                     <h6 class="text-uppercase small fw-bold mb-3">Tentang Toko Mas Sumatra</h6>
                     <ul class="list-unstyled small mb-0">
-                        <li class="mb-1">
-                            <a href="{{ route('about.store') }}" class="text-decoration-none text-light-50">
-                                Profil Singkat
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a href="{{ route('home') }}#katalog" class="text-decoration-none text-light-50">
-                                Katalog Perhiasan
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a href="{{ route('store.locations') }}" class="text-decoration-none text-light-50">
-                                Lokasi & Kontak
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a href="{{ route('about.store') }}#custom" class="text-decoration-none text-light-50">
-                                Layanan Custom
-                            </a>
-                        </li>
+                        <li class="mb-1"><a href="{{ route('about.store') }}" class="text-decoration-none text-light-50">Profil Singkat</a></li>
+                        <li class="mb-1"><a href="{{ route('home') }}#katalog" class="text-decoration-none text-light-50">Katalog Perhiasan</a></li>
+                        <li class="mb-1"><a href="{{ route('store.locations') }}" class="text-decoration-none text-light-50">Lokasi & Kontak</a></li>
+                        <li class="mb-1"><a href="{{ route('about.store') }}#custom" class="text-decoration-none text-light-50">Layanan Custom</a></li>
                     </ul>
                 </div>
 
-                {{-- Kolom 2: Informasi --}}
+                {{-- Kolom 2 --}}
                 <div class="col-md-3">
                     <h6 class="text-uppercase small fw-bold mb-3">Informasi</h6>
                     <ul class="list-unstyled small mb-0">
-                        <li class="mb-1">
-                            <a href="#" class="text-decoration-none text-light-50">
-                                Syarat & Ketentuan
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a href="#" class="text-decoration-none text-light-50">
-                                Kebijakan Privasi
-                            </a>
-                        </li>
-                        <li class="mb-1">
-                            <a href="#" class="text-decoration-none text-light-50">
-                                Pertanyaan yang Sering Diajukan
-                            </a>
-                        </li>
+                        <li class="mb-1"><a href="#" class="text-decoration-none text-light-50">Syarat & Ketentuan</a></li>
+                        <li class="mb-1"><a href="#" class="text-decoration-none text-light-50">Kebijakan Privasi</a></li>
+                        <li class="mb-1"><a href="#" class="text-decoration-none text-light-50">Pertanyaan yang Sering Diajukan</a></li>
                     </ul>
                 </div>
 
-                {{-- Kolom 3: Ikuti Kami --}}
+                {{-- Kolom 3 --}}
                 <div class="col-md-3">
                     <h6 class="text-uppercase small fw-bold mb-3">Ikuti Kami</h6>
                     <p class="small text-light-50 mb-2">
@@ -387,14 +367,12 @@
                     </p>
                 </div>
 
-                {{-- Kolom 4: Kontak & Legal --}}
+                {{-- Kolom 4 --}}
                 <div class="col-md-3">
                     <h6 class="text-uppercase small fw-bold mb-3">Kontak & Legal</h6>
                     <p class="small mb-1">
                         <strong>Toko Mas Sumatra</strong><br>
-                        <span class="text-light-50">
-                            [Alamat singkat toko Anda]
-                        </span>
+                        <span class="text-light-50">[Alamat singkat toko Anda]</span>
                     </p>
                     <p class="small mb-1">
                         <span class="text-light-50">Email:</span><br>
@@ -437,7 +415,28 @@
     {{-- JS global --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- Slot script khusus per halaman --}}
+    {{-- Slider sederhana untuk "Koleksi Berdasarkan Tema" --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.getElementById('collectionSlider');
+            const prevBtn = document.getElementById('collectionPrev');
+            const nextBtn = document.getElementById('collectionNext');
+
+            if (slider && prevBtn && nextBtn) {
+                const scrollAmount = slider.clientWidth; // geser 3 kartu sekaligus
+
+                prevBtn.addEventListener('click', function () {
+                    slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', function () {
+                    slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+
+    {{-- SLOT TAMBAHAN SCRIPT PER HALAMAN (opsional) --}}
     @yield('scripts')
 </body>
 </html>
