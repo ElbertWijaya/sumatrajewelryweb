@@ -242,7 +242,7 @@
                     $latestGalleryProducts = $products->shuffle()->take(10);
                 @endphp
 
-                <div class="row g-4">
+                <div class="row g-2">
                     @forelse($latestGalleryProducts as $product)
                         @php
                             $hargaDasar = ($product->karat_type == '24K')
