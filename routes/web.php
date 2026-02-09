@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\LoginController; // <--- PENTING: Tambahkan ini
@@ -15,6 +16,9 @@ Route::view('/tentang-toko', 'pages.about')->name('about.store');
 Route::view('/lokasi-kontak', 'pages.locations')->name('store.locations');
 // Halaman detail produk
 Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.detail');
+
+// --- HALAMAN UTAMA PRODUK ---
+Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
 
 // --- SISTEM AUTENTIKASI (LOGIN & LOGOUT) ---
 // 1. Halaman Portal Login
