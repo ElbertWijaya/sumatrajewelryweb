@@ -7,10 +7,15 @@
 
     {{-- CSS & Fonts global --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{-- Font utama: Playfair Display (judul/logo), Lato (teks) --}}
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <style>
+        {{-- =========================================================
+           STYLE DASAR APLIKASI
+           ========================================================= --}}
         body { font-family: 'Lato', sans-serif; background-color: #f8f9fa; }
         h1, h2, h3, .navbar-brand { font-family: 'Playfair Display', serif; }
 
@@ -19,12 +24,15 @@
         .btn-gold { background-color: #c5a059; color: white; border: none; }
         .btn-gold:hover { background-color: #b08d4b; color: white; }
 
-        /* Navbar */
+        {{-- =========================================================
+           NAVBAR (HEADER) GLOBAL
+           ========================================================= --}}
         .navbar {
-            padding: 1rem 0.75rem;
+            padding: 1rem 0.75rem;                 /* tinggi navbar */
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        /* Link menu navbar (kiri) */
         .navbar-nav .nav-link {
             font-size: 0.9rem;
             font-weight: 400;
@@ -36,31 +44,35 @@
             color: #ffffff;
         }
 
-        /* Language switch */
+        /* Switch bahasa (ID | EN) */
         .lang-switch a {
             font-size: 0.8rem;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            color: #ffffff; /* default putih */
+            color: #ffffff;        /* default putih */
         }
         .lang-switch a.active {
-            color: #c5a059; /* emas ketika terpilih */
+            color: #c5a059;        /* emas ketika terpilih */
         }
 
-        /* Ikon kanan – beri jarak lebih lega */
+        /* Ikon di sisi kanan navbar */
         .nav-icons {
-            gap: 3rem; /* jarak antar ikon */
+            gap: 3rem;             /* jarak antar ikon kanan */
         }
         .nav-icons a {
             color: rgba(255,255,255,0.75);
         }
         .nav-icons a:hover {
-            color: #c5a059; /* emas saat hover */
+            color: #c5a059;        /* emas saat hover */
         }
 
+        {{-- =========================================================
+           HERO, TICKER, DAN KARTU PRODUK
+           ========================================================= --}}
+        /* Background hero di homepage */
         .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
             color: white;
@@ -68,8 +80,15 @@
             text-align: center;
         }
 
-        .price-ticker { background-color: #c5a059; color: white; padding: 10px 0; font-weight: bold; }
+        /* Baris informasi harga emas (atas homepage) */
+        .price-ticker {
+            background-color: #c5a059;
+            color: white;
+            padding: 10px 0;
+            font-weight: bold;
+        }
 
+        /* Kartu produk di katalog */
         .product-card {
             border: none;
             transition: transform 0.3s;
@@ -78,60 +97,208 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
         .product-img {
             height: 250px;
             object-fit: cover;
             width: 100%;
             background-color: #eee;
         }
-        .price-tag { color: #c5a059; font-size: 1.2rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+        .price-tag {
+            color: #c5a059;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
 
+        {{-- =========================================================
+           BANNER KOLEKSI (KOTAK BESAR KOSONG)
+           ========================================================= --}}
+        /* Kontainer banner koleksi */
+        .collection-banner {
+            background: #f6f6f6;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .collection-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+        /* Area kotak gambar (kosong dulu, nanti bisa diisi background-image) */
+        .collection-banner-box {
+            width: 100%;
+            height: 500px;            /* ubah angka ini kalau ingin banner lebih tinggi/rendah */
+            background-color: #e9ecef;
+            background-size: cover;
+            background-position: center;
+        }
+        /* Bagian teks di bawah kotak gambar */
+        .collection-banner-body {
+            padding: 16px 18px 20px;
+            text-align: center;
+        }
+        /* Judul koleksi – dibuat lebih besar & mencolok */
+        .collection-banner-title {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .collection-banner-link {
+            font-size: 0.85rem;
+            color: #7b1b4a;           /* bisa diganti dengan warna brand lain */
+            text-decoration: none;
+        }
+        .collection-banner-link:hover {
+            text-decoration: underline;
+        }
+
+        {{-- =========================================================
+           SLIDER KOLEKSI (UNTUK "Koleksi Berdasarkan Tema")
+           ========================================================= --}}
+        .collection-slider-wrapper {
+            position: relative;
+        }
+
+        /* Container yang bisa discroll horizontal */
+        .collection-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 1.5rem;
+            padding-bottom: 8px;
+        }
+
+        /* Sembunyikan scrollbar di sebagian besar browser */
+        .collection-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .collection-slider {
+            -ms-overflow-style: none;  /* IE */
+            scrollbar-width: none;     /* Firefox */
+        }
+
+        /* Setiap item banner punya lebar tetap (3 item muat di layar besar) */
+        .collection-slider-item {
+            flex: 0 0 85%;   /* ±1 item per view (sedikit ruang di kiri/kanan) */
+            min-width: 320px;
+        }
+
+        @media (min-width: 1600px) {
+            .collection-slider-item {
+                flex: 0 0 48%;   /* layar super lebar → 2 kartu */
+            }
+        }
+
+        @media (max-width: 992px) {
+            .collection-slider-item {
+                flex: 0 0 70%; /* di tablet: 1–2 item per view */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .collection-slider-item {
+                flex: 0 0 85%; /* di hp kecil: 1 item penuh */
+            }
+        }
+
+        /* Tombol panah kiri/kanan slider */
+        .collection-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255,255,255,0.9);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .collection-slider-arrow:hover {
+            background-color: #f3e3bf;
+        }
+        .collection-slider-arrow-left {
+            left: -18px;
+        }
+        .collection-slider-arrow-right {
+            right: -18px;
+        }
+
+        {{-- =========================================================
+           SLOT TAMBAHAN STYLE PER HALAMAN (opsional)
+           ========================================================= --}}
         @yield('styles')
     </style>
 </head>
 <body>
 
-    {{-- Navbar dengan 3 area: kiri (menu), tengah (logo), kanan (ikon + auth) --}}
+    {{-- =========================================================
+       NAVBAR DENGAN 3 AREA: KIRI (BAHASA + MENU), TENGAH (LOGO),
+       KANAN (IKON SEARCH / FAVORITE / BAG / USER)
+       ========================================================= --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
         <div class="container">
+            {{-- Tombol toggle untuk tampilan mobile --}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <div class="row w-100 align-items-center">
-                    {{-- Kiri: bahasa (baris atas) + menu (baris bawah) --}}
+                    {{-- ======================== KIRI ======================== --}}
+                    {{-- Baris bahasa + baris menu utama --}}
                     <div class="col-lg-4 mb-2 mb-lg-0">
-                        {{-- Baris bahasa --}}
+                        {{-- Baris: pilihan bahasa (ID | EN) --}}
                         <div class="lang-switch d-flex align-items-center mb-1">
                             @php
+                                // Bahasa aktif aplikasi (default 'id' jika belum diset)
                                 $currentLocale = app()->getLocale() ?? 'id';
                             @endphp
-                            {{-- TODO: ganti href ke route perubahan bahasa jika sudah siap --}}
-                            <a href="#" class="text-decoration-none me-1 {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
+                            {{-- TODO: ubah href ke route pengganti bahasa jika fitur sudah dibuat --}}
+                            <a href="#"
+                               class="text-decoration-none me-1 {{ $currentLocale === 'id' ? 'active' : '' }}">
+                                ID
+                            </a>
                             <span class="text-light-50">|</span>
-                            <a href="#" class="text-decoration-none ms-1 {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
+                            <a href="#"
+                               class="text-decoration-none ms-1 {{ $currentLocale === 'en' ? 'active' : '' }}">
+                                EN
+                            </a>
                         </div>
 
-                        {{-- Baris menu --}}
+                        {{-- Baris: menu utama (Tentang, Lokasi, Koleksi, Artikel) --}}
                         <ul class="navbar-nav gap-lg-2">
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}" href="{{ route('about.store') }}">
+                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}"
+                                   href="{{ route('about.store') }}">
                                     Tentang Kami
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}" href="{{ route('store.locations') }}">
+                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}"
+                                   href="{{ route('store.locations') }}">
                                     Lokasi & Kontak
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home') }}#katalog">
+                                <a class="nav-link"
+                                   href="{{ route('home') }}#katalog">
                                     Koleksi Kami
                                 </a>
                             </li>
                             <li class="nav-item">
+                                {{-- Belum ada halaman artikel, sementara tetap '#' --}}
                                 <a class="nav-link" href="#">
                                     Artikel
                                 </a>
@@ -139,72 +306,86 @@
                         </ul>
                     </div>
 
-                    {{-- Tengah: logo --}}
+                    {{-- ======================== TENGAH ======================== --}}
+                    {{-- Logo Toko Mas Sumatra --}}
                     <div class="col-lg-4 d-flex justify-content-center mb-2 mb-lg-0">
                         <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">
                             Toko Mas Sumatra
                         </a>
                     </div>
 
-                    {{-- Kanan: ikon + auth --}}
-                        <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
-                            <div class="d-flex align-items-center nav-icons">
-                                {{-- Ikon search (placeholder, belum ada fungsi) --}}
-                                <a href="#">
-                                    <i class="bi bi-search fs-8"></i>
-                                </a>
+                    {{-- ======================== KANAN ======================== --}}
+                    {{-- Ikon (search, favorite, bag) + user / dashboard --}}
+                    <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
+                        <div class="d-flex align-items-center nav-icons">
+                            {{-- Ikon search (sementara belum punya fungsi khusus) --}}
+                            <a href="#">
+                                <i class="bi bi-search fs-6"></i>
+                            </a>
 
-                                {{-- Favorite --}}
-                                <a href="#">
-                                    <i class="bi bi-heart fs-8"></i>
-                                </a>
+                            {{-- Ikon favorite --}}
+                            <a href="#">
+                                <i class="bi bi-heart fs-6"></i>
+                            </a>
 
-                                {{-- Wishlist / Tas --}}
-                                <a href="#">
-                                    <i class="bi bi-bag fs-8"></i>
-                                </a>
+                            {{-- Ikon tas / wishlist --}}
+                            <a href="#">
+                                <i class="bi bi-bag fs-6"></i>
+                            </a>
 
-                                {{-- User / Dashboard --}}
-                                <div class="d-flex align-items-center">
-                                    @if(Auth::check())
-                                        <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}"
-                                        class="d-flex align-items-center text-decoration-none"
-                                        style="color: rgba(255,255,255,0.8);">
-                                            <i class="bi bi-person fs-5 me-1"></i>
-                                            <span class="d-none d-md-inline small">Dashboard</span>
-                                        </a>
-                                    @else
-                                        <a href="{{ route('login') }}"
-                                        class="d-flex align-items-center text-decoration-none"
-                                        style="color: rgba(255,255,255,0.8);">
-                                            <i class="bi bi-person fs-5 me-1"></i>
-                                            <span class="d-none d-md-inline small">Login / Register</span>
-                                        </a>
-                                    @endif
-                                </div>
+                            {{-- Ikon user: login / dashboard --}}
+                            <div class="d-flex align-items-center">
+                                @if(Auth::check())
+                                    {{-- Jika sudah login: arahkan ke dashboard (admin/customer) --}}
+                                    <a href="{{ Auth::user()->role == 'admin' ? url('/admin/dashboard') : route('customer.dashboard') }}"
+                                       class="d-flex align-items-center text-decoration-none"
+                                       style="color: rgba(255,255,255,0.8);">
+                                        <i class="bi bi-person fs-5 me-1"></i>
+                                        <span class="d-none d-md-inline small">Dashboard</span>
+                                    </a>
+                                @else
+                                    {{-- Jika belum login: arahkan ke halaman login/register --}}
+                                    <a href="{{ route('login') }}"
+                                       class="d-flex align-items-center text-decoration-none"
+                                       style="color: rgba(255,255,255,0.8);">
+                                        <i class="bi bi-person fs-5 me-1"></i>
+                                        <span class="d-none d-md-inline small">Login / Register</span>
+                                    </a>
+                                @endif
                             </div>
                         </div>
+                    </div>
                 </div>
 
-                {{-- Mobile: bahasa tampil di bawah menu --}}
+                {{-- Versi mobile: bahasa muncul di bawah menu --}}
                 <div class="d-lg-none mt-3">
                     <div class="lang-switch d-flex align-items-center">
                         <span class="text-light-50 small me-2">Bahasa:</span>
-                        <a href="#" class="text-decoration-none me-1 small {{ $currentLocale === 'id' ? 'active' : '' }}">ID</a>
+                        <a href="#"
+                           class="text-decoration-none me-1 small {{ $currentLocale === 'id' ? 'active' : '' }}">
+                            ID
+                        </a>
                         <span class="text-light-50 small">|</span>
-                        <a href="#" class="text-decoration-none ms-1 small {{ $currentLocale === 'en' ? 'active' : '' }}">EN</a>
+                        <a href="#"
+                           class="text-decoration-none ms-1 small {{ $currentLocale === 'en' ? 'active' : '' }}">
+                            EN
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    {{-- Konten utama --}}
+    {{-- =========================================================
+       KONTEN UTAMA SETIAP HALAMAN
+       ========================================================= --}}
     <main>
         @yield('content')
     </main>
 
-    {{-- Footer (tetap seperti sebelumnya dengan sedikit penyesuaian route) --}}
+    {{-- =========================================================
+       FOOTER GLOBAL
+       ========================================================= --}}
     <footer class="bg-dark text-light pt-5 pb-3 mt-5">
         <div class="container">
             <div class="row gy-4">
@@ -327,6 +508,28 @@
     {{-- JS global --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    {{-- Slider sederhana untuk "Koleksi Berdasarkan Tema" --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.getElementById('collectionSlider');
+            const prevBtn = document.getElementById('collectionPrev');
+            const nextBtn = document.getElementById('collectionNext');
+
+            if (slider && prevBtn && nextBtn) {
+                const scrollAmount = slider.clientWidth * 0.9; // geser ~90% lebar view
+
+                prevBtn.addEventListener('click', function () {
+                    slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', function () {
+                    slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+
+    {{-- Slot script khusus per halaman --}}
     @yield('scripts')
 </body>
 </html>
