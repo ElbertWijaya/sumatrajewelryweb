@@ -70,29 +70,31 @@
             padding-right: 2rem;
         }
 
-        /* === Layout utama navbar: kiri (bahasa+menu), tengah (logo), kanan (ikon) === */
+        /* === Layout utama navbar: 3 kolom sama besar (kiri, tengah, kanan) === */
         .navbar-main-inner {
             display: grid;
-            grid-template-columns: auto 1fr auto;  /* kiri | ruang tengah | kanan */
+            grid-template-columns: 1fr 1fr 1fr;  /* tiga kolom lebar sama */
             align-items: center;
             width: 100%;
             column-gap: 2rem;
         }
 
-        /* Kiri: tetap dua baris (bahasa di atas, menu di bawah) */
+        /* Kiri: bahasa + menu, rata kiri */
         .navbar-main-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start;
         }
 
-        /* Tengah: logo di tengah kolom tengah */
+        /* Tengah: logo benar‑benar di tengah kolom tengah */
         .navbar-main-center {
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
-        /* Kanan: ikon menempel di kanan */
+        /* Kanan: ikon rata kanan */
         .navbar-main-right {
             display: flex;
             justify-content: flex-end;
@@ -187,7 +189,7 @@
 
         .collection-banner-box {
             width: 100%;
-            height: 500px;      /* ubah angka ini untuk tinggi banner */
+            height: 500px;
             background-color: #e9ecef;
             background-size: cover;
             background-position: center;
@@ -199,7 +201,7 @@
         }
 
         .collection-banner-title {
-            font-size: 2rem;    /* ubah angka ini untuk besar judul */
+            font-size: 2rem;
             text-transform: uppercase;
             letter-spacing: 0.14em;
             font-weight: 600;
@@ -219,7 +221,7 @@
            SLIDER KOLEKSI
            ========================================================= --}}
         .collection-slider-container {
-            padding-left: 5rem;     /* padding kiri/kanan slider – ubah di sini */
+            padding-left: 5rem;
             padding-right: 5rem;
         }
 
@@ -238,7 +240,7 @@
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 0;                /* tidak ada jarak antar kartu */
+            gap: 0;
             padding-bottom: 8px;
         }
 
@@ -275,10 +277,10 @@
             background-color: #f3e3bf;
         }
         .collection-slider-arrow-left {
-            left: 2rem;   /* sejajar dengan padding kiri */
+            left: 2rem;
         }
         .collection-slider-arrow-right {
-            right: 2rem;  /* sejajar dengan padding kanan */
+            right: 2rem;
         }
 
         {{-- =========================================================
@@ -286,7 +288,7 @@
            ========================================================= --}}
         .featured-products-container,
         .latest-products-container {
-            padding-left: 10rem;   /* ubah di sini jika ingin padding berbeda */
+            padding-left: 10rem;
             padding-right: 10rem;
         }
 
@@ -316,6 +318,75 @@
         }
 
         {{-- =========================================================
+           STYLING "PRODUK TERBARU" – GAYA GALERI
+           ========================================================= --}}
+        .latest-gallery-container {
+            padding-left: 10rem;
+            padding-right: 10rem;
+        }
+
+        @media (max-width: 1200px) {
+            .latest-gallery-container {
+                padding-left: 4rem;
+                padding-right: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .latest-gallery-container {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
+        .latest-gallery-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+            padding: 10px 10px 12px;
+        }
+
+        .latest-gallery-image-wrap {
+            width: 100%;
+            background-color: #f3f4f6;
+            border-radius: 14px;
+            overflow: hidden;
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .latest-gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .latest-gallery-info {
+            padding: 8px 4px 0;
+        }
+
+        .latest-gallery-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .latest-gallery-meta {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .latest-gallery-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #c5a059;
+        }
+
+        {{-- =========================================================
            SLOT STYLES PER HALAMAN
            ========================================================= --}}
         @yield('styles')
@@ -325,13 +396,12 @@
 
     {{-- NAVBAR --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
-        <div class="navbar-full"> {{-- FULL WIDTH, BUKAN .container --}}
+        <div class="navbar-full">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
-                {{-- TIGA BLOK: KIRI (ID/EN + MENU), TENGAH (LOGO), KANAN (IKON) --}}
                 <div class="navbar-main-inner">
                     {{-- KIRI --}}
                     <div class="navbar-main-left">
@@ -516,7 +586,7 @@
             const nextBtn = document.getElementById('collectionNext');
 
             if (slider && prevBtn && nextBtn) {
-                const scrollAmount = slider.clientWidth; // geser 3 kartu sekaligus
+                const scrollAmount = slider.clientWidth;
 
                 prevBtn.addEventListener('click', function () {
                     slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });

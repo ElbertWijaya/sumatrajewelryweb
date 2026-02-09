@@ -221,26 +221,29 @@
         </div>
     @endif
 
-    {{-- KATALOG PRODUK UTAMA (FULL-WIDTH, PADDING 8REM) --}}
+    {{-- KATALOG PRODUK UTAMA – GAYA GALERI (BARIS KARTU LEBAR BESAR) --}}
     <div class="py-5" id="katalog">
         {{-- Header --}}
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold">Produk Terbaru</h2>
                 <div style="width: 60px; height: 3px; background: #c5a059; margin: 10px auto;"></div>
+                <p class="text-muted mb-0">
+                    Beberapa produk terbaru yang saat ini tersedia di Toko Mas Sumatra.
+                </p>
             </div>
         </div>
 
-        {{-- Grid produk --}}
+        {{-- Konten --}}
         <div class="container-fluid px-0">
-            <div class="latest-products-container">
+            <div class="latest-gallery-container">
                 @php
-                    // Ambil maksimal 10 produk secara acak dari koleksi $products
-                    $latestProducts = $products->shuffle()->take(10);
+                    // Ambil maksimal 10 produk acak
+                    $latestGalleryProducts = $products->shuffle()->take(10);
                 @endphp
 
                 <div class="row g-4">
-                    @forelse($latestProducts as $product)
+                    @forelse($latestGalleryProducts as $product)
                         @php
                             $hargaDasar = ($product->karat_type == '24K')
                                 ? $goldPrice24k->sell_price_per_gram
@@ -250,26 +253,37 @@
                                 + $product->stone_price;
                         @endphp
 
-                        {{-- 5 kolom per baris di desktop: 12 / 5 = 2.4 → pakai kelas custom --}}
+                        {{-- 5 kartu di desktop lebar, 4 di laptop, 3 di tablet, 2 di HP --}}
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
-                            <div class="product-card h-100 ratio-card-small">
-                                @if($product->image_url)
-                                    <img src="{{ asset('uploads/' . $product->image_url) }}" class="product-img" alt="{{ $product->name }}">
-                                @else
-                                    <div class="d-flex align-items-center justify-content-center product-img text-muted">
-                                        <small>No Image</small>
-                                    </div>
-                                @endif
+                            <div class="latest-gallery-card h-100 d-flex flex-column">
+                                {{-- Banner / area gambar SELALU ADA --}}
+                                <div class="latest-gallery-image-wrap d-flex align-items-center justify-content-center">
+                                    @if($product->image_url)
+                                        <img src="{{ asset('uploads/' . $product->image_url) }}"
+                                             alt="{{ $product->name }}"
+                                             class="latest-gallery-image">
+                                    @else
+                                        <span class="text-muted small">No Image</span>
+                                    @endif
+                                </div>
 
-                                <div class="card-body text-center">
-                                    <h5 class="card-title text-dark">{{ $product->name }}</h5>
-                                    <p class="text-muted small mb-1">
-                                        {{ $product->karat_type }} | {{ $product->weight }} gr
-                                    </p>
-                                    <div class="price-tag mb-3">
+                                {{-- Info singkat --}}
+                                <div class="latest-gallery-info">
+                                    <div class="latest-gallery-name text-truncate">
+                                        {{ $product->name }}
+                                    </div>
+                                    <div class="latest-gallery-meta small text-muted">
+                                        {{ $product->karat_type }} &middot; {{ $product->weight }} gr
+                                    </div>
+                                    <div class="latest-gallery-price">
                                         Rp {{ number_format($estimasiHarga, 0, ',', '.') }}
                                     </div>
-                                    <a href="{{ route('product.detail', $product->id) }}" class="btn btn-dark w-100">
+                                </div>
+
+                                {{-- Tombol --}}
+                                <div class="mt-auto pt-2">
+                                    <a href="{{ route('product.detail', $product->id) }}"
+                                       class="btn btn-outline-dark btn-sm w-100">
                                         Detail Produk
                                     </a>
                                 </div>
