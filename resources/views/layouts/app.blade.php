@@ -129,20 +129,24 @@
             transform: translateY(-3px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
         }
-        /* Area kotak gambar (kosong dulu, nanti bisa diisi background-image) */
+
+        /* Area kotak gambar (kosong dulu, nanti bisa diisi background-image)
+           UBAH height DI SINI jika ingin banner lebih tinggi/rendah */
         .collection-banner-box {
             width: 100%;
-            height: 500px;            /* ubah angka ini kalau ingin banner lebih tinggi/rendah */
+            height: 500px;
             background-color: #e9ecef;
             background-size: cover;
             background-position: center;
         }
+
         /* Bagian teks di bawah kotak gambar */
         .collection-banner-body {
             padding: 16px 18px 20px;
             text-align: center;
         }
-        /* Judul koleksi – dibuat lebih besar & mencolok */
+
+        /* Judul koleksi – UBAH font-size DI SINI kalau mau diubah lagi */
         .collection-banner-title {
             font-size: 2rem;
             text-transform: uppercase;
@@ -150,6 +154,7 @@
             font-weight: 600;
             margin-bottom: 4px;
         }
+
         .collection-banner-link {
             font-size: 0.85rem;
             color: #7b1b4a;           /* bisa diganti dengan warna brand lain */
@@ -157,82 +162,6 @@
         }
         .collection-banner-link:hover {
             text-decoration: underline;
-        }
-
-        {{-- =========================================================
-           SLIDER KOLEKSI (UNTUK "Koleksi Berdasarkan Tema")
-           ========================================================= --}}
-        .collection-slider-wrapper {
-            position: relative;
-        }
-
-        /* Container yang bisa discroll horizontal */
-        .collection-slider {
-            display: flex;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            gap: 1.5rem;
-            padding-bottom: 8px;
-        }
-
-        /* Sembunyikan scrollbar di sebagian besar browser */
-        .collection-slider::-webkit-scrollbar {
-            display: none;
-        }
-        .collection-slider {
-            -ms-overflow-style: none;  /* IE */
-            scrollbar-width: none;     /* Firefox */
-        }
-
-        /* Setiap item banner punya lebar tetap (3 item muat di layar besar) */
-        .collection-slider-item {
-            flex: 0 0 85%;   /* ±1 item per view (sedikit ruang di kiri/kanan) */
-            min-width: 320px;
-        }
-
-        @media (min-width: 1600px) {
-            .collection-slider-item {
-                flex: 0 0 48%;   /* layar super lebar → 2 kartu */
-            }
-        }
-
-        @media (max-width: 992px) {
-            .collection-slider-item {
-                flex: 0 0 70%; /* di tablet: 1–2 item per view */
-            }
-        }
-
-        @media (max-width: 576px) {
-            .collection-slider-item {
-                flex: 0 0 85%; /* di hp kecil: 1 item penuh */
-            }
-        }
-
-        /* Tombol panah kiri/kanan slider */
-        .collection-slider-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background-color: rgba(255,255,255,0.9);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2;
-        }
-        .collection-slider-arrow:hover {
-            background-color: #f3e3bf;
-        }
-        .collection-slider-arrow-left {
-            left: -18px;
-        }
-        .collection-slider-arrow-right {
-            right: -18px;
         }
 
         {{-- =========================================================
@@ -507,27 +436,6 @@
 
     {{-- JS global --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    {{-- Slider sederhana untuk "Koleksi Berdasarkan Tema" --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const slider = document.getElementById('collectionSlider');
-            const prevBtn = document.getElementById('collectionPrev');
-            const nextBtn = document.getElementById('collectionNext');
-
-            if (slider && prevBtn && nextBtn) {
-                const scrollAmount = slider.clientWidth * 0.9; // geser ~90% lebar view
-
-                prevBtn.addEventListener('click', function () {
-                    slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                });
-
-                nextBtn.addEventListener('click', function () {
-                    slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                });
-            }
-        });
-    </script>
 
     {{-- Slot script khusus per halaman --}}
     @yield('scripts')

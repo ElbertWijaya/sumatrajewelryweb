@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    {{-- KOLEKSI BERDASARKAN TEMA (SLIDER 3 ITEM) --}}
+    {{-- KOLEKSI BERDASARKAN TEMA (GRID 3 KOLOM, 2 BARIS) --}}
     <div class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-4">
@@ -41,113 +41,96 @@
                 </p>
             </div>
 
-            <div class="collection-slider-wrapper">
-                {{-- Panah kiri (disembunyikan di layar kecil) --}}
-                <button type="button"
-                        class="collection-slider-arrow collection-slider-arrow-left d-none d-md-flex"
-                        id="collectionPrev">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-
-                {{-- Panah kanan --}}
-                <button type="button"
-                        class="collection-slider-arrow collection-slider-arrow-right d-none d-md-flex"
-                        id="collectionNext">
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-
-                {{-- Area yang bisa digeser horizontal --}}
-                <div class="collection-slider" id="collectionSlider">
-                    {{-- 1. Hadiah Pernikahan --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    HADIAH PERNIKAHAN
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+            <div class="row g-4">
+                {{-- 1. Hadiah Pernikahan --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                HADIAH PERNIKAHAN
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    {{-- 2. Koleksi Pria --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    KOLEKSI PRIA
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+                {{-- 2. Koleksi Pria --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                KOLEKSI PRIA
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    {{-- 3. Cincin Kawin & Tunangan --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    CINCIN KAWIN &amp; TUNANGAN
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+                {{-- 3. Cincin Kawin & Tunangan --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                CINCIN KAWIN &amp; TUNANGAN
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    {{-- 4. Koleksi Zodiak --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    KOLEKSI ZODIAK
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+                {{-- 4. Koleksi Zodiak --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                KOLEKSI ZODIAK
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    {{-- 5. Perhiasan Eksotik --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    PERHIASAN EKSOTIK
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+                {{-- 5. Perhiasan Eksotik --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                PERHIASAN EKSOTIK
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    {{-- 6. Koleksi Sehari-hari --}}
-                    <div class="collection-slider-item">
-                        <div class="collection-banner h-100">
-                            <div class="collection-banner-box" style="background-image: none;"></div>
-                            <div class="collection-banner-body">
-                                <div class="collection-banner-title text-dark">
-                                    KOLEKSI SEHARI-HARI
-                                </div>
-                                <a href="#katalog" class="collection-banner-link">
-                                    Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                </a>
+                {{-- 6. Koleksi Sehari-hari --}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="collection-banner h-100">
+                        <div class="collection-banner-box" style="background-image: none;"></div>
+                        <div class="collection-banner-body">
+                            <div class="collection-banner-title text-dark">
+                                KOLEKSI SEHARI-HARI
                             </div>
+                            <a href="#katalog" class="collection-banner-link">
+                                Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                            </a>
                         </div>
                     </div>
-                </div> {{-- /collection-slider --}}
+                </div>
             </div>
         </div>
     </div>
