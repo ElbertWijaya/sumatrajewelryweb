@@ -28,11 +28,10 @@
            NAVBAR (HEADER) GLOBAL
            ========================================================= --}}
         .navbar {
-            padding: 1rem 0.75rem;                 /* tinggi navbar */
+            padding: 1rem 0.75rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* Link menu navbar (kiri) */
         .navbar-nav .nav-link {
             font-size: 0.9rem;
             font-weight: 400;
@@ -44,32 +43,29 @@
             color: #ffffff;
         }
 
-        /* Switch bahasa (ID | EN) */
         .lang-switch a {
             font-size: 0.8rem;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            color: #ffffff;        /* default putih */
+            color: #ffffff;
         }
         .lang-switch a.active {
-            color: #c5a059;        /* emas ketika terpilih */
+            color: #c5a059;
         }
 
-        /* Ikon di sisi kanan navbar */
         .nav-icons {
-            gap: 3rem;             /* jarak antar ikon kanan */
+            gap: 3rem;
         }
         .nav-icons a {
             color: rgba(255,255,255,0.75);
         }
         .nav-icons a:hover {
-            color: #c5a059;        /* emas saat hover */
+            color: #c5a059;
         }
 
         {{-- =========================================================
            HERO, TICKER, DAN KARTU PRODUK
            ========================================================= --}}
-        /* Background hero di homepage */
         .hero-section {
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
                         url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=1920&q=80');
@@ -80,7 +76,6 @@
             text-align: center;
         }
 
-        /* Baris informasi harga emas (atas homepage) */
         .price-ticker {
             background-color: #c5a059;
             color: white;
@@ -88,7 +83,6 @@
             font-weight: bold;
         }
 
-        /* Kartu produk di katalog */
         .product-card {
             border: none;
             transition: transform 0.3s;
@@ -115,9 +109,8 @@
         }
 
         {{-- =========================================================
-           BANNER KOLEKSI (KOTAK BESAR KOSONG)
+           BANNER KOLEKSI
            ========================================================= --}}
-        /* Kontainer banner koleksi */
         .collection-banner {
             background: #f6f6f6;
             border-radius: 12px;
@@ -130,25 +123,21 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
         }
 
-        /* Area kotak gambar (kosong dulu, nanti bisa diisi background-image)
-           UBAH height DI SINI jika ingin banner lebih tinggi/rendah */
         .collection-banner-box {
             width: 100%;
-            height: 500px;
+            height: 500px;      /* ubah angka ini untuk tinggi banner */
             background-color: #e9ecef;
             background-size: cover;
             background-position: center;
         }
 
-        /* Bagian teks di bawah kotak gambar */
         .collection-banner-body {
             padding: 16px 18px 20px;
             text-align: center;
         }
 
-        /* Judul koleksi – UBAH font-size DI SINI kalau mau diubah lagi */
         .collection-banner-title {
-            font-size: 2rem;
+            font-size: 2rem;    /* ubah angka ini untuk besar judul */
             text-transform: uppercase;
             letter-spacing: 0.14em;
             font-weight: 600;
@@ -157,7 +146,7 @@
 
         .collection-banner-link {
             font-size: 0.85rem;
-            color: #7b1b4a;           /* bisa diganti dengan warna brand lain */
+            color: #7b1b4a;
             text-decoration: none;
         }
         .collection-banner-link:hover {
@@ -165,38 +154,45 @@
         }
 
         {{-- =========================================================
-           SLIDER KOLEKSI (Koleksi Berdasarkan Tema)
+           SLIDER KOLEKSI
            ========================================================= --}}
+        .collection-slider-container {
+            padding-left: 5rem;     /* padding kiri/kanan slider – ubah di sini */
+            padding-right: 5rem;
+        }
+
+        @media (max-width: 768px) {
+            .collection-slider-container {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
         .collection-slider-wrapper {
             position: relative;
         }
 
-        /* Container horizontal scroll */
         .collection-slider {
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 1rem;
+            gap: 0;                /* tidak ada jarak antar kartu */
             padding-bottom: 8px;
         }
 
-        /* Sembunyikan scrollbar visual */
         .collection-slider::-webkit-scrollbar {
             display: none;
         }
         .collection-slider {
-            -ms-overflow-style: none;  /* IE */
-            scrollbar-width: none;     /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Item: 3 kartu per view di desktop, proporsional saat zoom */
-        /* Setiap item SELALU 1/3 lebar container di segala ukuran layar */
         .collection-slider-item {
             flex: 0 0 calc(100% / 3);
             max-width: calc(100% / 3);
         }
 
-        /* Tombol panah */
         .collection-slider-arrow {
             position: absolute;
             top: 50%;
@@ -217,14 +213,44 @@
             background-color: #f3e3bf;
         }
         .collection-slider-arrow-left {
-            left: -18px;
+            left: 2rem;   /* sejajar dengan padding kiri */
         }
         .collection-slider-arrow-right {
-            right: -18px;
+            right: 2rem;  /* sejajar dengan padding kanan */
         }
 
         {{-- =========================================================
-           SLOT TAMBAHAN STYLE PER HALAMAN (opsional)
+           GRID FULL-WIDTH UNTUK TOP PRODUCTS & PRODUK TERBARU
+           ========================================================= --}}
+        /* Wrapper dengan padding kiri/kanan lebih besar (~8rem) */
+        .featured-products-container,
+        .latest-products-container {
+            padding-left: 10rem;   /* UBAH DI SINI jika ingin padding berbeda */
+            padding-right: 10rem;
+        }
+
+        @media (max-width: 992px) {
+            .featured-products-container,
+            .latest-products-container {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+        /* Rasio stabil untuk kartu produk besar (Top Products) */
+        .ratio-card .product-img {
+            aspect-ratio: 5 / 4;   /* lebar:tinggi, ubah jika mau */
+            height: auto;
+        }
+
+        /* Rasio stabil untuk kartu produk kecil (Produk Terbaru) */
+        .ratio-card-small .product-img {
+            aspect-ratio: 8 / 4;
+            height: auto;   
+        }
+
+        {{-- =========================================================
+           SLOT STYLES PER HALAMAN
            ========================================================= --}}
         @yield('styles')
     </style>
@@ -240,7 +266,7 @@
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <div class="row w-100 align-items-center">
-                    {{-- Kiri: Bahasa + Menu --}}
+                    {{-- Kiri --}}
                     <div class="col-lg-4 mb-2 mb-lg-0">
                         <div class="lang-switch d-flex align-items-center mb-1">
                             @php
@@ -253,12 +279,10 @@
 
                         <ul class="navbar-nav gap-lg-2">
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}"
-                                   href="{{ route('about.store') }}">Tentang Kami</a>
+                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}" href="{{ route('about.store') }}">Tentang Kami</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}"
-                                   href="{{ route('store.locations') }}">Lokasi & Kontak</a>
+                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}" href="{{ route('store.locations') }}">Lokasi & Kontak</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home') }}#katalog">Koleksi Kami</a>
@@ -269,14 +293,14 @@
                         </ul>
                     </div>
 
-                    {{-- Tengah: Logo --}}
+                    {{-- Tengah --}}
                     <div class="col-lg-4 d-flex justify-content-center mb-2 mb-lg-0">
                         <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">
                             Toko Mas Sumatra
                         </a>
                     </div>
 
-                    {{-- Kanan: Ikon --}}
+                    {{-- Kanan --}}
                     <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
                         <div class="d-flex align-items-center nav-icons">
                             <a href="#"><i class="bi bi-search fs-6"></i></a>
@@ -436,7 +460,6 @@
         });
     </script>
 
-    {{-- SLOT TAMBAHAN SCRIPT PER HALAMAN (opsional) --}}
     @yield('scripts')
 </body>
 </html>
