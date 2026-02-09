@@ -63,6 +63,68 @@
             color: #c5a059;
         }
 
+        /* === WRAPPER NAVBAR FULL-WIDTH === */
+        .navbar-full {
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* === Layout utama navbar: kiri (bahasa+menu), tengah (logo), kanan (ikon) === */
+        .navbar-main-inner {
+            display: grid;
+            grid-template-columns: auto 1fr auto;  /* kiri | ruang tengah | kanan */
+            align-items: center;
+            width: 100%;
+            column-gap: 2rem;
+        }
+
+        /* Kiri: tetap dua baris (bahasa di atas, menu di bawah) */
+        .navbar-main-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Tengah: logo di tengah kolom tengah */
+        .navbar-main-center {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Kanan: ikon menempel di kanan */
+        .navbar-main-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* Di layar kecil, stack ke bawah */
+        @media (max-width: 991.98px) {
+            .navbar-full {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .navbar-main-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .navbar-main-left,
+            .navbar-main-center,
+            .navbar-main-right {
+                align-items: center;
+                justify-content: center;
+            }
+            .navbar-main-left { order: 2; }
+            .navbar-main-center {
+                order: 1;
+                margin-bottom: 0.5rem;
+            }
+            .navbar-main-right { order: 3; }
+        }
+
         {{-- =========================================================
            HERO, TICKER, DAN KARTU PRODUK
            ========================================================= --}}
@@ -222,10 +284,9 @@
         {{-- =========================================================
            GRID FULL-WIDTH UNTUK TOP PRODUCTS & PRODUK TERBARU
            ========================================================= --}}
-        /* Wrapper dengan padding kiri/kanan lebih besar (~8rem) */
         .featured-products-container,
         .latest-products-container {
-            padding-left: 10rem;   /* UBAH DI SINI jika ingin padding berbeda */
+            padding-left: 10rem;   /* ubah di sini jika ingin padding berbeda */
             padding-right: 10rem;
         }
 
@@ -237,16 +298,21 @@
             }
         }
 
-        /* Rasio stabil untuk kartu produk besar (Top Products) */
         .ratio-card .product-img {
-            aspect-ratio: 5 / 4;   /* lebar:tinggi, ubah jika mau */
+            aspect-ratio: 5 / 4;
             height: auto;
         }
 
-        /* Rasio stabil untuk kartu produk kecil (Produk Terbaru) */
         .ratio-card-small .product-img {
             aspect-ratio: 8 / 4;
-            height: auto;   
+            height: auto;
+        }
+
+        @media (min-width: 1200px) {
+            .col-xl-2-4 {
+                flex: 0 0 20%;
+                max-width: 20%;
+            }
         }
 
         {{-- =========================================================
@@ -259,15 +325,16 @@
 
     {{-- NAVBAR --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
-        <div class="container">
+        <div class="navbar-full"> {{-- FULL WIDTH, BUKAN .container --}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
-                <div class="row w-100 align-items-center">
-                    {{-- Kiri --}}
-                    <div class="col-lg-4 mb-2 mb-lg-0">
+                {{-- TIGA BLOK: KIRI (ID/EN + MENU), TENGAH (LOGO), KANAN (IKON) --}}
+                <div class="navbar-main-inner">
+                    {{-- KIRI --}}
+                    <div class="navbar-main-left">
                         <div class="lang-switch d-flex align-items-center mb-1">
                             @php
                                 $currentLocale = app()->getLocale() ?? 'id';
@@ -279,10 +346,12 @@
 
                         <ul class="navbar-nav gap-lg-2">
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}" href="{{ route('about.store') }}">Tentang Kami</a>
+                                <a class="nav-link {{ request()->routeIs('about.store') ? 'active' : '' }}"
+                                   href="{{ route('about.store') }}">Tentang Kami</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}" href="{{ route('store.locations') }}">Lokasi & Kontak</a>
+                                <a class="nav-link {{ request()->routeIs('store.locations') ? 'active' : '' }}"
+                                   href="{{ route('store.locations') }}">Lokasi & Kontak</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home') }}#katalog">Koleksi Kami</a>
@@ -293,15 +362,15 @@
                         </ul>
                     </div>
 
-                    {{-- Tengah --}}
-                    <div class="col-lg-4 d-flex justify-content-center mb-2 mb-lg-0">
-                        <a class="navbar-brand text-gold fs-3" href="{{ route('home') }}">
+                    {{-- TENGAH --}}
+                    <div class="navbar-main-center">
+                        <a class="navbar-brand text-gold fs-3 mb-0" href="{{ route('home') }}">
                             Toko Mas Sumatra
                         </a>
                     </div>
 
-                    {{-- Kanan --}}
-                    <div class="col-lg-4 d-flex justify-content-center justify-content-lg-end">
+                    {{-- KANAN --}}
+                    <div class="navbar-main-right">
                         <div class="d-flex align-items-center nav-icons">
                             <a href="#"><i class="bi bi-search fs-6"></i></a>
                             <a href="#"><i class="bi bi-heart fs-6"></i></a>
