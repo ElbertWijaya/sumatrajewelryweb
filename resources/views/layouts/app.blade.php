@@ -386,6 +386,60 @@
             color: #c5a059;
         }
 
+        /* === Katalog: card produk di halaman /katalog === */
+        .catalog-card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+            padding: 10px 10px 12px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .catalog-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Thumbnail 1:1 */
+        .catalog-thumb-wrap {
+            width: 100%;
+            background-color: #f3f4f6;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;   /* RASIO KOTAK 1:1 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .catalog-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .catalog-card-body {
+            padding: 8px 4px 0;
+        }
+
+        .catalog-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .catalog-price {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #c5a059;
+        }
+
+        .catalog-location {
+            font-size: 0.8rem;
+        }
+
         {{-- =========================================================
            SLOT STYLES PER HALAMAN
            ========================================================= --}}
