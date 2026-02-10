@@ -50,6 +50,7 @@ class AdminController extends Controller
             'karat_type'      => 'required',
             'branch_location' => 'nullable|string', // Asia / Sun Plaza
             'gold_color'      => 'nullable|string', // Kuning / Putih / Rose Gold
+            'collection'      => 'nullable|string|max:100', // Nama koleksi
             'labor_cost'      => 'nullable|numeric',
             'image'           => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi foto
         ]);
@@ -77,6 +78,7 @@ class AdminController extends Controller
             'stock_status'    => 'ready',
             'branch_location' => $request->branch_location ?: 'Asia',
             'gold_color'      => $request->gold_color ?: null,
+            'collection'      => $request->collection ?: null,
         ]);
 
         // 4. Kembali ke dashboard

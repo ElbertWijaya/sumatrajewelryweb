@@ -254,6 +254,13 @@
                             </div>
                         </div>
 
+                        {{-- Collection --}}
+                        <div class="mb-3">
+                            <label>Collection (opsional)</label>
+                            <input type="text" name="collection" class="form-control"
+                                placeholder="Contoh: Wedding, Daily, Premium">
+                        </div>
+
                         <div class="mb-3">
                             <label>Upload Foto Produk</label>
                             <input type="file" name="image" class="form-control" accept="image/*">

@@ -443,7 +443,7 @@
         /* === Sidebar Filter Katalog === */
         .catalog-filter-card {
             background: #ffffff;
-            border-radius: 20px;
+            border-radius: 0;                  /* kotak, tanpa fillet */
             border: 1px solid #e5e7eb;
             padding: 18px 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
@@ -460,24 +460,48 @@
             align-items: center;
             gap: 8px;
             padding: 6px 4px;
-            border-radius: 8px;
+            border-radius: 4px;
         }
 
         .catalog-filter-check .form-check-input {
             width: 16px;
             height: 16px;
             margin-top: 0;
-            border-radius: 4px;                    /* kotak */
-            border-color: #d1d5db;
+            border-radius: 0;                  /* SUDUT TAJAM: kotak */
+            border: 1px solid #d1d5db;
             box-shadow: none;
+            background-color: #ffffff;
+            appearance: none;                  /* buang tampilan default (lingkaran) */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            position: relative;
         }
 
+        /* Saat hover: garis sedikit lebih gelap */
+        .catalog-filter-check .form-check-input:hover {
+            border-color: #9ca3af;
+        }
+
+        /* Checked: background putih, ada centang hitam */
         .catalog-filter-check .form-check-input:checked {
-            background-color: #111827;             /* warna header gelap */
             border-color: #111827;
+            background-color: #ffffff;
         }
 
+        /* Gambar centang hitam di dalam kotak */
+        .catalog-filter-check .form-check-input:checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -56%);
+            font-size: 0.8rem;
+            color: #111827;
+        }
+
+        /* Fokus lembut */
         .catalog-filter-check .form-check-input:focus {
+            outline: none;
             box-shadow: 0 0 0 1px rgba(17,24,39,0.15);
         }
 

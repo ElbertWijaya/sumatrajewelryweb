@@ -153,6 +153,35 @@
 
                         <hr>
 
+                        {{-- Filter Collection --}}
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Collection</div>
+                            @foreach($collections as $col)
+                                <div class="form-check small catalog-filter-check">
+                                    <input class="form-check-input"
+                                        type="radio"
+                                        name="collection_filter"
+                                        id="collection_{{ $loop->index }}"
+                                        value="{{ $col }}"
+                                        onclick="applyFilter('collection', '{{ $col }}')"
+                                        {{ $collection === $col ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="collection_{{ $loop->index }}">
+                                        {{ $col }}
+                                    </label>
+                                </div>
+                            @endforeach
+
+                            @if($collection)
+                                <button type="button"
+                                        class="btn btn-link btn-sm p-0 mt-1"
+                                        onclick="applyFilter('collection', '')">
+                                    <small>Hapus filter collection</small>
+                                </button>
+                            @endif
+                        </div>
+
+                        <hr>
+
                         {{-- Filter Stok Ready --}}
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Stok</div>

@@ -21,8 +21,9 @@ class Product extends Model
         'stock_status',
         'image_url',
         'description',
-        'branch_location',   // baru
-        'gold_color',        // baru
+        'branch_location',
+        'gold_color',        
+        'collection'         
     ];
 
     // Relasi: Produk ini milik kategori apa?
