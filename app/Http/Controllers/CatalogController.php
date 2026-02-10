@@ -25,6 +25,7 @@ public function index(Request $request)
     $minPrice       = $request->input('min_price');          // Rupiah
     $maxPrice       = $request->input('max_price');
     $branchLocation = $request->input('branch_location');    // Asia / Sun Plaza
+    $$collection     = $request->input('collection');    // nama koleksi
     $goldColor      = $request->input('gold_color');         // Kuning / Putih / Rose Gold
 
     // Query dasar
@@ -59,6 +60,11 @@ public function index(Request $request)
     if ($goldColor) {
         $query->where('gold_color', $goldColor);
     }
+
+    // 6. Filter: koleksi
+    if ($collection) {
+    $query->where('collection', $collection);
+}
 
     // Ambil harga emas 24K untuk estimasi
     $goldPrice24k = GoldPrice::where('karat_type', '24K')->first();
@@ -101,6 +107,9 @@ public function index(Request $request)
                 $query->orderByDesc('labor_cost');
             }
             break;
+        case 'oldest':
+            $query->oldest();   // orderBy('created_at', 'asc')
+            break;
         case 'latest':
         default:
             $query->latest();
@@ -131,6 +140,13 @@ public function index(Request $request)
         ->distinct()
         ->orderBy('gold_color')
         ->pluck('gold_color');
+    
+    // Daftar koleksi unik
+    $collections = Product::select('collection')
+        ->whereNotNull('collection')
+        ->distinct()
+        ->orderBy('collection')
+        ->pluck('collection');        
 
     return view('catalog.index', compact(
         'products',
@@ -148,6 +164,8 @@ public function index(Request $request)
         'maxPrice',
         'branchLocation',
         'goldColor',
+        'collection',
+        'collections',
         'branchLocations',
         'goldColors'
         ));

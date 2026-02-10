@@ -440,6 +440,115 @@
             font-size: 0.8rem;
         }
 
+        /* === Sidebar Filter Katalog === */
+        .catalog-filter-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            padding: 18px 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .catalog-filter-card h6 {
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+        }
+
+        /* Kotak pilihan (radio & checkbox) lebih elegan */
+        .catalog-filter-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+            border-radius: 8px;
+        }
+
+        /* Gunakan kotak, bukan bulat, dan hilangkan background biru default */
+        .catalog-filter-check .form-check-input {
+            width: 16px;
+            height: 16px;
+            margin-top: 0;
+            border-radius: 4px;                    /* KOTAK */
+            border-color: #d1d5db;
+            box-shadow: none;
+        }
+
+        .catalog-filter-check .form-check-input:checked {
+            background-color: #111827;             /* warna header (hitam gelap) */
+            border-color: #111827;
+        }
+
+        .catalog-filter-check .form-check-input:focus {
+            box-shadow: 0 0 0 1px rgba(17,24,39,0.15);
+        }
+
+        .catalog-filter-check .form-check-label {
+            cursor: pointer;
+        }
+        
+        /* === Pagination Katalog === */
+        .catalog-pagination-nav {
+            display: flex;
+            flex-direction: column;   /* angka di atas, teks di bawah */
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .catalog-pagination {
+            --bs-pagination-padding-x: 0;   /* kita atur manual via width/height */
+            --bs-pagination-padding-y: 0;
+            --bs-pagination-border-radius: 999px;
+            --bs-pagination-bg: #ffffff;
+            --bs-pagination-border-color: #e5e7eb;
+            --bs-pagination-color: #4b5563;
+            --bs-pagination-hover-bg: #f3f4f6;
+            --bs-pagination-hover-border-color: #e5e7eb;
+            --bs-pagination-hover-color: #111827;
+            --bs-pagination-active-bg: #c5a059;
+            --bs-pagination-active-border-color: #c5a059;
+            --bs-pagination-active-color: #ffffff;
+            --bs-pagination-disabled-bg: #f9fafb;
+            --bs-pagination-disabled-color: #9ca3af;
+            --bs-pagination-disabled-border-color: #e5e7eb;
+        }
+
+        /* Jarak antar angka: padding horizontal 3 (Bootstrap) */
+        .catalog-pagination .page-item {
+            margin: 0.4rem; /* ~ padding-x: 3px kanan-kiri */
+        }
+
+        .catalog-pagination .page-link {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;      /* angka jadi lingkaran penuh */
+            border-width: 1px;
+            font-size: 0.8rem;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Panah kiri-kanan: tanpa border luar, hanya ikon */
+        .catalog-pagination .page-item:first-child .page-link,
+        .catalog-pagination .page-item:last-child .page-link {
+            border: none;
+            background: transparent;
+        }
+
+        .catalog-pagination .page-item:first-child .page-link:hover,
+        .catalog-pagination .page-item:last-child .page-link:hover {
+            background: #f3f4f6;
+        }
+
+        .catalog-pagination-info {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
         {{-- =========================================================
            SLOT STYLES PER HALAMAN
            ========================================================= --}}

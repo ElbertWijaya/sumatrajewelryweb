@@ -28,23 +28,20 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-12 text-center small text-muted mt-2">
-                    Menampilkan {{ $products->total() }} produk
-                </div>
-            </div>
 
+            </div>
             {{-- Layout dua kolom (filter kiri, produk kanan) --}}
             <div class="row">
                 {{-- Sidebar filter --}}
                 <div class="col-lg-3 mb-4">
-                    <div class="border rounded-3 bg-white p-3 shadow-sm">
+                    <div class="catalog-filter-card">
                         <h6 class="fw-bold mb-3">Filter</h6>
 
                         {{-- Filter Kategori --}}
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Kategori</div>
                             @foreach($categories as $cat)
-                                <div class="form-check small">
+                                <div class="form-check small catalog-filter-check">
                                     <input class="form-check-input"
                                            type="radio"
                                            name="category_filter"
@@ -73,7 +70,7 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Kadar / Karat</div>
                             @foreach($karats as $k)
-                                <div class="form-check small">
+                                <div class="form-check small catalog-filter-check">
                                     <input class="form-check-input"
                                            type="radio"
                                            name="karat_filter"
@@ -102,7 +99,7 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Lokasi Cabang</div>
                             @foreach($branchLocations as $loc)
-                                <div class="form-check small">
+                                <div class="form-check small catalog-filter-check">
                                     <input class="form-check-input"
                                            type="radio"
                                            name="branch_location_filter"
@@ -131,7 +128,7 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Warna Emas</div>
                             @foreach($goldColors as $color)
-                                <div class="form-check small">
+                                <div class="form-check small catalog-filter-check">
                                     <input class="form-check-input"
                                            type="radio"
                                            name="gold_color_filter"
@@ -159,7 +156,7 @@
                         {{-- Filter Stok Ready --}}
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Stok</div>
-                            <div class="form-check small">
+                            <div class="form-check small catalog-filter-check">
                                 <input class="form-check-input"
                                        type="checkbox"
                                        id="only_ready"
@@ -242,6 +239,7 @@
                         <select class="form-select form-select-sm w-auto"
                                 onchange="applyFilter('sort', this.value)">
                             <option value="latest" {{ $sort === 'latest' || !$sort ? 'selected' : '' }}>Terbaru</option>
+                            <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Terlama</option>
                             <option value="price_asc" {{ $sort === 'price_asc' ? 'selected' : '' }}>Harga Terendah</option>
                             <option value="price_desc" {{ $sort === 'price_desc' ? 'selected' : '' }}>Harga Tertinggi</option>
                         </select>
