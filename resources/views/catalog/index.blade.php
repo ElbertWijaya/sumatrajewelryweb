@@ -14,7 +14,7 @@
                 </p>
             </div>
 
-            {{-- Bar pencarian (di tengah) & info jumlah --}}
+            {{-- Bar pencarian (di tengah) --}}
             <div class="row mb-4 align-items-center justify-content-center">
                 <div class="col-md-8 col-lg-6 mb-2 mb-md-0">
                     <form action="{{ route('catalog.index') }}" method="GET">
@@ -28,8 +28,8 @@
                         </div>
                     </form>
                 </div>
-
             </div>
+
             {{-- Layout dua kolom (filter kiri, produk kanan) --}}
             <div class="row">
                 {{-- Sidebar filter --}}
@@ -330,9 +330,9 @@
                         </div>
 
                         {{-- Pagination --}}
-                            <div class="mt-4 d-flex justify-content-center">
-                                {{ $products->links('vendor.pagination.bootstrap-4') }}
-                            </div>
+                        <div class="mt-4 d-flex justify-content-center">
+                            {{ $products->links('vendor.pagination.bootstrap-4') }}
+                        </div>
                     @endif
                 </div>
             </div>

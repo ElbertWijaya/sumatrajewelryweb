@@ -454,7 +454,7 @@
             letter-spacing: 0.03em;
         }
 
-        /* Kotak pilihan (radio & checkbox) lebih elegan */
+        /* Kotak pilihan (radio & checkbox) */
         .catalog-filter-check {
             display: flex;
             align-items: center;
@@ -463,18 +463,17 @@
             border-radius: 8px;
         }
 
-        /* Gunakan kotak, bukan bulat, dan hilangkan background biru default */
         .catalog-filter-check .form-check-input {
             width: 16px;
             height: 16px;
             margin-top: 0;
-            border-radius: 4px;                    /* KOTAK */
+            border-radius: 4px;                    /* kotak */
             border-color: #d1d5db;
             box-shadow: none;
         }
 
         .catalog-filter-check .form-check-input:checked {
-            background-color: #111827;             /* warna header (hitam gelap) */
+            background-color: #111827;             /* warna header gelap */
             border-color: #111827;
         }
 

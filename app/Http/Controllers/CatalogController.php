@@ -25,7 +25,7 @@ public function index(Request $request)
     $minPrice       = $request->input('min_price');          // Rupiah
     $maxPrice       = $request->input('max_price');
     $branchLocation = $request->input('branch_location');    // Asia / Sun Plaza
-    $$collection     = $request->input('collection');    // nama koleksi
+    $collection     = $request->input('collection');    // nama koleksi
     $goldColor      = $request->input('gold_color');         // Kuning / Putih / Rose Gold
 
     // Query dasar
@@ -108,7 +108,7 @@ public function index(Request $request)
             }
             break;
         case 'oldest':
-            $query->oldest();   // orderBy('created_at', 'asc')
+            $query->oldest(); // orderBy('created_at', 'asc')
             break;
         case 'latest':
         default:
