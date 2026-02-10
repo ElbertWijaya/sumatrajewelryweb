@@ -47,6 +47,8 @@ class AdminController extends Controller
             'sku' => 'required|unique:products,sku', // SKU tidak boleh kembar
             'name' => 'required',
             'weight' => 'required|numeric',
+            'branch_location' => 'nullable|string', // Asia / Sun Plaza
+            'gold_color'      => 'nullable|string', // Kuning / Putih / Rose Gold
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi foto
         ]);
 
@@ -66,10 +68,13 @@ class AdminController extends Controller
             'name' => $request->name,
             'category_id' => 1, // Sementara kita set kategori ID 1 (Cincin) dulu
             'weight' => $request->weight,
+            'stone_price' => $request->stone_price ?? 0, // Jika kosong anggap 0
             'karat_type' => $request->karat_type,
+            'gold_color' => $request->gold_color,
             'labor_cost' => $request->labor_cost ?? 0, // Jika kosong anggap 0
             'image_url' => $imageName, // Simpan nama filenya saja
-            'stock_status' => 'ready'
+            'stock_status' => 'ready',
+            'branch_location' => $request->branch_location ?: 'Asia'
         ]);
 
         // 4. Kembali ke dashboard

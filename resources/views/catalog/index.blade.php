@@ -97,7 +97,85 @@
                             @endif
                         </div>
 
-                        {{-- Nanti bisa tambah filter lain di bawah ini (harga, berat, stok, dll.) --}}
+                        <hr>
+
+                        {{-- Filter Stok Ready --}}
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Stok</div>
+                            <div class="form-check small">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="only_ready"
+                                       {{ $onlyReady ? 'checked' : '' }}
+                                       onclick="applyFilter('only_ready', this.checked ? '1' : '')">
+                                <label class="form-check-label" for="only_ready">
+                                    Hanya tampilkan stok ready
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        {{-- Filter Berat --}}
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Berat (gram)</div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number"
+                                           step="0.01"
+                                           min="0"
+                                           class="form-control form-control-sm"
+                                           placeholder="Min"
+                                           value="{{ $minWeight }}"
+                                           onchange="applyFilter('min_weight', this.value)">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number"
+                                           step="0.01"
+                                           min="0"
+                                           class="form-control form-control-sm"
+                                           placeholder="Max"
+                                           value="{{ $maxWeight }}"
+                                           onchange="applyFilter('max_weight', this.value)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        {{-- Filter Harga --}}
+                        <div class="mb-2">
+                            <div class="small text-muted mb-1">Harga (Rp)</div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number"
+                                           min="0"
+                                           class="form-control form-control-sm"
+                                           placeholder="Min"
+                                           value="{{ $minPrice }}"
+                                           onchange="applyFilter('min_price', this.value)">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number"
+                                           min="0"
+                                           class="form-control form-control-sm"
+                                           placeholder="Max"
+                                           value="{{ $maxPrice }}"
+                                           onchange="applyFilter('max_price', this.value)">
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Tombol reset rentang --}}
+                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady)
+                            <button type="button"
+                                    class="btn btn-link btn-sm p-0 mt-1"
+                                    onclick="resetRangeFilters()">
+                                <small>Reset berat & harga</small>
+                            </button>
+                        @endif
+
+                        {{-- Nanti bisa tambah filter lain di bawah ini (lokasi, warna emas, dll.) --}}
                     </div>
                 </div>
 
@@ -205,7 +283,7 @@
     function applyFilter(key, value) {
         const url = new URL(window.location.href);
 
-        if (value) {
+        if (value !== undefined && value !== null && value !== '') {
             url.searchParams.set(key, value);
         } else {
             url.searchParams.delete(key);
@@ -214,6 +292,18 @@
         // setiap ganti filter/sort, kembali ke halaman 1
         url.searchParams.delete('page');
 
+        window.location.href = url.toString();
+    }
+
+    function resetRangeFilters() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('min_weight');
+        url.searchParams.delete('max_weight');
+        url.searchParams.delete('min_price');
+        url.searchParams.delete('max_price');
+        // kembalikan filter stok ready ke default: true
+        url.searchParams.set('only_ready', '1');
+        url.searchParams.delete('page');
         window.location.href = url.toString();
     }
 </script>

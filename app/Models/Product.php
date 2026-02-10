@@ -12,7 +12,8 @@ class Product extends Model
     // Izin kolom mana saja yang boleh diisi
     protected $fillable = [
         'sku', 'name', 'category_id', 'weight', 'karat_type', 
-        'stone_price', 'labor_cost', 'stock_status', 'image_url', 'description'
+        'stone_price', 'labor_cost', 'stock_status', 'image_url', 'description',
+        'branch_location', 'gold_color'
     ];
 
     // Relasi: Produk ini milik kategori apa?
