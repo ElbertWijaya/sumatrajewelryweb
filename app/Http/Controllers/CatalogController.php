@@ -1,3 +1,15 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\GoldPrice;
+
+class CatalogController extends Controller
+{
+    // Halaman katalog penuh
 public function index(Request $request)
 {
     // Ambil parameter filter dari query string
@@ -138,5 +150,6 @@ public function index(Request $request)
         'goldColor',
         'branchLocations',
         'goldColors'
-    ));
+        ));
+    }
 }

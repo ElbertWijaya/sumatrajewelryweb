@@ -58,7 +58,6 @@
                                 </div>
                             @endforeach
 
-                            {{-- Tombol reset kategori --}}
                             @if($categoryId)
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
@@ -93,6 +92,64 @@
                                         class="btn btn-link btn-sm p-0 mt-1"
                                         onclick="applyFilter('karat', '')">
                                     <small>Hapus filter karat</small>
+                                </button>
+                            @endif
+                        </div>
+
+                        <hr>
+
+                        {{-- Filter Lokasi Cabang --}}
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Lokasi Cabang</div>
+                            @foreach($branchLocations as $loc)
+                                <div class="form-check small">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="branch_location_filter"
+                                           id="branch_{{ $loc }}"
+                                           value="{{ $loc }}"
+                                           onclick="applyFilter('branch_location', '{{ $loc }}')"
+                                           {{ $branchLocation === $loc ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="branch_{{ $loc }}">
+                                        {{ $loc }}
+                                    </label>
+                                </div>
+                            @endforeach
+
+                            @if($branchLocation)
+                                <button type="button"
+                                        class="btn btn-link btn-sm p-0 mt-1"
+                                        onclick="applyFilter('branch_location', '')">
+                                    <small>Hapus filter lokasi</small>
+                                </button>
+                            @endif
+                        </div>
+
+                        <hr>
+
+                        {{-- Filter Warna Emas --}}
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Warna Emas</div>
+                            @foreach($goldColors as $color)
+                                <div class="form-check small">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="gold_color_filter"
+                                           id="gold_{{ $color }}"
+                                           value="{{ $color }}"
+                                           onclick="applyFilter('gold_color', '{{ $color }}')"
+                                           {{ $goldColor === $color ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="gold_{{ $color }}">
+                                        {{ $color }}
+                                    </label>
+                                </div>
+                            @endforeach
+
+                            @if($goldColor)
+                                <button type="button"
+                                        class="btn btn-link btn-sm p-0 mt-1"
+                                        onclick="applyFilter('gold_color', '')">
+                                    <small>Hapus filter warna</small>
                                 </button>
                             @endif
                         </div>
@@ -167,15 +224,13 @@
                         </div>
 
                         {{-- Tombol reset rentang --}}
-                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady)
+                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady || $branchLocation || $goldColor)
                             <button type="button"
                                     class="btn btn-link btn-sm p-0 mt-1"
                                     onclick="resetRangeFilters()">
-                                <small>Reset berat & harga</small>
+                                <small>Reset filter stok, berat, harga, lokasi & warna</small>
                             </button>
                         @endif
-
-                        {{-- Nanti bisa tambah filter lain di bawah ini (lokasi, warna emas, dll.) --}}
                     </div>
                 </div>
 
@@ -208,13 +263,15 @@
                                         + $product->labor_cost
                                         + $product->stone_price;
 
-                                    // Sementara: rating & lokasi dummy sampai ada di DB
+                                    // Rating masih dummy
                                     $rating      = 4.8;
                                     $ratingCount = 32;
-                                    $stok        = $product->stock_status === 'ready'
+
+                                    $stok = $product->stock_status === 'ready'
                                         ? 'Tersedia'
                                         : strtoupper($product->stock_status);
-                                    $lokasiCabang = 'Cabang Utama';
+
+                                    $lokasiCabang = $product->branch_location ?: 'Cabang';
                                 @endphp
 
                                 {{-- 5 per baris di xl, 4 di lg, 3 di md, 2 di sm --}}
@@ -239,6 +296,13 @@
                                                 <div class="catalog-name text-truncate">
                                                     {{ $product->name }}
                                                 </div>
+
+                                                {{-- (Opsional) Warna Emas --}}
+                                                @if($product->gold_color)
+                                                    <div class="small text-muted">
+                                                        {{ $product->gold_color }}
+                                                    </div>
+                                                @endif
 
                                                 {{-- Harga --}}
                                                 <div class="catalog-price">
@@ -303,6 +367,9 @@
         url.searchParams.delete('max_price');
         // kembalikan filter stok ready ke default: true
         url.searchParams.set('only_ready', '1');
+        // juga hapus lokasi & warna
+        url.searchParams.delete('branch_location');
+        url.searchParams.delete('gold_color');
         url.searchParams.delete('page');
         window.location.href = url.toString();
     }
