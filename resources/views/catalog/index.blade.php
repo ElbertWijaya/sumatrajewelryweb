@@ -332,9 +332,9 @@
                         </div>
 
                         {{-- Pagination --}}
-                        <div class="mt-4">
-                            {{ $products->links() }}
-                        </div>
+                            <div class="mt-4 d-flex justify-content-center">
+                                {{ $products->links('vendor.pagination.bootstrap-4') }}
+                            </div>
                     @endif
                 </div>
             </div>
