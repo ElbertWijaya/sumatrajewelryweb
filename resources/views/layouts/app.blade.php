@@ -440,10 +440,10 @@
             font-size: 0.8rem;
         }
 
-        /* === Sidebar Filter Katalog === */
+        /* === Sidebar Filter Katalog: card dasar === */
         .catalog-filter-card {
             background: #ffffff;
-            border-radius: 0;                  /* kotak, tanpa fillet */
+            border-radius: 10px;
             border: 1px solid #e5e7eb;
             padding: 18px 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
@@ -454,61 +454,69 @@
             letter-spacing: 0.03em;
         }
 
-        /* Kotak pilihan (radio & checkbox) */
-        .catalog-filter-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 4px;
-            border-radius: 4px;
+        /* Setiap opsi filter berupa "pill" */
+        .catalog-filter-option {
+            margin-bottom: 4px;
         }
 
-        .catalog-filter-check .form-check-input {
-            width: 16px;
-            height: 16px;
-            margin-top: 0;
-            border-radius: 0;                  /* SUDUT TAJAM: kotak */
-            border: 1px solid #d1d5db;
-            box-shadow: none;
-            background-color: #ffffff;
-            appearance: none;                  /* buang tampilan default (lingkaran) */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            position: relative;
-        }
-
-        /* Saat hover: garis sedikit lebih gelap */
-        .catalog-filter-check .form-check-input:hover {
-            border-color: #9ca3af;
-        }
-
-        /* Checked: background putih, ada centang hitam */
-        .catalog-filter-check .form-check-input:checked {
-            border-color: #111827;
-            background-color: #ffffff;
-        }
-
-        /* Gambar centang hitam di dalam kotak */
-        .catalog-filter-check .form-check-input:checked::after {
-            content: "✓";
+        .catalog-filter-input {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -56%);
-            font-size: 0.8rem;
-            color: #111827;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        /* Fokus lembut */
-        .catalog-filter-check .form-check-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 1px rgba(17,24,39,0.15);
-        }
-
-        .catalog-filter-check .form-check-label {
+        .catalog-filter-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;                 /* pill */
+            border: 1px solid transparent;
+            font-size: 0.85rem;
+            color: #374151;
             cursor: pointer;
+            transition: all 0.15s ease-in-out;
         }
-        
+
+        /* icon box di kiri */
+        .catalog-filter-label::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid #d1d5db;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        /* hover: garis halus dan background tipis */
+        .catalog-filter-label:hover {
+            border-color: #e5e7eb;
+            background-color: #f9fafb;
+        }
+
+        /* saat checked: pill aktif dengan centang hitam */
+        .catalog-filter-input:checked + .catalog-filter-label {
+            border-color: #c5a059;
+            background-color: #fef9e6;           /* kuning lembut */
+            color: #111827;
+            font-weight: 500;
+        }
+
+        /* centang hitam di dalam kotak kiri */
+        .catalog-filter-input:checked + .catalog-filter-label::before {
+            border-color: #111827;
+            background-color: #111827;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='8' viewBox='0 0 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4L3.5 6.5L9 1' stroke='%23ffffff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* fokus: ring tipis */
+        .catalog-filter-input:focus + .catalog-filter-label {
+            box-shadow: 0 0 0 1px rgba(17,24,39,0.15);
+        } 
+
         /* === Pagination Katalog === */
         .catalog-pagination-nav {
             display: flex;

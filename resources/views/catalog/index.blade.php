@@ -41,15 +41,16 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Kategori</div>
                             @foreach($categories as $cat)
-                                <div class="form-check small catalog-filter-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="category_filter"
-                                           id="cat_{{ $cat->id }}"
-                                           value="{{ $cat->id }}"
-                                           onclick="applyFilter('category', '{{ $cat->id }}')"
-                                           {{ (string)$categoryId === (string)$cat->id ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="cat_{{ $cat->id }}">
+                                <div class="catalog-filter-option">
+                                    <input
+                                        class="catalog-filter-input"
+                                        type="radio"
+                                        name="category_filter"
+                                        id="cat_{{ $cat->id }}"
+                                        value="{{ $cat->id }}"
+                                        onclick="applyFilter('category', '{{ $cat->id }}')"
+                                        {{ (string)$categoryId === (string)$cat->id ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="cat_{{ $cat->id }}">
                                         {{ $cat->name }}
                                     </label>
                                 </div>
@@ -70,15 +71,16 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Kadar / Karat</div>
                             @foreach($karats as $k)
-                                <div class="form-check small catalog-filter-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="karat_filter"
-                                           id="karat_{{ $k }}"
-                                           value="{{ $k }}"
-                                           onclick="applyFilter('karat', '{{ $k }}')"
-                                           {{ $karat === $k ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="karat_{{ $k }}">
+                                <div class="catalog-filter-option">
+                                    <input
+                                        class="catalog-filter-input"
+                                        type="radio"
+                                        name="karat_filter"
+                                        id="karat_{{ $k }}"
+                                        value="{{ $k }}"
+                                        onclick="applyFilter('karat', '{{ $k }}')"
+                                        {{ $karat === $k ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="karat_{{ $k }}">
                                         {{ $k }}
                                     </label>
                                 </div>
@@ -99,15 +101,16 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Lokasi Cabang</div>
                             @foreach($branchLocations as $loc)
-                                <div class="form-check small catalog-filter-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="branch_location_filter"
-                                           id="branch_{{ $loc }}"
-                                           value="{{ $loc }}"
-                                           onclick="applyFilter('branch_location', '{{ $loc }}')"
-                                           {{ $branchLocation === $loc ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="branch_{{ $loc }}">
+                                <div class="catalog-filter-option">
+                                    <input
+                                        class="catalog-filter-input"
+                                        type="radio"
+                                        name="branch_location_filter"
+                                        id="branch_{{ $loc }}"
+                                        value="{{ $loc }}"
+                                        onclick="applyFilter('branch_location', '{{ $loc }}')"
+                                        {{ $branchLocation === $loc ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="branch_{{ $loc }}">
                                         {{ $loc }}
                                     </label>
                                 </div>
@@ -128,15 +131,16 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Warna Emas</div>
                             @foreach($goldColors as $color)
-                                <div class="form-check small catalog-filter-check">
-                                    <input class="form-check-input"
-                                           type="radio"
-                                           name="gold_color_filter"
-                                           id="gold_{{ $color }}"
-                                           value="{{ $color }}"
-                                           onclick="applyFilter('gold_color', '{{ $color }}')"
-                                           {{ $goldColor === $color ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="gold_{{ $color }}">
+                                <div class="catalog-filter-option">
+                                    <input
+                                        class="catalog-filter-input"
+                                        type="radio"
+                                        name="gold_color_filter"
+                                        id="gold_{{ $color }}"
+                                        value="{{ $color }}"
+                                        onclick="applyFilter('gold_color', '{{ $color }}')"
+                                        {{ $goldColor === $color ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="gold_{{ $color }}">
                                         {{ $color }}
                                     </label>
                                 </div>
@@ -157,15 +161,16 @@
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Collection</div>
                             @foreach($collections as $col)
-                                <div class="form-check small catalog-filter-check">
-                                    <input class="form-check-input"
+                                <div class="catalog-filter-option">
+                                    <input
+                                        class="catalog-filter-input"
                                         type="radio"
                                         name="collection_filter"
                                         id="collection_{{ $loop->index }}"
                                         value="{{ $col }}"
                                         onclick="applyFilter('collection', '{{ $col }}')"
                                         {{ $collection === $col ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="collection_{{ $loop->index }}">
+                                    <label class="catalog-filter-label" for="collection_{{ $loop->index }}">
                                         {{ $col }}
                                     </label>
                                 </div>
@@ -185,13 +190,14 @@
                         {{-- Filter Stok Ready --}}
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Stok</div>
-                            <div class="form-check small catalog-filter-check">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="only_ready"
-                                       {{ $onlyReady ? 'checked' : '' }}
-                                       onclick="applyFilter('only_ready', this.checked ? '1' : '')">
-                                <label class="form-check-label" for="only_ready">
+                            <div class="catalog-filter-option">
+                                <input
+                                    class="catalog-filter-input"
+                                    type="checkbox"
+                                    id="only_ready"
+                                    {{ $onlyReady ? 'checked' : '' }}
+                                    onclick="applyFilter('only_ready', this.checked ? '1' : '')">
+                                <label class="catalog-filter-label" for="only_ready">
                                     Hanya tampilkan stok ready
                                 </label>
                             </div>
@@ -250,11 +256,11 @@
                         </div>
 
                         {{-- Tombol reset rentang --}}
-                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady || $branchLocation || $goldColor)
+                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady || $branchLocation || $goldColor || $collection)
                             <button type="button"
                                     class="btn btn-link btn-sm p-0 mt-1"
                                     onclick="resetRangeFilters()">
-                                <small>Reset filter stok, berat, harga, lokasi & warna</small>
+                                <small>Reset filter stok, berat, harga, lokasi, warna & collection</small>
                             </button>
                         @endif
                     </div>
@@ -394,9 +400,10 @@
         url.searchParams.delete('max_price');
         // kembalikan filter stok ready ke default: true
         url.searchParams.set('only_ready', '1');
-        // juga hapus lokasi & warna
+        // juga hapus lokasi, warna, collection
         url.searchParams.delete('branch_location');
         url.searchParams.delete('gold_color');
+        url.searchParams.delete('collection');
         url.searchParams.delete('page');
         window.location.href = url.toString();
     }
