@@ -17,10 +17,10 @@ class AdminController extends Controller
         // 2. Ambil semua produk yang ada di database
         $products = Product::all();
 
-        // 3. (TAMBAHAN PENTING) Ambil data pesanan agar tidak error "Undefined variable $orders"
+        // 3. Ambil data pesanan
         $orders = Order::with('user')->latest()->get();
 
-        // 4. Kirim data tersebut ke View (halaman HTML), JANGAN LUPA sertakan 'orders'
+        // 4. Kirim data ke view
         return view('admin.dashboard', compact('goldPrice24k', 'products', 'orders'));
     }
 
@@ -30,7 +30,7 @@ class AdminController extends Controller
         $goldPrice = GoldPrice::where('karat_type', '24K')->first();
 
         // 2. Update angkanya dengan input dari form
-        $goldPrice->sell_price_per_gram = $request->sell_price;
+        $goldPrice->sell_price_per_gram    = $request->sell_price;
         $goldPrice->buyback_price_per_gram = $request->buyback_price;
         
         // 3. Simpan ke database
@@ -44,12 +44,14 @@ class AdminController extends Controller
     {
         // 1. Validasi (Cek kelengkapan data)
         $request->validate([
-            'sku' => 'required|unique:products,sku', // SKU tidak boleh kembar
-            'name' => 'required',
-            'weight' => 'required|numeric',
+            'sku'             => 'required|unique:products,sku', // SKU tidak boleh kembar
+            'name'            => 'required',
+            'weight'          => 'required|numeric',
+            'karat_type'      => 'required',
             'branch_location' => 'nullable|string', // Asia / Sun Plaza
             'gold_color'      => 'nullable|string', // Kuning / Putih / Rose Gold
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi foto
+            'labor_cost'      => 'nullable|numeric',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi foto
         ]);
 
         // 2. Proses Upload Foto (Jika ada)
@@ -64,17 +66,17 @@ class AdminController extends Controller
 
         // 3. Simpan ke Database
         Product::create([
-            'sku' => $request->sku,
-            'name' => $request->name,
-            'category_id' => 1, // Sementara kita set kategori ID 1 (Cincin) dulu
-            'weight' => $request->weight,
-            'stone_price' => $request->stone_price ?? 0, // Jika kosong anggap 0
-            'karat_type' => $request->karat_type,
-            'gold_color' => $request->gold_color,
-            'labor_cost' => $request->labor_cost ?? 0, // Jika kosong anggap 0
-            'image_url' => $imageName, // Simpan nama filenya saja
-            'stock_status' => 'ready',
-            'branch_location' => $request->branch_location ?: 'Asia'
+            'sku'             => $request->sku,
+            'name'            => $request->name,
+            'category_id'     => 1, // Sementara kategori default 1 (Cincin)
+            'weight'          => $request->weight,
+            'karat_type'      => $request->karat_type,
+            'stone_price'     => 0, // belum ada input di form
+            'labor_cost'      => $request->labor_cost ?? 0,
+            'image_url'       => $imageName,
+            'stock_status'    => 'ready',
+            'branch_location' => $request->branch_location ?: 'Asia',
+            'gold_color'      => $request->gold_color ?: null,
         ]);
 
         // 4. Kembali ke dashboard
@@ -89,18 +91,18 @@ class AdminController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
-    // 2. Proses Konfirmasi Pembayaran (JADI DUIT!)
+    // 2. Proses Konfirmasi Pembayaran
     public function confirmPayment($id)
     {
         $order = Order::with('items.product')->findOrFail($id);
 
-        // A. Ubah Status Pesanan: pembayaran lunas, pesanan masuk tahap proses oleh toko
+        // A. Ubah Status Pesanan
         $order->update([
             'payment_status' => 'paid',
-            'order_status'   => 'processing', // Sedang diproses (cek stok / persiapan / antrian produksi)
+            'order_status'   => 'processing', // Sedang diproses
         ]);
 
-        // B. Ubah Status Barang jadi SOLD (stok fisik dianggap terjual)
+        // B. Ubah Status Barang jadi SOLD
         foreach ($order->items as $item) {
             $item->product->update(['stock_status' => 'sold']);
         }
@@ -108,7 +110,7 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi! Pesanan sedang diproses oleh toko.');
     }
 
-    #Input Nomor Resi dan Ubah Status Pesanan jadi DIKIRIM
+    // 3. Input Nomor Resi dan ubah status pesanan
     public function inputResi(Request $request, $id)
     {
         $request->validate([
@@ -119,7 +121,7 @@ class AdminController extends Controller
 
         $order->update([
             'tracking_number' => $request->tracking_number,
-            'order_status'    => 'ready_to_ship' // Ubah status jadi DIKIRIM
+            'order_status'    => 'ready_to_ship'
         ]);
 
         return redirect()->back()->with('success', 'Nomor Resi berhasil diinput. Status pesanan berubah menjadi DIKIRIM.');

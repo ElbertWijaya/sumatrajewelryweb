@@ -139,7 +139,9 @@
                             <td>{{ $product->weight }} gr</td>
                             <td>
                                 @php
-                                    $hargaDasar = ($product->karat_type == '24K') ? $goldPrice24k->sell_price_per_gram : ($goldPrice24k->sell_price_per_gram * 0.8);
+                                    $hargaDasar = ($product->karat_type == '24K')
+                                        ? ($goldPrice24k->sell_price_per_gram ?? 0)
+                                        : (($goldPrice24k->sell_price_per_gram ?? 0) * 0.8);
                                     $total = ($product->weight * $hargaDasar) + $product->labor_cost + $product->stone_price;
                                 @endphp
                                 Rp {{ number_format($total, 0, ',', '.') }}
@@ -163,6 +165,7 @@
         </div>
     </div>
 
+    {{-- Modal Update Harga Emas --}}
     <div class="modal fade" id="updatePriceModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -190,6 +193,7 @@
         </div>
     </div>
 
+    {{-- Modal Tambah Produk --}}
     <div class="modal fade" id="addProductModal" tabindex="-1">
         <div class="modal-dialog modal-lg"> 
             <div class="modal-content">
@@ -227,6 +231,26 @@
                             <div class="col-md-4 mb-3">
                                 <label>Ongkos Bikin (Rp)</label>
                                 <input type="number" name="labor_cost" class="form-control" value="0">
+                            </div>
+                        </div>
+
+                        {{-- Lokasi Cabang & Warna Emas --}}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Lokasi Cabang</label>
+                                <select name="branch_location" class="form-select">
+                                    <option value="Asia">Asia</option>
+                                    <option value="Sun Plaza">Sun Plaza</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Warna Emas</label>
+                                <select name="gold_color" class="form-select">
+                                    <option value="">Pilih warna</option>
+                                    <option value="Kuning">Kuning</option>
+                                    <option value="Putih">Putih</option>
+                                    <option value="Rose Gold">Rose Gold</option>
+                                </select>
                             </div>
                         </div>
 
