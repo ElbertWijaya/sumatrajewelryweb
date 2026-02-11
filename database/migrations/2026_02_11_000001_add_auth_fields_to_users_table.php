@@ -21,7 +21,6 @@ return new class extends Migration
             }
 
             // phone_number: hanya tambahkan kalau memang belum ada.
-            // Pada repo Anda phone_number sudah ada (lihat create_users_table), jadi kita tidak menambah di sini kalau sudah ada.
             if (! Schema::hasColumn('users', 'phone_number')) {
                 $table->string('phone_number')->nullable()->after('provider_id');
             }
@@ -34,6 +33,8 @@ return new class extends Migration
 
         // Pastikan index provider_id ada (cek dulu)
         if (! $this->indexExists('users', 'users_provider_id_index')) {
+            // gunakan nama index yang kita pilih; jika index sudah ada dengan nama lain,
+            // ini tidak akan membuat duplikat karena kita mengecek index by name.
             DB::statement('ALTER TABLE `users` ADD INDEX `users_provider_id_index` (`provider_id`)');
         }
 
@@ -61,22 +62,10 @@ return new class extends Migration
             if (Schema::hasColumn('users', 'phone_verified_at')) {
                 $table->dropColumn('phone_verified_at');
             }
-            if (Schema::hasColumn('users', 'phone_number')) {
-                // jangan drop phone_number yang awalnya dibuat di create_users_table
-                // hanya drop jika kolom ini ditambahkan oleh migration ini dan memang ada
-                // untuk safety kita tidak menghapus phone_number di down() karena bisa berasal dari migration awal
-            }
-            if (Schema::hasColumn('users', 'provider_id')) {
-                // if provider_id was added by this migration, drop it
-                // We'll try dropping only if index exists; keep safe to avoid accidental data loss
-                // (Optionally leave provider/provider_id as-is in rollback to avoid data loss)
-            }
-            if (Schema::hasColumn('users', 'provider')) {
-                // same as above
-            }
+            // tidak menghapus phone_number dari sini (bisa berasal dari migration awal)
         });
 
-        // Remove indexes if exist (provider_id index, phone unique)
+        // Remove indexes jika ada
         if ($this->indexExists('users', 'users_provider_id_index')) {
             DB::statement('ALTER TABLE `users` DROP INDEX `users_provider_id_index`');
         }
@@ -85,11 +74,19 @@ return new class extends Migration
         }
     }
 
+    /**
+     * Periksa eksistensi index menggunakan INFORMATION_SCHEMA (portable & bindable).
+     */
     private function indexExists(string $table, string $indexName): bool
     {
-        $db = DB::getPdo();
-        $stmt = $db->prepare("SHOW INDEX FROM `{$table}` WHERE Key_name = :idx LIMIT 1");
-        $stmt->execute(['idx' => $indexName]);
-        return (bool) $stmt->fetch();
+        // Ambil nama database saat ini
+        $database = DB::getDatabaseName();
+
+        $result = DB::select(
+            'SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND INDEX_NAME = ? LIMIT 1',
+            [$database, $table, $indexName]
+        );
+
+        return ! empty($result);
     }
 };

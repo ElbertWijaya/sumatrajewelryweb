@@ -28,6 +28,31 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.process');
 // 3. Proses Logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Register routes
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register.show');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register.post');
+// Email verification routes (using built-in controllers)
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+Route::get('/email/verify', function () {
+    return view('auth.verify_notice');
+})->middleware('auth')->name('verification.notice');
+// Handle verification (signed URL)
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/my-dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+// Resend verification
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
+// Protect checkout: require auth and verified
+Route::middleware(['auth','verified'])->group(function () {
+    Route::get('/checkout/{id}', [App\Http\Controllers\OrderController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout/process', [App\Http\Controllers\OrderController::class, 'processOrder'])->name('checkout.process');
+});
+
 
 // --- GROUP CUSTOMER (Harus Login) ---
 Route::middleware(['auth'])->group(function () {

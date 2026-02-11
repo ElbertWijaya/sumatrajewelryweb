@@ -16,12 +16,12 @@ return new class extends Migration
             }
         });
 
-        // Pastikan ada index untuk provider_id (jika belum ada, buat)
+        // Pastikan index provider_id ada (cek dulu)
         if (! $this->indexExists('users', 'users_provider_id_index')) {
             DB::statement('ALTER TABLE `users` ADD INDEX `users_provider_id_index` (`provider_id`)');
         }
 
-        // Periksa dan buat unique index untuk phone_number jika aman (tidak ada duplikat)
+        // Coba buat unique index untuk phone_number hanya jika aman (tidak ada duplikat)
         if (! $this->indexExists('users', 'users_phone_number_unique')) {
             $dupes = DB::select("
                 SELECT phone_number, COUNT(*) AS cnt
@@ -33,15 +33,13 @@ return new class extends Migration
             if (empty($dupes)) {
                 DB::statement('ALTER TABLE `users` ADD UNIQUE `users_phone_number_unique` (`phone_number`)');
             } else {
-                // Log agar admin tahu; tidak menggagalkan migration
-                info('Terdeteksi duplikat phone_number; unique index tidak dibuat. Periksa data duplikat dan bersihkan jika ingin menambahkan constraint.');
+                info('Terdeteksi duplikat phone_number; unique index users_phone_number_unique tidak dibuat. Bersihkan data jika ingin menambahkan constraint.');
             }
         }
     }
 
     public function down(): void
     {
-        // Hati-hati saat rollback; hanya hapus kolom/index kalau ada
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'phone_verified_at')) {
                 $table->dropColumn('phone_verified_at');
@@ -57,12 +55,19 @@ return new class extends Migration
         }
     }
 
-    // Utility: cek index ada (MySQL)
+    /**
+     * Periksa eksistensi index menggunakan INFORMATION_SCHEMA (portable & bindable).
+     */
     private function indexExists(string $table, string $indexName): bool
     {
-        $db = DB::getPdo();
-        $stmt = $db->prepare("SHOW INDEX FROM `{$table}` WHERE Key_name = :idx LIMIT 1");
-        $stmt->execute(['idx' => $indexName]);
-        return (bool) $stmt->fetch();
+        // Ambil nama database saat ini
+        $database = DB::getDatabaseName();
+
+        $result = DB::select(
+            'SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND INDEX_NAME = ? LIMIT 1',
+            [$database, $table, $indexName]
+        );
+
+        return ! empty($result);
     }
 };
