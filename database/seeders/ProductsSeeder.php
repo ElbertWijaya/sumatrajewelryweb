@@ -4,61 +4,69 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class ProductsSeeder extends Seeder
 {
     public function run(): void
     {
-        $now = Carbon::now();
-
-        // Cek apakah table products ada
-        if (!\Schema::hasTable('products')) {
+        // Pastikan table products ada
+        if (! Schema::hasTable('products')) {
             return;
         }
 
+        $now = Carbon::now();
+
+        // Ambil category id default (jika ada)
+        $firstCategory = DB::table('categories')->first();
+        $categoryId = $firstCategory ? $firstCategory->id : null;
+
         $exampleProducts = [
             [
+                'sku' => $this->generateSku('CIN'),
                 'name' => 'Cincin Emas Classic',
-                'karat_type' => '17K',
+                'category_id' => $categoryId,
                 'weight' => 3.5,
-                'labor_cost' => 200000,
+                'karat_type' => '17K',
                 'stone_price' => 150000,
-                'image_url' => null,
+                'labor_cost' => 200000,
                 'stock_status' => 'ready',
+                'image_url' => null,
+                'description' => 'Cincin elegan untuk acara spesial.',
                 'branch_location' => 'Jakarta',
                 'gold_color' => 'Kuning',
                 'collection' => 'Daily Collections',
-                'category_id' => $this->firstCategoryId(),
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
+                'sku' => $this->generateSku('GEL'),
                 'name' => 'Gelang Elegan',
-                'karat_type' => '24K',
+                'category_id' => $categoryId,
                 'weight' => 5.2,
-                'labor_cost' => 300000,
+                'karat_type' => '24K',
                 'stone_price' => 0,
-                'image_url' => null,
+                'labor_cost' => 300000,
                 'stock_status' => 'ready',
+                'image_url' => null,
+                'description' => 'Gelang minimalis cocok untuk sehari-hari.',
                 'branch_location' => 'Bandung',
                 'gold_color' => 'Putih',
                 'collection' => 'Pilihan Unggulan',
-                'category_id' => $this->firstCategoryId(),
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
         ];
 
-        DB::table('products')->insert($exampleProducts);
+        // insertOrIgnore agar idempotent (tidak error jika ada duplicate SKU)
+        DB::table('products')->insertOrIgnore($exampleProducts);
     }
 
-    private function firstCategoryId()
+    private function generateSku(string $prefix = 'P'): string
     {
-        if (\Schema::hasTable('categories')) {
-            $c = DB::table('categories')->first();
-            return $c ? $c->id : null;
-        }
-        return null;
+        // contoh: CIN-20260211-5F3A2C (prefix + tanggal + random)
+        return strtoupper($prefix . '-' . date('Ymd') . '-' . Str::upper(Str::random(6)));
     }
 }

@@ -32,16 +32,15 @@ class RegisterController extends Controller
             'role' => 'customer',
         ]);
 
-        // Fire Registered event (Laravel verifies email using this)
+        // Fire Registered event -> Laravel akan mengirim email verifikasi (jika route & listener terpasang)
         event(new Registered($user));
 
-        // Kirim welcome notification (queued)
+        // Kirim welcome email (queued). Pastikan queue worker berjalan di environment Anda.
         $user->notify(new WelcomeNotification($user));
 
-        // Login the user (optional). We'll keep them logged in but require email verification for checkout.
+        // Login user (tetap harus verifikasi email untuk checkout)
         Auth::login($user);
 
-        // Redirect to verification notice page
         return redirect()->route('verification.notice')->with('status', 'registrationsuccess');
     }
 }

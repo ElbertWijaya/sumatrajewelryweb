@@ -53,6 +53,13 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::post('/checkout/process', [App\Http\Controllers\OrderController::class, 'processOrder'])->name('checkout.process');
 });
 
+// Social login (Google, Facebook) — stub routes
+Route::get('auth/{provider}', [App\Http\Controllers\Auth\SocialController::class, 'redirect'])->name('social.redirect');
+Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\SocialController::class, 'callback'])->name('social.callback');
+
+// Phone registration (stub) — endpoint yang dipanggil dari modal login
+Route::post('register/phone/send-otp', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'sendOtp'])
+    ->name('register.phone.sendOtp');
 
 // --- GROUP CUSTOMER (Harus Login) ---
 Route::middleware(['auth'])->group(function () {

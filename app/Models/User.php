@@ -31,7 +31,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_verified_at' => 'datetime',
     ];
 
-    // Optionally: helper to check if phone verified
+    /**
+     * Helper: apakah telepon sudah terverifikasi
+     */
     public function hasVerifiedPhone(): bool
     {
         return ! is_null($this->phone_verified_at);
