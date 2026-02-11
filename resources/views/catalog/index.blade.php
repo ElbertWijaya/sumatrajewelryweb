@@ -386,62 +386,81 @@
 @endsection
 
 @section('scripts')
-<script>
-    function applyFilter(key, value) {
-        const url = new URL(window.location.href);
+    <script>
+        // keys that support multiple selection (we will use bracket notation key[])
+        const MULTI_KEYS = ['category', 'karat', 'branch_location', 'gold_color', 'collection'];
 
-        // current values (may be multiple)
-        const current = url.searchParams.getAll(key);
-
-        if (value === '' || value === null) {
-            // if explicitly clearing
-            url.searchParams.delete(key);
-        } else {
-            // toggle: if value exists, remove it; otherwise add it
-            if (current.includes(value)) {
-                const remaining = current.filter(v => v !== value);
-                url.searchParams.delete(key);
-                remaining.forEach(v => url.searchParams.append(key, v));
-            } else {
-                // append new value (multiple)
-                url.searchParams.append(key, value);
-            }
+        function isMultiKey(key) {
+            return MULTI_KEYS.includes(key);
         }
 
-        // setiap ganti filter/sort, kembali ke halaman 1
-        url.searchParams.delete('page');
+        function paramNameFor(key) {
+            return isMultiKey(key) ? key + '[]' : key;
+        }
 
-        // scroll langsung ke area produk setelah reload
-        url.hash = 'product-grid';
+        function applyFilter(key, value) {
+            const url = new URL(window.location.href);
+            const pname = paramNameFor(key);
 
-        window.location.href = url.toString();
-    }
+            if (value === '' || value === null) {
+                // explicit clear of this filter key
+                url.searchParams.delete(pname);
+            } else if (isMultiKey(key)) {
+                // get all existing values for pname
+                const current = url.searchParams.getAll(pname);
 
-    function clearFilterKey(key) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete(key);
-        url.searchParams.delete('page');
-        url.hash = 'product-grid';
-        window.location.href = url.toString();
-    }
+                if (current.includes(value)) {
+                    // remove that value
+                    const remaining = current.filter(v => v !== value);
+                    url.searchParams.delete(pname);
+                    remaining.forEach(v => url.searchParams.append(pname, v));
+                } else {
+                    // append new value (as repeated pname)
+                    url.searchParams.append(pname, value);
+                }
+            } else {
+                // single-value key
+                const current = url.searchParams.get(pname);
+                if (current === value) {
+                    url.searchParams.delete(pname);
+                } else {
+                    url.searchParams.set(pname, value);
+                }
+            }
 
-    function resetRangeFilters() {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('min_weight');
-        url.searchParams.delete('max_weight');
-        url.searchParams.delete('min_price');
-        url.searchParams.delete('max_price');
-        // kembalikan filter stok ready ke default: true
-        url.searchParams.set('only_ready', '1');
-        // juga hapus lokasi, warna, collection, kategori, karat
-        url.searchParams.delete('branch_location');
-        url.searchParams.delete('gold_color');
-        url.searchParams.delete('collection');
-        url.searchParams.delete('category');
-        url.searchParams.delete('karat');
-        url.searchParams.delete('page');
-        url.hash = 'product-grid';
-        window.location.href = url.toString();
-    }
-</script>
+            // setiap ganti filter/sort, kembali ke halaman 1
+            url.searchParams.delete('page');
+
+            // scroll langsung ke area produk setelah reload
+            url.hash = 'product-grid';
+
+            window.location.href = url.toString();
+        }
+
+        function clearFilterKey(key) {
+            const url = new URL(window.location.href);
+            const pname = paramNameFor(key);
+            url.searchParams.delete(pname);
+            url.searchParams.delete('page');
+            url.hash = 'product-grid';
+            window.location.href = url.toString();
+        }
+
+        function resetRangeFilters() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('min_weight');
+            url.searchParams.delete('max_weight');
+            url.searchParams.delete('min_price');
+            url.searchParams.delete('max_price');
+            // kembalikan filter stok ready ke default: true
+            url.searchParams.set('only_ready', '1');
+            // juga hapus lokasi, warna, collection, kategori, karat (multi keys)
+            ['branch_location', 'gold_color', 'collection', 'category', 'karat'].forEach(k => {
+                url.searchParams.delete(paramNameFor(k));
+            });
+            url.searchParams.delete('page');
+            url.hash = 'product-grid';
+            window.location.href = url.toString();
+        }
+    </script>
 @endsection

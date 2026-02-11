@@ -25,11 +25,11 @@
                 Temukan koleksi perhiasan emas berkualitas tinggi dengan desain eksklusif,
                 harga transparan, dan layanan yang bersahabat.
             </p>
-            <a href="#katalog" class="btn btn-gold btn-lg px-5">Lihat Koleksi Terbaru</a>
+            <a href="{{ route('catalog.index') }}" class="btn btn-gold btn-lg px-5">Lihat Koleksi Terbaru</a>
         </div>
     </div>
 
-    {{-- KOLEKSI BERDASARKAN TEMA (HEADER CONTAINER, SLIDER FULL-WIDTH DENGAN PADDING) --}}
+    {{-- KOLEKSI BERDASARKAN TEMA --}}
     <div class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-4">
@@ -57,108 +57,52 @@
                     </button>
 
                     <div class="collection-slider" id="collectionSlider">
-                        {{-- 1. Hadiah Pernikahan --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        HADIAH PERNIKAHAN
+                        {{-- Dynamic: loop collections from DB --}}
+                        @foreach($collections as $col)
+                            <div class="collection-slider-item">
+                                <div class="collection-banner h-100">
+                                    <div class="collection-banner-box" style="background-image: none;"></div>
+                                    <div class="collection-banner-body">
+                                        <div class="collection-banner-title text-dark">
+                                            {{ strtoupper($col) }}
+                                        </div>
+                                        {{-- Link to katalog with collection filter active --}}
+                                        <a href="{{ route('catalog.index', ['collection' => $col]) }}" class="collection-banner-link">
+                                            Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                                        </a>
                                     </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
 
-                        {{-- 2. Koleksi Pria --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        KOLEKSI PRIA
+                        {{-- Fallback: jika tidak ada collection di DB, tampilkan placeholder (opsional) --}}
+                        @if($collections->isEmpty())
+                            <div class="collection-slider-item">
+                                <div class="collection-banner h-100">
+                                    <div class="collection-banner-box" style="background-image: none;"></div>
+                                    <div class="collection-banner-body">
+                                        <div class="collection-banner-title text-dark">
+                                            Koleksi
+                                        </div>
+                                        <a href="{{ route('catalog.index') }}" class="collection-banner-link">
+                                            Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
+                                        </a>
                                     </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
                                 </div>
                             </div>
-                        </div>
-
-                        {{-- 3. Cincin Kawin & Tunangan --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        CINCIN KAWIN &amp; TUNANGAN
-                                    </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- 4. Koleksi Zodiak --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        KOLEKSI ZODIAK
-                                    </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- 5. Perhiasan Eksotik --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        PERHIASAN EKSOTIK
-                                    </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- 6. Koleksi Sehari-hari --}}
-                        <div class="collection-slider-item">
-                            <div class="collection-banner h-100">
-                                <div class="collection-banner-box" style="background-image: none;"></div>
-                                <div class="collection-banner-body">
-                                    <div class="collection-banner-title text-dark">
-                                        KOLEKSI SEHARI-HARI
-                                    </div>
-                                    <a href="#katalog" class="collection-banner-link">
-                                        Lihat Koleksi <i class="bi bi-arrow-right-short"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
                     </div> {{-- /collection-slider --}}
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- TOP PRODUCTS / KOLEKSI UNGGULAN (FULL-WIDTH, PADDING 8REM) --}}
+    {{-- TOP PRODUCTS --}}
     @if($products->count() > 0)
         @php
             $topProducts = $products->take(3);
         @endphp
 
-        {{-- Header tetap di container biasa --}}
         <div class="container py-5">
             <div class="text-center mb-4">
                 <h2 class="fw-bold">Pilihan Koleksi Unggulan</h2>
@@ -169,7 +113,6 @@
             </div>
         </div>
 
-        {{-- Grid produk unggulan full-width --}}
         <div class="container-fluid px-0">
             <div class="featured-products-container">
                 <div class="row g-4">
@@ -221,7 +164,7 @@
         </div>
     @endif
 
-    {{-- KATALOG PRODUK UTAMA – GAYA GALERI (BARIS KARTU LEBAR BESAR) --}}
+    {{-- KATALOG PRODUK UTAMA --}}
     <div class="py-5" id="katalog">
         {{-- Header --}}
         <div class="container">
@@ -253,10 +196,8 @@
                                 + $product->stone_price;
                         @endphp
 
-                        {{-- 5 kartu di desktop lebar, 4 di laptop, 3 di tablet, 2 di HP --}}
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
                             <div class="latest-gallery-card h-100 d-flex flex-column">
-                                {{-- Banner / area gambar SELALU ADA --}}
                                 <div class="latest-gallery-image-wrap d-flex align-items-center justify-content-center">
                                     @if($product->image_url)
                                         <img src="{{ asset('uploads/' . $product->image_url) }}"
@@ -267,7 +208,6 @@
                                     @endif
                                 </div>
 
-                                {{-- Info singkat --}}
                                 <div class="latest-gallery-info">
                                     <div class="latest-gallery-name text-truncate">
                                         {{ $product->name }}
@@ -280,7 +220,6 @@
                                     </div>
                                 </div>
 
-                                {{-- Tombol --}}
                                 <div class="mt-auto pt-2">
                                     <a href="{{ route('product.detail', $product->id) }}"
                                        class="btn btn-outline-dark btn-sm w-100">
@@ -296,9 +235,9 @@
                     @endforelse
                 </div>
 
-                {{-- Tombol tampilkan lebih banyak --}}
+                {{-- Tombol tampilkan lebih banyak -> arahkan ke katalog --}}
                 <div class="text-center mt-4">
-                    <a href="#" class="btn btn-outline-dark px-5 py-2">
+                    <a href="{{ route('catalog.index') }}" class="btn btn-outline-dark px-5 py-2">
                         Tampilkan Lebih Banyak
                     </a>
                 </div>

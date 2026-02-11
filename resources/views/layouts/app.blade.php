@@ -694,7 +694,7 @@
                                    href="{{ route('store.locations') }}">Lokasi & Kontak</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home') }}#katalog">Koleksi Kami</a>
+                                <a class="nav-link" href="{{ route('catalog.index') }}">Produk Kami</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Artikel</a>

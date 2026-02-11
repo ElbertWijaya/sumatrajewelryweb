@@ -16,8 +16,15 @@ class HomeController extends Controller
         // 2. Ambil Produk yang statusnya 'ready' saja (Jangan tampilkan barang terjual)
         $products = Product::where('stock_status', 'ready')->latest()->get();
 
-        // 3. Kirim ke tampilan halaman depan
-        return view('home', compact('goldPrice24k', 'products'));
+        // 3. Ambil daftar collection unik (non-null) untuk tampilan home -> Koleksi Berdasarkan Tema
+        $collections = Product::select('collection')
+            ->whereNotNull('collection')
+            ->distinct()
+            ->orderBy('collection')
+            ->pluck('collection');
+
+        // 4. Kirim ke tampilan halaman depan
+        return view('home', compact('goldPrice24k', 'products', 'collections'));
     }
 
     public function show($id)

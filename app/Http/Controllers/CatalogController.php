@@ -12,38 +12,37 @@ class CatalogController extends Controller
     // Halaman katalog penuh
     public function index(Request $request)
     {
-        // Ambil parameter filter dari query string
+        // Ambil parameter filter dari query string / request
         $search      = $request->input('search');
 
-        // Untuk filter multi-select kita menerima array atau single value.
-        $category    = $request->input('category', []);      // id kategori (array atau single)
-        $karat       = $request->input('karat', []);         // contoh: 17K, 24K (array or single)
-        $sort        = $request->input('sort');              // latest, price_asc, price_desc
-        $onlyReady   = $request->boolean('only_ready', true); // default: true
-        $minWeight   = $request->input('min_weight');         // gram
-        $maxWeight   = $request->input('max_weight');
-        $minPrice    = $request->input('min_price');          // Rupiah
-        $maxPrice    = $request->input('max_price');
-        $branchLocation = $request->input('branch_location', []); // array or single
-        $collection  = $request->input('collection', []);    // array or single
-        $goldColor   = $request->input('gold_color', []);    // array or single
+        // Terima kemungkinan array (karat[]), atau single value, atau comma-separated string
+        $category     = $request->input('category', []);      // id kategori (array or single)
+        $karat        = $request->input('karat', []);         // contoh: 17K, 24K
+        $sort         = $request->input('sort');              // latest, price_asc, price_desc
+        $onlyReady    = $request->boolean('only_ready', true); // default: true
+        $minWeight    = $request->input('min_weight');         // gram
+        $maxWeight    = $request->input('max_weight');
+        $minPrice     = $request->input('min_price');          // Rupiah
+        $maxPrice     = $request->input('max_price');
+        $branch       = $request->input('branch_location', []); // array or single
+        $collection   = $request->input('collection', []);    // array or single
+        $goldColor    = $request->input('gold_color', []);    // array or single
 
-        // Normalize: if value is string with comma-separated values, explode it.
+        // normalizer: turn single / comma-separated into array of strings
         $normalize = function ($val) {
             if ($val === null || $val === '') return [];
             if (is_array($val)) return array_values($val);
-            // if comma separated like "a,b"
             if (is_string($val) && strpos($val, ',') !== false) {
-                return array_filter(array_map('trim', explode(',', $val)));
+                return array_values(array_filter(array_map('trim', explode(',', $val))));
             }
             return [$val];
         };
 
-        $categoryArr     = $normalize($category);
-        $karatArr        = $normalize($karat);
-        $branchArr       = $normalize($branchLocation);
-        $collectionArr   = $normalize($collection);
-        $colorArr        = $normalize($goldColor);
+        $categoryArr   = $normalize($category);
+        $karatArr      = $normalize($karat);
+        $branchArr     = $normalize($branch);
+        $collectionArr = $normalize($collection);
+        $colorArr      = $normalize($goldColor);
 
         // Query dasar
         $query = Product::query();
@@ -90,7 +89,7 @@ class CatalogController extends Controller
         // Ekspresi kasar estimasi harga untuk keperluan whereRaw / orderByRaw
         $priceExpr = "(weight * " . ($basePrice24 > 0 ? $basePrice24 : 1) . ") + labor_cost + stone_price";
 
-        // 7. Filter: rentang berat
+        // Filter berat
         if ($minWeight !== null && $minWeight !== '') {
             $query->where('weight', '>=', (float) $minWeight);
         }
@@ -98,7 +97,7 @@ class CatalogController extends Controller
             $query->where('weight', '<=', (float) $maxWeight);
         }
 
-        // 8. Filter: rentang harga estimasi
+        // Filter harga estimasi
         if ($basePrice24 > 0) {
             if ($minPrice !== null && $minPrice !== '') {
                 $query->whereRaw("$priceExpr >= ?", [(float) $minPrice]);
@@ -108,7 +107,7 @@ class CatalogController extends Controller
             }
         }
 
-        // 9. Sort
+        // Sort
         switch ($sort) {
             case 'price_asc':
                 if ($basePrice24 > 0) {
@@ -125,7 +124,7 @@ class CatalogController extends Controller
                 }
                 break;
             case 'oldest':
-                $query->oldest(); // orderBy('created_at', 'asc')
+                $query->oldest();
                 break;
             case 'latest':
             default:
@@ -139,39 +138,35 @@ class CatalogController extends Controller
         // Data pendukung filter
         $categories = Category::orderBy('name')->get();
 
-        // Daftar karat unik dari produk
         $karats = Product::select('karat_type')
             ->distinct()
             ->orderBy('karat_type')
             ->pluck('karat_type');
 
-        // Daftar lokasi unik (kalau nanti cabang nambah, otomatis ikut)
         $branchLocations = Product::select('branch_location')
             ->distinct()
             ->orderBy('branch_location')
             ->pluck('branch_location');
 
-        // Daftar warna emas unik
         $goldColors = Product::select('gold_color')
             ->whereNotNull('gold_color')
             ->distinct()
             ->orderBy('gold_color')
             ->pluck('gold_color');
-        
-        // Daftar koleksi unik
+
         $collections = Product::select('collection')
             ->whereNotNull('collection')
             ->distinct()
             ->orderBy('collection')
-            ->pluck('collection');        
-        
-        // Kirim juga array yang sudah dinormalisasi agar view bisa cek checked dengan mudah
+            ->pluck('collection');
+
+        // Kirim arrays yang sudah dinormalisasi agar view bisa cek checked dengan mudah
         return view('catalog.index', compact(
             'products',
             'categories',
             'goldPrice24k',
             'search',
-            'categoryArr',    // array of selected category ids
+            'categoryArr',
             'karatArr',
             'sort',
             'karats',
