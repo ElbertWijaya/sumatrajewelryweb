@@ -267,7 +267,7 @@
                 </div>
 
                 {{-- Daftar produk --}}
-                <div class="col-lg-9">
+                <div class="col-lg-9" id="product-grid">
                     {{-- Baris sort --}}
                     <div class="d-flex justify-content-end align-items-center mb-3 small">
                         <span class="me-2 text-muted">Urutkan:</span>
@@ -379,15 +379,25 @@
 <script>
     function applyFilter(key, value) {
         const url = new URL(window.location.href);
+        const current = url.searchParams.get(key);
 
-        if (value !== undefined && value !== null && value !== '') {
-            url.searchParams.set(key, value);
-        } else {
+        // If value is empty (e.g. called from "Hapus filter" buttons), delete param
+        if (value === '' || value === null) {
             url.searchParams.delete(key);
+        } else {
+            // Toggle: if the clicked value equals current param -> remove it (turn off)
+            if (current === value) {
+                url.searchParams.delete(key);
+            } else {
+                url.searchParams.set(key, value);
+            }
         }
 
         // setiap ganti filter/sort, kembali ke halaman 1
         url.searchParams.delete('page');
+
+        // scroll langsung ke area produk setelah reload
+        url.hash = 'product-grid';
 
         window.location.href = url.toString();
     }
@@ -405,6 +415,10 @@
         url.searchParams.delete('gold_color');
         url.searchParams.delete('collection');
         url.searchParams.delete('page');
+
+        // scroll ke grid juga
+        url.hash = 'product-grid';
+
         window.location.href = url.toString();
     }
 </script>

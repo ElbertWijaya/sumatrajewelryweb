@@ -440,70 +440,70 @@
             font-size: 0.8rem;
         }
 
-        /* === Sidebar Filter Katalog: card dasar === */
+        /* === Sidebar Filter Katalog ===*/
+        
         .catalog-filter-card {
             background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
+            border-radius: 10px;                 /* sesuaikan kalau mau lebih tajam */
+            border: 1px solid #eaeaea;
             padding: 18px 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
         }
-
         .catalog-filter-card h6 {
             font-size: 0.95rem;
             letter-spacing: 0.03em;
+            margin-bottom: 12px;
         }
 
-        /* Setiap opsi filter berupa "pill" */
+        /* ---------------------------
+        Pola baru: hidden input + label (catalog-filter-input + catalog-filter-label)
+        --------------------------- */
         .catalog-filter-option {
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            position: relative;
         }
 
+        /* sembunyikan input tapi tetap fokusable */
         .catalog-filter-input {
             position: absolute;
             opacity: 0;
             pointer-events: none;
         }
 
+        /* label sebagai pill (visual) */
         .catalog-filter-label {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 5px 10px;
-            border-radius: 999px;                 /* pill */
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;                 /* pill shape */
             border: 1px solid transparent;
-            font-size: 0.85rem;
+            font-size: 0.90rem;
             color: #374151;
             cursor: pointer;
-            transition: all 0.15s ease-in-out;
+            transition: background-color .12s ease, border-color .12s ease;
         }
 
-        /* icon box di kiri */
+        /* kotak kecil di kiri (visual only) */
         .catalog-filter-label::before {
             content: "";
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;                   /* small rounded square */
             border: 1px solid #d1d5db;
             background-color: #ffffff;
             box-sizing: border-box;
+            display: inline-block;
         }
 
-        /* hover: garis halus dan background tipis */
+        /* hover effect pada label (subtle) */
         .catalog-filter-label:hover {
-            border-color: #e5e7eb;
-            background-color: #f9fafb;
+            background-color: #fbfbfb;
+            border-color: #eee;
         }
 
-        /* saat checked: pill aktif dengan centang hitam */
-        .catalog-filter-input:checked + .catalog-filter-label {
-            border-color: #c5a059;
-            background-color: #fef9e6;           /* kuning lembut */
-            color: #111827;
-            font-weight: 500;
-        }
-
-        /* centang hitam di dalam kotak kiri */
+        /* IMPORTANT: jangan ubah keseluruhan label saat checked.
+        HANYA ubah kotak (::before) untuk menampilkan centang. */
         .catalog-filter-input:checked + .catalog-filter-label::before {
             border-color: #111827;
             background-color: #111827;
@@ -512,10 +512,86 @@
             background-position: center;
         }
 
-        /* fokus: ring tipis */
-        .catalog-filter-input:focus + .catalog-filter-label {
-            box-shadow: 0 0 0 1px rgba(17,24,39,0.15);
-        } 
+        /* label text tetap stabil saat checked */
+        .catalog-filter-input:checked + .catalog-filter-label {
+            border-color: transparent;
+            background-color: transparent !important;
+            color: inherit;
+            font-weight: 400;
+        }
+
+        /* fokus hanya pada kotak kecil */
+        .catalog-filter-input:focus + .catalog-filter-label::before {
+            box-shadow: 0 0 0 3px rgba(17,24,39,0.06);
+        }
+
+        /* ---------------------------
+        Pola lama (form-check) — tetap dukung jika masih ada sisa markup lama
+        (.catalog-filter-check .form-check-input + .form-check-label)
+        --------------------------- */
+        .catalog-filter-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 4px;
+            border-radius: 4px;
+        }
+
+        /* tampilkan kotak kecil, override default Bootstrap */
+        .catalog-filter-check .form-check-input {
+            width: 16px;
+            height: 16px;
+            margin-top: 0;
+            border-radius: 3px;       /* kotak kecil */
+            border: 1px solid #d1d5db;
+            box-shadow: none;
+            background-color: #ffffff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            position: relative;
+        }
+
+        /* hover pada kotak kecil */
+        .catalog-filter-check .form-check-input:hover {
+            border-color: #9ca3af;
+        }
+
+        /* centang hitam pada kotak lama */
+        .catalog-filter-check .form-check-input:checked {
+            border-color: #111827;
+            background-color: #111827;
+        }
+        .catalog-filter-check .form-check-input:checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -56%);
+            font-size: 0.8rem;
+            color: #ffffff;
+        }
+
+        /* pastikan label lama tidak berubah gaya saat checked */
+        .catalog-filter-check .form-check-input:checked + .form-check-label {
+            background-color: transparent;
+            border-color: transparent;
+            color: inherit;
+            font-weight: 400;
+        }
+
+        /* fokus lembut untuk pola lama */
+        .catalog-filter-check .form-check-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(17,24,39,0.08);
+        }
+
+        /* sedikit spacing untuk link 'Hapus filter' */
+        .catalog-filter-card .btn-link {
+            margin-left: 0;
+            margin-top: 6px;
+            display: inline-block;
+        }
 
         /* === Pagination Katalog === */
         .catalog-pagination-nav {
