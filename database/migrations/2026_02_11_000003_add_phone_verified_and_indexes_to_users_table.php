@@ -9,35 +9,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Tambah kolom phone_verified_at jika belum ada
         Schema::table('users', function (Blueprint $table) {
-            // provider
-            if (! Schema::hasColumn('users', 'provider')) {
-                $table->string('provider')->nullable()->after('password');
-            }
-
-            // provider_id
-            if (! Schema::hasColumn('users', 'provider_id')) {
-                $table->string('provider_id')->nullable()->after('provider');
-            }
-
-            // phone_number: hanya tambahkan kalau memang belum ada.
-            // Pada repo Anda phone_number sudah ada (lihat create_users_table), jadi kita tidak menambah di sini kalau sudah ada.
-            if (! Schema::hasColumn('users', 'phone_number')) {
-                $table->string('phone_number')->nullable()->after('provider_id');
-            }
-
-            // phone_verified_at
             if (! Schema::hasColumn('users', 'phone_verified_at')) {
                 $table->timestamp('phone_verified_at')->nullable()->after('phone_number');
             }
         });
 
-        // Pastikan index provider_id ada (cek dulu)
+        // Pastikan ada index untuk provider_id (jika belum ada, buat)
         if (! $this->indexExists('users', 'users_provider_id_index')) {
             DB::statement('ALTER TABLE `users` ADD INDEX `users_provider_id_index` (`provider_id`)');
         }
 
-        // Coba buat unique index untuk phone_number hanya jika aman (tidak ada duplikat)
+        // Periksa dan buat unique index untuk phone_number jika aman (tidak ada duplikat)
         if (! $this->indexExists('users', 'users_phone_number_unique')) {
             $dupes = DB::select("
                 SELECT phone_number, COUNT(*) AS cnt
@@ -49,42 +33,31 @@ return new class extends Migration
             if (empty($dupes)) {
                 DB::statement('ALTER TABLE `users` ADD UNIQUE `users_phone_number_unique` (`phone_number`)');
             } else {
-                info('Terdeteksi duplikat phone_number; unique index users_phone_number_unique tidak dibuat. Bersihkan data jika ingin menambahkan constraint.');
+                // Log agar admin tahu; tidak menggagalkan migration
+                info('Terdeteksi duplikat phone_number; unique index tidak dibuat. Periksa data duplikat dan bersihkan jika ingin menambahkan constraint.');
             }
         }
     }
 
     public function down(): void
     {
-        // Hati-hati rollback; hapus hanya kalau ada
+        // Hati-hati saat rollback; hanya hapus kolom/index kalau ada
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'phone_verified_at')) {
                 $table->dropColumn('phone_verified_at');
             }
-            if (Schema::hasColumn('users', 'phone_number')) {
-                // jangan drop phone_number yang awalnya dibuat di create_users_table
-                // hanya drop jika kolom ini ditambahkan oleh migration ini dan memang ada
-                // untuk safety kita tidak menghapus phone_number di down() karena bisa berasal dari migration awal
-            }
-            if (Schema::hasColumn('users', 'provider_id')) {
-                // if provider_id was added by this migration, drop it
-                // We'll try dropping only if index exists; keep safe to avoid accidental data loss
-                // (Optionally leave provider/provider_id as-is in rollback to avoid data loss)
-            }
-            if (Schema::hasColumn('users', 'provider')) {
-                // same as above
-            }
         });
 
-        // Remove indexes if exist (provider_id index, phone unique)
         if ($this->indexExists('users', 'users_provider_id_index')) {
             DB::statement('ALTER TABLE `users` DROP INDEX `users_provider_id_index`');
         }
+
         if ($this->indexExists('users', 'users_phone_number_unique')) {
             DB::statement('ALTER TABLE `users` DROP INDEX `users_phone_number_unique`');
         }
     }
 
+    // Utility: cek index ada (MySQL)
     private function indexExists(string $table, string $indexName): bool
     {
         $db = DB::getPdo();

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            // Tambahkan kolom resi setelah status order
+            // Tambahkan kolom tracking_number setelah status order
             $table->string('tracking_number')->nullable()->after('order_status');
         });
     }
@@ -23,7 +23,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('orders', 'tracking_number')) {
+                $table->dropColumn('tracking_number');
+            }
         });
     }
 };
