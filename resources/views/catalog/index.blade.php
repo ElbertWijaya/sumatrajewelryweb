@@ -37,6 +37,15 @@
                     <div class="catalog-filter-card">
                         <h6 class="fw-bold mb-3">Filter</h6>
 
+                        {{-- Note: controller mengirimkan arrays: categoryArr, karatArr, branchArr, colorArr, collectionArr --}}
+                        @php
+                            $categorySelected = $categoryArr ?? [];
+                            $karatSelected = $karatArr ?? [];
+                            $branchSelected = $branchArr ?? [];
+                            $colorSelected = $colorArr ?? [];
+                            $collectionSelected = $collectionArr ?? [];
+                        @endphp
+
                         {{-- Filter Kategori --}}
                         <div class="mb-3">
                             <div class="small text-muted mb-1">Kategori</div>
@@ -44,22 +53,22 @@
                                 <div class="catalog-filter-option">
                                     <input
                                         class="catalog-filter-input"
-                                        type="radio"
-                                        name="category_filter"
+                                        type="checkbox"
+                                        name="category"
                                         id="cat_{{ $cat->id }}"
                                         value="{{ $cat->id }}"
                                         onclick="applyFilter('category', '{{ $cat->id }}')"
-                                        {{ (string)$categoryId === (string)$cat->id ? 'checked' : '' }}>
+                                        {{ in_array((string)$cat->id, array_map('strval', $categorySelected)) ? 'checked' : '' }}>
                                     <label class="catalog-filter-label" for="cat_{{ $cat->id }}">
                                         {{ $cat->name }}
                                     </label>
                                 </div>
                             @endforeach
 
-                            @if($categoryId)
+                            @if(!empty($categorySelected))
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
-                                        onclick="applyFilter('category', '')">
+                                        onclick="clearFilterKey('category')">
                                     <small>Hapus filter kategori</small>
                                 </button>
                             @endif
@@ -74,22 +83,22 @@
                                 <div class="catalog-filter-option">
                                     <input
                                         class="catalog-filter-input"
-                                        type="radio"
-                                        name="karat_filter"
+                                        type="checkbox"
+                                        name="karat"
                                         id="karat_{{ $k }}"
                                         value="{{ $k }}"
                                         onclick="applyFilter('karat', '{{ $k }}')"
-                                        {{ $karat === $k ? 'checked' : '' }}>
+                                        {{ in_array((string)$k, array_map('strval', $karatSelected)) ? 'checked' : '' }}>
                                     <label class="catalog-filter-label" for="karat_{{ $k }}">
                                         {{ $k }}
                                     </label>
                                 </div>
                             @endforeach
 
-                            @if($karat)
+                            @if(!empty($karatSelected))
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
-                                        onclick="applyFilter('karat', '')">
+                                        onclick="clearFilterKey('karat')">
                                     <small>Hapus filter karat</small>
                                 </button>
                             @endif
@@ -104,22 +113,22 @@
                                 <div class="catalog-filter-option">
                                     <input
                                         class="catalog-filter-input"
-                                        type="radio"
-                                        name="branch_location_filter"
-                                        id="branch_{{ $loc }}"
+                                        type="checkbox"
+                                        name="branch_location"
+                                        id="branch_{{ \Illuminate\Support\Str::slug($loc) }}"
                                         value="{{ $loc }}"
                                         onclick="applyFilter('branch_location', '{{ $loc }}')"
-                                        {{ $branchLocation === $loc ? 'checked' : '' }}>
-                                    <label class="catalog-filter-label" for="branch_{{ $loc }}">
+                                        {{ in_array((string)$loc, array_map('strval', $branchSelected)) ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="branch_{{ \Illuminate\Support\Str::slug($loc) }}">
                                         {{ $loc }}
                                     </label>
                                 </div>
                             @endforeach
 
-                            @if($branchLocation)
+                            @if(!empty($branchSelected))
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
-                                        onclick="applyFilter('branch_location', '')">
+                                        onclick="clearFilterKey('branch_location')">
                                     <small>Hapus filter lokasi</small>
                                 </button>
                             @endif
@@ -134,22 +143,22 @@
                                 <div class="catalog-filter-option">
                                     <input
                                         class="catalog-filter-input"
-                                        type="radio"
-                                        name="gold_color_filter"
-                                        id="gold_{{ $color }}"
+                                        type="checkbox"
+                                        name="gold_color"
+                                        id="gold_{{ \Illuminate\Support\Str::slug($color) }}"
                                         value="{{ $color }}"
                                         onclick="applyFilter('gold_color', '{{ $color }}')"
-                                        {{ $goldColor === $color ? 'checked' : '' }}>
-                                    <label class="catalog-filter-label" for="gold_{{ $color }}">
+                                        {{ in_array((string)$color, array_map('strval', $colorSelected)) ? 'checked' : '' }}>
+                                    <label class="catalog-filter-label" for="gold_{{ \Illuminate\Support\Str::slug($color) }}">
                                         {{ $color }}
                                     </label>
                                 </div>
                             @endforeach
 
-                            @if($goldColor)
+                            @if(!empty($colorSelected))
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
-                                        onclick="applyFilter('gold_color', '')">
+                                        onclick="clearFilterKey('gold_color')">
                                     <small>Hapus filter warna</small>
                                 </button>
                             @endif
@@ -164,22 +173,22 @@
                                 <div class="catalog-filter-option">
                                     <input
                                         class="catalog-filter-input"
-                                        type="radio"
-                                        name="collection_filter"
+                                        type="checkbox"
+                                        name="collection"
                                         id="collection_{{ $loop->index }}"
                                         value="{{ $col }}"
                                         onclick="applyFilter('collection', '{{ $col }}')"
-                                        {{ $collection === $col ? 'checked' : '' }}>
+                                        {{ in_array((string)$col, array_map('strval', $collectionSelected)) ? 'checked' : '' }}>
                                     <label class="catalog-filter-label" for="collection_{{ $loop->index }}">
                                         {{ $col }}
                                     </label>
                                 </div>
                             @endforeach
 
-                            @if($collection)
+                            @if(!empty($collectionSelected))
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 mt-1"
-                                        onclick="applyFilter('collection', '')">
+                                        onclick="clearFilterKey('collection')">
                                     <small>Hapus filter collection</small>
                                 </button>
                             @endif
@@ -194,6 +203,7 @@
                                 <input
                                     class="catalog-filter-input"
                                     type="checkbox"
+                                    name="only_ready"
                                     id="only_ready"
                                     {{ $onlyReady ? 'checked' : '' }}
                                     onclick="applyFilter('only_ready', this.checked ? '1' : '')">
@@ -256,7 +266,7 @@
                         </div>
 
                         {{-- Tombol reset rentang --}}
-                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady || $branchLocation || $goldColor || $collection)
+                        @if($minWeight || $maxWeight || $minPrice || $maxPrice || !$onlyReady || !empty($branchSelected) || !empty($colorSelected) || !empty($collectionSelected) || !empty($categorySelected) || !empty($karatSelected))
                             <button type="button"
                                     class="btn btn-link btn-sm p-0 mt-1"
                                     onclick="resetRangeFilters()">
@@ -379,17 +389,22 @@
 <script>
     function applyFilter(key, value) {
         const url = new URL(window.location.href);
-        const current = url.searchParams.get(key);
 
-        // If value is empty (e.g. called from "Hapus filter" buttons), delete param
+        // current values (may be multiple)
+        const current = url.searchParams.getAll(key);
+
         if (value === '' || value === null) {
+            // if explicitly clearing
             url.searchParams.delete(key);
         } else {
-            // Toggle: if the clicked value equals current param -> remove it (turn off)
-            if (current === value) {
+            // toggle: if value exists, remove it; otherwise add it
+            if (current.includes(value)) {
+                const remaining = current.filter(v => v !== value);
                 url.searchParams.delete(key);
+                remaining.forEach(v => url.searchParams.append(key, v));
             } else {
-                url.searchParams.set(key, value);
+                // append new value (multiple)
+                url.searchParams.append(key, value);
             }
         }
 
@@ -402,6 +417,14 @@
         window.location.href = url.toString();
     }
 
+    function clearFilterKey(key) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete(key);
+        url.searchParams.delete('page');
+        url.hash = 'product-grid';
+        window.location.href = url.toString();
+    }
+
     function resetRangeFilters() {
         const url = new URL(window.location.href);
         url.searchParams.delete('min_weight');
@@ -410,15 +433,14 @@
         url.searchParams.delete('max_price');
         // kembalikan filter stok ready ke default: true
         url.searchParams.set('only_ready', '1');
-        // juga hapus lokasi, warna, collection
+        // juga hapus lokasi, warna, collection, kategori, karat
         url.searchParams.delete('branch_location');
         url.searchParams.delete('gold_color');
         url.searchParams.delete('collection');
+        url.searchParams.delete('category');
+        url.searchParams.delete('karat');
         url.searchParams.delete('page');
-
-        // scroll ke grid juga
         url.hash = 'product-grid';
-
         window.location.href = url.toString();
     }
 </script>
