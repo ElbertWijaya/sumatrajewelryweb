@@ -17,24 +17,29 @@ class GoldPricesSeeder extends Seeder
 
         $now = Carbon::now();
 
-        $rows = [
-            [
-                'karat_type' => '24K',
-                'sell_price_per_gram' => 1000000, // contoh angka, silakan sesuaikan
-                'buyback_price_per_gram' => 950000,
+        $karats = config('jewelry.karats', []);
+
+        if (empty($karats)) {
+            return;
+        }
+
+        $rows = [];
+
+        // Angka hanya contoh; dibuat menurun dari 24K ke bawah
+        $baseSell = 1000000;      // 24K
+        $baseBuyback = 950000;    // 24K
+        $step = 25000;            // selisih antar karat
+
+        foreach ($karats as $index => $karat) {
+            $rows[] = [
+                'karat_type' => $karat,
+                'sell_price_per_gram' => max(1, $baseSell - $index * $step),
+                'buyback_price_per_gram' => max(1, $baseBuyback - $index * $step),
                 'updated_by' => null,
                 'created_at' => $now,
                 'updated_at' => $now,
-            ],
-            [
-                'karat_type' => '17K',
-                'sell_price_per_gram' => 700000,
-                'buyback_price_per_gram' => 650000,
-                'updated_by' => null,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-        ];
+            ];
+        }
 
         DB::table('gold_prices')->insertOrIgnore($rows);
     }

@@ -138,27 +138,15 @@ class CatalogController extends Controller
         // Data pendukung filter
         $categories = Category::orderBy('name')->get();
 
-        $karats = Product::select('karat_type')
-            ->distinct()
-            ->orderBy('karat_type')
+        // Ambil daftar filter dari konfigurasi & master data
+        $karats = \App\Models\GoldPrice::orderBy('karat_type')
             ->pluck('karat_type');
 
-        $branchLocations = Product::select('branch_location')
-            ->distinct()
-            ->orderBy('branch_location')
-            ->pluck('branch_location');
+        $branchLocations = collect(config('jewelry.branches', []));
 
-        $goldColors = Product::select('gold_color')
-            ->whereNotNull('gold_color')
-            ->distinct()
-            ->orderBy('gold_color')
-            ->pluck('gold_color');
+        $goldColors = collect(config('jewelry.gold_colors', []));
 
-        $collections = Product::select('collection')
-            ->whereNotNull('collection')
-            ->distinct()
-            ->orderBy('collection')
-            ->pluck('collection');
+        $collections = collect(config('jewelry.collections', []));
 
         // Kirim arrays yang sudah dinormalisasi agar view bisa cek checked dengan mudah
         return view('catalog.index', compact(
