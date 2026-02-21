@@ -16,103 +16,67 @@
     </div>
 
     <div class="row gy-4 mb-4">
-        {{-- Cabang Asia --}}
+        {{-- Dua kartu cabang sejajar --}}
         <div class="col-md-6">
-            <div class="border rounded-3 p-4 h-100 bg-light">
-                <div class="d-flex justify-content-between align-items-start mb-3">
+            <button type="button"
+                    class="store-location-card w-100 text-start border rounded-3 p-3 bg-white shadow-sm active"
+                    data-store-map="https://www.google.com/maps?q=Jl.+Asia+No.170+B,+Sei+Rengas+II,+Medan+Area,+Medan+20211&output=embed">
+                <div class="d-flex align-items-start mb-2">
+                    <i class="bi bi-geo-alt text-gold me-2 mt-1"></i>
                     <div>
-                        <h4 class="fw-semibold mb-1">Toko Mas Sumatra - Asia</h4>
-                        <p class="small text-muted mb-0">Cabang Asia • Toko Pusat</p>
-                    </div>
-                    <span class="badge bg-dark text-uppercase small">Offline Store</span>
-                </div>
-
-                <div class="row g-3 align-items-start">
-                    <div class="col-12 col-lg-6">
-                        <p class="mb-2 small">
-                            <strong><i class="bi bi-geo-alt me-1"></i>Alamat</strong><br>
-                            <span class="text-muted">
-                                Jl. Asia No.170 B, Sei Rengas II, Kec. Medan Area,<br>
-                                Kota Medan, Sumatera Utara 20211
-                            </span>
-                        </p>
-
-                        <p class="mb-2 small">
-                            <strong><i class="bi bi-clock me-1"></i>Jam Operasional</strong><br>
-                            <span class="text-muted">
-                                Buka setiap hari 09.00 &ndash; 16.30 WIB<br>
-                                (Tutup pada hari Minggu)
-                            </span>
-                        </p>
-
-                        <p class="mb-0 small">
-                            <strong><i class="bi bi-whatsapp me-1"></i>Telepon / WhatsApp</strong><br>
-                            <a href="https://wa.me/6282164836268" target="_blank" class="text-decoration-none fw-semibold">
-                                0821-6483-6268
-                            </a>
-                        </p>
-                    </div>
-
-                    <div class="col-12 col-lg-6">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
-                            <iframe
-                                src="https://www.google.com/maps?q=Jl.+Asia+No.170+B,+Sei+Rengas+II,+Medan+Area,+Medan+20211&output=embed"
-                                style="border:0;"
-                                allowfullscreen=""
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div>
+                        <div class="fw-semibold">Toko Mas Sumatra - Asia</div>
+                        <div class="small text-muted">Jl. Asia No.170 B, Sei Rengas II, Medan Area, Kota Medan 20211</div>
                     </div>
                 </div>
-            </div>
+                <div class="small text-muted mb-1">
+                    <i class="bi bi-clock me-1"></i>
+                    09.00 &ndash; 16.30 WIB (tutup Minggu)
+                </div>
+                <div class="small">
+                    <i class="bi bi-whatsapp text-success me-1"></i>
+                    <span class="fw-semibold">0821-6483-6268</span>
+                </div>
+            </button>
         </div>
 
-        {{-- Cabang Sun Plaza --}}
         <div class="col-md-6">
-            <div class="border rounded-3 p-4 h-100 bg-white">
-                <div class="d-flex justify-content-between align-items-start mb-3">
+            <button type="button"
+                    class="store-location-card w-100 text-start border rounded-3 p-3 bg-white shadow-sm"
+                    data-store-map="https://www.google.com/maps?q=Sun+Plaza+Medan,+Jl.+KH.+Zainul+Arifin+No.7,+Medan+20152&output=embed">
+                <div class="d-flex align-items-start mb-2">
+                    <i class="bi bi-geo-alt text-gold me-2 mt-1"></i>
                     <div>
-                        <h4 class="fw-semibold mb-1">Sumatra Jewellery - Sun Plaza</h4>
-                        <p class="small text-muted mb-0">Cabang Sun Plaza • Mall</p>
+                        <div class="fw-semibold">Sumatra Jewellery - Sun Plaza</div>
+                        <div class="small text-muted">Mall Jl. KH. Zainul Arifin No.7, Madras Hulu, Medan Polonia, Kota Medan 20152</div>
                     </div>
-                    <span class="badge bg-secondary text-uppercase small">Mall Store</span>
                 </div>
+                <div class="small text-muted mb-1">
+                    <i class="bi bi-clock me-1"></i>
+                    11.00 &ndash; 21.00 WIB
+                </div>
+                <div class="small">
+                    <i class="bi bi-telephone text-muted me-1"></i>
+                    <span class="fw-semibold">(061) 4501879</span>
+                </div>
+            </button>
+        </div>
+    </div>
 
-                <div class="row g-3 align-items-start">
-                    <div class="col-12 col-lg-6">
-                        <p class="mb-2 small">
-                            <strong><i class="bi bi-geo-alt me-1"></i>Alamat</strong><br>
-                            <span class="text-muted">
-                                Mall Jl. KH. Zainul Arifin No.7, Madras Hulu, Kec. Medan Polonia,<br>
-                                Kota Medan, Sumatera Utara 20152
-                            </span>
-                        </p>
+    {{-- Peta di bawah dua kartu --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="border rounded-3 p-3 bg-light shadow-sm">
+                <h6 class="fw-semibold mb-2">Peta Lokasi Toko</h6>
+                <p class="small text-muted mb-3">Pilih salah satu cabang di atas untuk melihat posisinya pada peta.</p>
 
-                        <p class="mb-2 small">
-                            <strong><i class="bi bi-clock me-1"></i>Jam Operasional</strong><br>
-                            <span class="text-muted">
-                                Buka setiap hari 11.00 &ndash; 21.00 WIB
-                            </span>
-                        </p>
-
-                        <p class="mb-0 small">
-                            <strong><i class="bi bi-telephone me-1"></i>Telepon</strong><br>
-                            <a href="tel:+62614501879" class="text-decoration-none fw-semibold">
-                                (061) 4501879
-                            </a>
-                        </p>
-                    </div>
-
-                    <div class="col-12 col-lg-6">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
-                            <iframe
-                                src="https://www.google.com/maps?q=Sun+Plaza+Medan,+Jl.+KH.+Zainul+Arifin+No.7,+Medan+20152&output=embed"
-                                style="border:0;"
-                                allowfullscreen=""
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        </div>
-                    </div>
+                <div class="ratio ratio-16x9 rounded overflow-hidden">
+                    <iframe
+                        id="storeMap"
+                        src="https://www.google.com/maps?q=Jl.+Asia+No.170+B,+Sei+Rengas+II,+Medan+Area,+Medan+20211&output=embed"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
@@ -154,5 +118,45 @@
             </div>
         </div>
     </div>
+    </div>
 </div>
+@push('styles')
+    .store-location-card {
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .store-location-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .store-location-card.active {
+        border-color: #c5a059;
+        box-shadow: 0 8px 20px rgba(197, 160, 89, 0.25);
+    }
+@endpush
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var items = document.querySelectorAll('.store-location-card');
+        var iframe = document.getElementById('storeMap');
+
+        if (!items.length || !iframe) return;
+
+        items.forEach(function (item) {
+            item.addEventListener('click', function () {
+                var src = this.getAttribute('data-store-map');
+                if (!src) return;
+
+                iframe.setAttribute('src', src);
+
+                items.forEach(function (el) { el.classList.remove('active'); });
+                this.classList.add('active');
+            });
+        });
+    });
+</script>
+@endpush
 @endsection

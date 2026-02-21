@@ -266,13 +266,13 @@
             border-radius: 50%;
             border: none;
             background-color: rgba(255,255,255,0.9);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
+
+        /* dst... (style lain tetap) */
+
+        @stack('styles')
+            cursor: pointer;
         .collection-slider-arrow:hover {
             background-color: #f3e3bf;
         }
@@ -869,6 +869,7 @@
         });
     </script>
 
+    @stack('scripts')
     @yield('scripts')
 </body>
 </html>
