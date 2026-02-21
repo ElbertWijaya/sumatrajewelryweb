@@ -18,9 +18,12 @@ class CategoriesSeeder extends Seeder
 
         $now = Carbon::now();
         $categories = [
-            ['name' => 'Cincin', 'slug' => 'cincin', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Gelang', 'slug' => 'gelang', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Kalung', 'slug' => 'kalung', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Liontin', 'slug' => 'liontin', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Cincin', 'slug' => 'cincin', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Cincin Wanita', 'slug' => 'cincin-wanita', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'Cincin Pria', 'slug' => 'cincin-pria', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Anting', 'slug' => 'anting', 'created_at' => $now, 'updated_at' => $now],
         ];
 

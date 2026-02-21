@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Cincin, Kalung
-            $table->string('slug'); // cincin-emas
+			$table->string('slug')->unique(); // cincin-emas
             $table->timestamps();
         });
     }

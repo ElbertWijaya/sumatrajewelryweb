@@ -118,9 +118,10 @@
                 <div class="row g-4">
                     @foreach($topProducts as $product)
                         @php
+                            $basePrice = optional($goldPrice24k)->sell_price_per_gram ?? 0;
                             $hargaDasar = ($product->karat_type == '24K')
-                                ? $goldPrice24k->sell_price_per_gram
-                                : ($goldPrice24k->sell_price_per_gram * 0.8);
+                                ? $basePrice
+                                : ($basePrice * 0.8);
                             $estimasiHarga = ($product->weight * $hargaDasar)
                                 + $product->labor_cost
                                 + $product->stone_price;
