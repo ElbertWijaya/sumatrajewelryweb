@@ -145,7 +145,7 @@
             @csrf
             <div class="mb-3">
                 <label class="form-label small">Nomor Telepon</label>
-                <input type="tel" name="phone_number" id="phone_number" class="form-control" placeholder="+6281234567890" required>
+                <input type="tel" name="phone_number" id="phone_number" class="form-control" placeholder="082164836268" required>
             </div>
 
             <div id="phoneFormMsg" class="small text-danger mb-2" style="display:none;"></div>
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 if (data.status && data.status === 'ok') {
                     // close modal and redirect to OTP page or show input
-                    location.href = '{{ route("register.show") }}?phone=' + encodeURIComponent(phone);
+						location.href = '{{ route("register.phone.verifyForm") }}?phone=' + encodeURIComponent(phone);
                 } else {
                     msgEl.textContent = data.message || 'Gagal mengirim OTP. Coba lagi.';
                     msgEl.style.display = 'block';

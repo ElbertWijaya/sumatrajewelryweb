@@ -68,6 +68,11 @@ Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\SocialControll
 Route::post('register/phone/send-otp', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'sendOtp'])
     ->name('register.phone.sendOtp');
 
+Route::get('register/phone/verify', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'showVerifyForm'])
+    ->name('register.phone.verifyForm');
+Route::post('register/phone/verify', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'verifyAndRegister'])
+    ->name('register.phone.verify');
+
 // --- GROUP CUSTOMER (Harus Login) ---
 Route::middleware(['auth'])->group(function () {
     // Dashboard Customer

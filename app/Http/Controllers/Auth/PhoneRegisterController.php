@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,27 +50,67 @@ class PhoneRegisterController extends Controller
         // Saat ini log OTP ke storage/logs laravel.log untuk testing lokal (HATI-HATI: remove in prod)
         Log::info("Stub OTP for {$phone}: {$otp}");
 
-        return response()->json(['status' => 'ok', 'message' => 'Kode OTP dikirim (stub).']);
+        return response()->json(['status' => 'ok', 'message' => 'Kode OTP dikirim.']);
     }
 
-    // Optional: endpoint untuk verifikasi OTP (stub)
-    public function verifyOtp(Request $request)
+    public function showVerifyForm(Request $request)
     {
-        $request->validate([
-            'phone_number' => ['required'],
-            'otp' => ['required'],
-        ]);
-
-        $phone = $request->phone_number;
-        $otpKey = 'otp_code_' . md5($phone);
-        $cached = \Cache::get($otpKey);
-
-        if (! $cached || $cached != $request->otp) {
-            return response()->json(['status' => 'error', 'message' => 'OTP tidak valid.'], 422);
+        $phone = $request->query('phone');
+        if (! $phone) {
+            return redirect()->route('login')->withErrors(['phone' => 'Nomor telepon tidak ditemukan.']);
         }
 
-        // OTP valid -> hapus cache & kembalikan sukses
-        \Cache::forget($otpKey);
-        return response()->json(['status' => 'ok', 'message' => 'OTP terverifikasi (stub).']);
+        return view('auth.phone_verify', [
+            'phone' => $phone,
+        ]);
+    }
+
+    public function verifyAndRegister(Request $request)
+    {
+        $request->validate([
+            'phone_number' => ['required', 'string', 'min:9', 'max:20'],
+            'otp' => ['required', 'digits:6'],
+            'name' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $phone = $request->input('phone_number');
+        $otpKey = 'otp_code_' . md5($phone);
+        $cached = Cache::get($otpKey);
+
+        if (! $cached || (string) $cached !== (string) $request->input('otp')) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kedaluwarsa.'])->withInput();
+        }
+
+        // Hapus OTP dari cache
+        Cache::forget($otpKey);
+
+        // Cari user berdasarkan nomor telepon
+        $user = User::where('phone_number', $phone)->first();
+
+        if (! $user) {
+            $name = $request->input('name') ?: 'Pelanggan ' . substr(preg_replace('/\D+/', '', $phone), -4);
+
+            // Buat email dummy berbasis nomor telepon agar unik
+            $normalizedPhone = preg_replace('/\D+/', '', $phone) ?: Str::random(8);
+            $email = 'phone_' . $normalizedPhone . '@sumatra-phone.local';
+
+            $user = User::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make(Str::random(32)),
+                'phone_number' => $phone,
+                'phone_verified_at' => now(),
+                'role' => 'customer',
+            ]);
+        } else {
+            if (! $user->phone_verified_at) {
+                $user->phone_verified_at = now();
+                $user->save();
+            }
+        }
+
+        Auth::login($user, true);
+
+        return redirect()->intended('/my-dashboard');
     }
 }
