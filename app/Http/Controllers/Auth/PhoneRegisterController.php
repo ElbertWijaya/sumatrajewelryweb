@@ -113,4 +113,74 @@ class PhoneRegisterController extends Controller
 
         return redirect()->intended('/my-dashboard');
     }
+
+    // ==== Flow pengaturan nomor telepon dari akun yang sudah login ====
+
+    public function showAccountPhoneForm(Request $request)
+    {
+        $user = Auth::user();
+
+        return view('customer.phone_settings', [
+            'user' => $user,
+            'phoneForOtp' => session('phone_for_otp'),
+        ]);
+    }
+
+    public function sendOtpForAccount(Request $request)
+    {
+        $request->validate([
+            'phone_number' => ['required', 'string', 'min:9', 'max:20'],
+        ]);
+
+        $phone = $request->input('phone_number');
+
+        $key = 'otp_attempts_' . md5($phone);
+        $attempts = Cache::get($key, 0);
+        if ($attempts >= 5) {
+            return back()->withErrors(['phone_number' => 'Batas percobaan OTP tercapai. Coba lagi nanti.']);
+        }
+        Cache::put($key, $attempts + 1, now()->addMinutes(10));
+
+        $otp = rand(100000, 999999);
+        $otpKey = 'otp_code_' . md5($phone);
+        Cache::put($otpKey, $otp, now()->addMinutes(5));
+
+        Log::info("Stub OTP for {$phone}: {$otp}");
+
+        return redirect()->route('account.phone')
+            ->with('status', 'Kode OTP dikirim ke nomor tersebut.')
+            ->with('phone_for_otp', $phone);
+    }
+
+    public function verifyForAccount(Request $request)
+    {
+        $request->validate([
+            'phone_number' => ['required', 'string', 'min:9', 'max:20'],
+            'otp' => ['required', 'digits:6'],
+        ]);
+
+        $user = Auth::user();
+        $phone = $request->input('phone_number');
+
+        $otpKey = 'otp_code_' . md5($phone);
+        $cached = Cache::get($otpKey);
+
+        if (! $cached || (string) $cached !== (string) $request->input('otp')) {
+            return back()->withErrors(['otp' => 'Kode OTP tidak valid atau sudah kedaluwarsa.'])->withInput();
+        }
+
+        Cache::forget($otpKey);
+
+        // Pastikan tidak mengikat ke nomor yang sudah dipakai user lain
+        $existing = User::where('phone_number', $phone)->where('id', '!=', $user->id)->first();
+        if ($existing) {
+            return back()->withErrors(['phone_number' => 'Nomor ini sudah terpakai oleh akun lain.'])->withInput();
+        }
+
+        $user->phone_number = $phone;
+        $user->phone_verified_at = now();
+        $user->save();
+
+        return redirect()->route('account.phone')->with('status', 'Nomor telepon berhasil diverifikasi dan terhubung ke akun Anda.');
+    }
 }

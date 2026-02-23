@@ -10,11 +10,14 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-dark bg-black mb-4">
-        <div class="container">
+        <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="{{ route('home') }}">Toko Mas Sumatra</a>
-            <div class="d-flex">
-                <span class="text-white me-3 align-self-center">Halo, {{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('account.phone') }}" class="btn btn-outline-light btn-sm me-2">
+                    <i class="bi bi-phone me-1"></i> Nomor Telepon
+                </a>
+                <span class="text-white me-2 d-none d-md-inline">Halo, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST" class="mb-0">
                     @csrf
                     <button class="btn btn-outline-danger btn-sm">Logout</button>
                 </form>

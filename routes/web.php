@@ -77,6 +77,14 @@ Route::post('register/phone/verify', [App\Http\Controllers\Auth\PhoneRegisterCon
 Route::middleware(['auth'])->group(function () {
     // Dashboard Customer
     Route::get('/my-dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+
+    // Pengaturan nomor telepon akun
+    Route::get('/account/phone', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'showAccountPhoneForm'])
+        ->name('account.phone');
+    Route::post('/account/phone/send-otp', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'sendOtpForAccount'])
+        ->name('account.phone.sendOtp');
+    Route::post('/account/phone/verify', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'verifyForAccount'])
+        ->name('account.phone.verify');
 });
 
 
