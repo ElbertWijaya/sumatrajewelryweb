@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
 {
@@ -20,17 +25,15 @@ class SocialController extends Controller
             return redirect()->route('login')->withErrors(['social' => 'Provider tidak didukung.']);
         }
 
-        // Cek config sudah ada (agar tidak error bila Socialite blm dikonfig)
+        // Cek config sudah ada (agar tidak error bila credential belum diset)
         $clientIdKey = strtoupper($provider) . '_CLIENT_ID';
         if (empty(config("services.{$provider}.client_id")) && empty(env($clientIdKey))) {
-            // config belum lengkap — beri pesan user-friendly
-            return redirect()->route('login')->withErrors(['social' => 'Integrasi ' . ucfirst($provider) . ' belum dikonfigurasi.']);
+            return redirect()->route('login')
+                ->withErrors(['social' => 'Integrasi ' . ucfirst($provider) . ' belum dikonfigurasi di server.']);
         }
 
-        // Jika Socialite sudah terpasang nanti, kita akan redirect ke provider:
-        // return Socialite::driver($provider)->redirect();
-        // Untuk sekarang (stub), kembalikan redirect ke login dengan pesan
-        return redirect()->route('login')->with('status', 'Redirect ke ' . ucfirst($provider) . ' (stub). Saat ini integrasi belum aktif di server.');
+        // Redirect ke provider menggunakan Socialite
+        return Socialite::driver($provider)->redirect();
     }
 
     public function callback(Request $request, $provider)
@@ -41,16 +44,59 @@ class SocialController extends Controller
             return redirect()->route('login')->withErrors(['social' => 'Provider tidak didukung.']);
         }
 
-        // Jika Socialite terpasang, kita akan memproses callback di sini:
-        // try {
-        //     $socialUser = Socialite::driver($provider)->stateless()->user();
-        //     // logic: cari user by provider_id / email, buat jika perlu, login, redirect
-        // } catch (\Exception $e) {
-        //     Log::error('Social callback error: ' . $e->getMessage());
-        //     return redirect()->route('login')->withErrors(['social' => 'Terjadi kesalahan saat autentikasi sosial.']);
-        // }
+        try {
+            $socialUser = Socialite::driver($provider)->stateless()->user();
+        } catch (\Exception $e) {
+            Log::error('Social callback error: ' . $e->getMessage());
+            return redirect()->route('login')->withErrors([
+                'social' => 'Terjadi kesalahan saat autentikasi dengan ' . ucfirst($provider) . '. Coba lagi.',
+            ]);
+        }
 
-        // Stub response untuk saat ini
-        return redirect()->route('login')->with('status', ucfirst($provider) . ' callback diterima (stub). Integrasi belum aktif.');
+        // Cari user berdasarkan provider_id terlebih dahulu
+        $user = User::where('provider', $provider)
+            ->where('provider_id', $socialUser->getId())
+            ->first();
+
+        $email = $socialUser->getEmail();
+
+        // Jika belum ada, coba cocokan berdasarkan email (user pernah daftar manual)
+        if (! $user && $email) {
+            $user = User::where('email', $email)->first();
+        }
+
+        // Jika tetap belum ada, buat user baru
+        if (! $user) {
+            // Pastikan ada email unik; jika provider tidak memberikan email,
+            // buat email dummy yang tetap unik agar tidak melanggar constraint.
+            if (! $email) {
+                $email = $provider . '_' . $socialUser->getId() . '@example-social.local';
+            }
+
+            $user = User::create([
+                'name'     => $socialUser->getName() ?: ($socialUser->getNickname() ?: ucfirst($provider) . ' User'),
+                'email'    => $email,
+                'password' => Hash::make(Str::random(40)),
+                'provider' => $provider,
+                'provider_id' => $socialUser->getId(),
+                'role' => 'customer',
+            ]);
+        } else {
+            // Pastikan data provider terisi untuk user lama
+            if (! $user->provider || ! $user->provider_id) {
+                $user->provider = $provider;
+                $user->provider_id = $socialUser->getId();
+                $user->save();
+            }
+        }
+
+        Auth::login($user, true);
+
+        // Redirect sesuai role (reuse logika login biasa)
+        if ($user->role === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        return redirect()->intended('/my-dashboard');
     }
 }
