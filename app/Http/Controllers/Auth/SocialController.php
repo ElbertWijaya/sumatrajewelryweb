@@ -14,7 +14,7 @@ use Laravel\Socialite\Facades\Socialite;
 class SocialController extends Controller
 {
     // Daftar provider yang akan kita dukung
-    protected $allowedProviders = ['google', 'facebook'];
+    protected $allowedProviders = ['google', 'instagram'];
 
     public function redirect(Request $request, $provider)
     {

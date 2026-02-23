@@ -113,10 +113,10 @@
                                     Masuk dengan Google
                                 </a>
 
-                                {{-- Facebook --}}
-                                <a href="{{ route('social.redirect', ['provider' => 'facebook']) }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
-                                    <img src="{{ asset('img/icons/facebook.svg') }}" alt="Facebook" style="height:18px; margin-right:8px;">
-                                    Masuk dengan Facebook
+                                {{-- Instagram --}}
+                                <a href="{{ route('social.redirect', ['provider' => 'instagram']) }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-instagram me-2"></i>
+                                    Masuk dengan Instagram
                                 </a>
 
                                 {{-- Nomor Telepon --}}
