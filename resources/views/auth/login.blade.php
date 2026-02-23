@@ -113,12 +113,6 @@
                                     Masuk dengan Google
                                 </a>
 
-                                {{-- Instagram --}}
-                                <a href="{{ route('social.redirect', ['provider' => 'instagram']) }}" class="btn btn-outline-primary d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-instagram me-2"></i>
-                                    Masuk dengan Instagram
-                                </a>
-
                                 {{-- Nomor Telepon --}}
                                 <button class="btn btn-outline-dark d-flex align-items-center justify-content-center" id="openPhoneRegister">
                                     <i class="bi bi-phone me-2"></i> Daftar / Masuk dengan Nomor Telepon

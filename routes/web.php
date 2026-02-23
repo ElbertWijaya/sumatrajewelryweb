@@ -7,6 +7,7 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\LoginController; // <--- PENTING: Tambahkan ini
+use App\Http\Controllers\Auth\PasswordResetController;
 
 // --- HALAMAN DEPAN ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -31,6 +32,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Register routes
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register.show');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register.post');
+
+// Forgot / reset password
+Route::get('/password/forgot', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 // Email verification routes (using built-in controllers)
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
