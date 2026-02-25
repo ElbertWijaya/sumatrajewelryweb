@@ -8,24 +8,24 @@
     @endphp
 
     <div class="py-5" style="background-color: #f5f5f7;">
-        <div class="container">
+        <div class="container-xxl">
             <div class="row g-4">
-                <div class="col-lg-3 col-xl-2">
+                <div class="col-lg-3 col-xl-3">
                     @include('customer.partials.sidebar', ['active' => 'settings'])
                 </div>
 
-                <div class="col-lg-9 col-xl-10">
+                <div class="col-lg-9 col-xl-9">
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="card-body p-4">
                             <h5 class="mb-1">Informasi Akun</h5>
                             <p class="text-muted small mb-4">Lihat dan kelola data pribadi yang terhubung dengan akun Toko Mas Sumatra.</p>
 
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-lg-6">
                                     <label class="form-label small text-muted mb-1">Nama Lengkap</label>
                                     <input type="text" class="form-control form-control-sm" value="{{ $user->name }}" readonly>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-lg-6">
                                     <label class="form-label small text-muted mb-1">Email</label>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control" value="{{ $user->email }}" readonly>
@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-lg-6">
                                     <label class="form-label small text-muted mb-1">Nomor Telepon</label>
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control" value="{{ $user->phone_number ?? 'Belum diatur' }}" readonly>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-12 col-lg-6">
                                     <label class="form-label small text-muted mb-1">Tanggal Lahir</label>
                                     <input type="text" class="form-control form-control-sm" value="-" readonly>
                                     <div class="form-text small text-muted">Field ini bisa kita aktifkan nanti jika dibutuhkan.</div>

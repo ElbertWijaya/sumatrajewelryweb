@@ -2,6 +2,123 @@
 
 @section('title', 'Dashboard Saya')
 
+@section('styles')
+    <style>
+        .customer-hero {
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .customer-hero-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        .customer-hero-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .customer-hero-sub {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .customer-hero-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .customer-hero-stat {
+            padding: 0.6rem 0.85rem;
+            border-radius: 12px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .customer-hero-stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.1rem;
+        }
+
+        .customer-hero-stat-value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .customer-section-card {
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            background-color: #ffffff;
+        }
+
+        .customer-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .customer-section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .customer-section-sub {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .customer-order-row {
+            padding-top: 0.6rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .customer-order-row:last-child {
+            border-bottom: none;
+        }
+
+        .customer-history-table thead {
+            background-color: #f9fafb;
+        }
+
+        .customer-history-table thead th {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6b7280;
+            border-bottom-color: #e5e7eb;
+        }
+
+        .customer-history-table tbody td {
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .customer-history-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        @media (min-width: 992px) {
+            .customer-hero-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+@endsection
+
 @section('content')
     @php
         $user = Auth::user();
@@ -19,74 +136,56 @@
         <div class="container">
             <div class="row g-4">
                 {{-- Sidebar kiri: menu dashboard (shared) --}}
-                <div class="col-lg-3 col-xl-2">
+                <div class="col-lg-3 col-xl-3">
                     @include('customer.partials.sidebar', ['active' => 'dashboard', 'totalOrders' => $totalOrders])
                 </div>
 
-                {{-- Kolom tengah: hero + status + pesanan aktif + riwayat --}}
-                <div class="col-lg-6 col-xl-7">
-                    {{-- Hero section --}}
-                    <div class="card border-0 mb-3" style="background: linear-gradient(135deg, #4338ca, #6366f1); color: #ffffff;">
-                        <div class="card-body p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between">
-                            <div class="mb-3 mb-md-0">
-                                <div class="small text-uppercase fw-semibold mb-2" style="letter-spacing: 0.08em; opacity: 0.85;">Dashboard Pelanggan</div>
-                                <h4 class="fw-semibold mb-2">Selamat datang kembali, {{ $user->name }}.</h4>
-                                <p class="mb-0 small" style="max-width: 360px; opacity: 0.9;">
-                                    Pantau status pesanan emas Anda, kelola informasi akun, dan temukan rekomendasi perhiasan terbaik.
-                                </p>
-                            </div>
-                            <div class="text-md-end">
-                                <div class="small mb-2">Pesanan aktif</div>
-                                <div class="fs-3 fw-bold">{{ $activeOrdersCount }}</div>
-                                <a href="{{ route('catalog.index') }}" class="btn btn-light btn-sm mt-2 d-inline-flex align-items-center">
-                                    <i class="bi bi-bag me-2"></i> Lanjut Belanja
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Status chips --}}
-                    <div class="row g-2 mb-3">
-                        <div class="col-6 col-md-3">
-                            <div class="card border-0 shadow-sm small h-100">
-                                <div class="card-body py-2 px-3">
-                                    <div class="text-muted mb-1">Belum Bayar</div>
-                                    <div class="fw-semibold">{{ $unpaidOrders }}</div>
+                {{-- Kolom tengah: hero + pesanan aktif + riwayat --}}
+                <div class="col-lg-9 col-xl-9">
+                    {{-- Hero section (brand color, tanpa ungu) --}}
+                    <div class="card customer-hero mb-3">
+                        <div class="card-body p-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-6">
+                                    <div class="customer-hero-label mb-1">Dashboard Pelanggan</div>
+                                    <h4 class="customer-hero-title mb-2">Selamat datang kembali, {{ $user->name }}.</h4>
+                                    <p class="customer-hero-sub mb-3" style="max-width: 400px;">
+                                        Pantau status pesanan emas Anda, kelola informasi akun, dan temukan rekomendasi perhiasan terbaik.
+                                    </p>
+                                    <a href="{{ route('catalog.index') }}" class="btn btn-gold btn-sm d-inline-flex align-items-center">
+                                        <i class="bi bi-bag me-2"></i> Lanjut Belanja
+                                    </a>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="card border-0 shadow-sm small h-100">
-                                <div class="card-body py-2 px-3">
-                                    <div class="text-muted mb-1">Sedang Proses</div>
-                                    <div class="fw-semibold">{{ $activeOrdersCount }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="card border-0 shadow-sm small h-100">
-                                <div class="card-body py-2 px-3">
-                                    <div class="text-muted mb-1">Selesai</div>
-                                    <div class="fw-semibold">{{ $completedOrders }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="card border-0 shadow-sm small h-100">
-                                <div class="card-body py-2 px-3">
-                                    <div class="text-muted mb-1">Total Pesanan</div>
-                                    <div class="fw-semibold">{{ $totalOrders }}</div>
+                                <div class="col-md-6">
+                                    <div class="customer-hero-stats">
+                                        <div class="customer-hero-stat">
+                                            <div class="customer-hero-stat-label">Belum Bayar</div>
+                                            <div class="customer-hero-stat-value">{{ $unpaidOrders }}</div>
+                                        </div>
+                                        <div class="customer-hero-stat">
+                                            <div class="customer-hero-stat-label">Sedang Proses</div>
+                                            <div class="customer-hero-stat-value">{{ $activeOrdersCount }}</div>
+                                        </div>
+                                        <div class="customer-hero-stat">
+                                            <div class="customer-hero-stat-label">Selesai</div>
+                                            <div class="customer-hero-stat-value">{{ $completedOrders }}</div>
+                                        </div>
+                                        <div class="customer-hero-stat">
+                                            <div class="customer-hero-stat-label">Total Pesanan</div>
+                                            <div class="customer-hero-stat-value">{{ $totalOrders }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {{-- Pesanan aktif --}}
-                    <div class="card border-0 shadow-sm mb-3">
+                    <div class="card customer-section-card mb-3">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">Pesanan Aktif</h6>
-                                <small class="text-muted">Pesanan yang masih dalam proses.</small>
+                            <div class="customer-section-header">
+                                <div class="customer-section-title">Pesanan Aktif</div>
+                                <div class="customer-section-sub">Pesanan yang masih dalam proses.</div>
                             </div>
 
                             @if($activeOrdersCount > 0)
@@ -94,7 +193,7 @@
                                     @php
                                         $firstItem = $order->items->first();
                                     @endphp
-                                    <div class="d-flex align-items-center py-2 border-bottom small">
+                                    <div class="d-flex align-items-center customer-order-row small">
                                         <div class="flex-grow-1">
                                             <div class="fw-semibold">
                                                 <a href="{{ route('order.success', $order->id) }}" class="text-decoration-none">
@@ -112,7 +211,7 @@
                                         </div>
                                         <div class="text-end">
                                             <div class="fw-semibold mb-1">Rp {{ number_format($order->total_price, 0, ',', '.') }}</div>
-                                            <span class="badge bg-primary-subtle text-primary text-capitalize">{{ str_replace('_', ' ', $order->order_status) }}</span>
+                                            <span class="badge bg-dark text-white text-capitalize">{{ str_replace('_', ' ', $order->order_status) }}</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -125,12 +224,12 @@
                     </div>
 
                     {{-- Riwayat pesanan (tabel penuh) --}}
-                    <div class="card shadow-sm border-0">
+                    <div class="card customer-section-card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="customer-section-header mb-2">
                                 <div>
-                                    <h6 class="mb-0">Riwayat Pesanan</h6>
-                                    <div class="small text-muted">Detail lengkap semua pesanan Anda.</div>
+                                    <div class="customer-section-title">Riwayat Pesanan</div>
+                                    <div class="customer-section-sub">Detail lengkap semua pesanan Anda.</div>
                                 </div>
                                 <a href="{{ route('catalog.index') }}" class="btn btn-outline-dark btn-sm d-none d-md-inline-flex align-items-center">
                                     <i class="bi bi-shop me-1"></i> Lihat Katalog
@@ -139,7 +238,7 @@
 
                             @if($myOrders->count() > 0)
                                 <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
+                                    <table class="table table-hover align-middle mb-0 customer-history-table">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>No. Invoice</th>

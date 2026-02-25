@@ -658,6 +658,48 @@
         }
 
         {{-- =========================================================
+           DASHBOARD & SETTINGS CUSTOMER
+           (Sidebar kiri agar konsisten dengan brand)
+           ========================================================= --}}
+        .dashboard-sidebar-nav .nav-link {
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #111827;
+            padding: 0.55rem 0.9rem;
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+
+        .dashboard-sidebar-nav .nav-link i {
+            color: inherit;
+        }
+
+        .dashboard-sidebar-nav .nav-link .badge {
+            font-size: 0.7rem;
+            border-radius: 999px;
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .dashboard-sidebar-nav .nav-link:hover {
+            background-color: #f5f5f5;
+            border-color: #e5e7eb;
+        }
+
+        .dashboard-sidebar-nav .nav-link.active {
+            background-color: #111827;
+            color: #ffffff;
+            border-color: #111827;
+            box-shadow: 0 8px 20px rgba(15,23,42,0.18);
+        }
+
+        .dashboard-sidebar-nav .nav-link.active .badge {
+            background-color: #c5a059;
+            color: #ffffff;
+        }
+
+        {{-- =========================================================
            SLOT STYLES PER HALAMAN
            ========================================================= --}}
         @yield('styles')
