@@ -120,9 +120,14 @@ class PhoneRegisterController extends Controller
     {
         $user = Auth::user();
 
+        if ($request->query('reset')) {
+            session()->forget(['phone_for_otp', 'otp_step']);
+        }
+
         return view('customer.phone_settings', [
             'user' => $user,
             'phoneForOtp' => session('phone_for_otp'),
+            'otpStep' => session('otp_step'),
         ]);
     }
 
@@ -149,7 +154,8 @@ class PhoneRegisterController extends Controller
 
         return redirect()->route('account.phone')
             ->with('status', 'Kode OTP dikirim ke nomor tersebut.')
-            ->with('phone_for_otp', $phone);
+            ->with('phone_for_otp', $phone)
+            ->with('otp_step', 'verify');
     }
 
     public function verifyForAccount(Request $request)
@@ -180,6 +186,8 @@ class PhoneRegisterController extends Controller
         $user->phone_number = $phone;
         $user->phone_verified_at = now();
         $user->save();
+
+        session()->forget(['phone_for_otp', 'otp_step']);
 
         return redirect()->route('account.phone')->with('status', 'Nomor telepon berhasil diverifikasi dan terhubung ke akun Anda.');
     }

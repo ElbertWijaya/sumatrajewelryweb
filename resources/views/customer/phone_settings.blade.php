@@ -50,29 +50,31 @@
 
                         <hr>
 
-                        <form method="POST" action="{{ route('account.phone.sendOtp') }}" class="mb-4">
-                            @csrf
-                            <h6 class="fw-semibold mb-2">1. Kirim Kode OTP</h6>
-                            <p class="small text-muted">Masukkan nomor telepon yang ingin Anda hubungkan ke akun ini.</p>
-
-                            <div class="mb-3">
-                                <label class="form-label small fw-semibold">Nomor Telepon</label>
-                                <input type="tel" name="phone_number" class="form-control form-control-lg @error('phone_number') is-invalid @enderror"
-                                       value="{{ old('phone_number', $phoneForOtp ?? $user->phone_number) }}" placeholder="Contoh: 0882015043857" required>
-                                @error('phone_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-dark btn-lg">KIRIM KODE OTP</button>
-                            </div>
-                        </form>
-
-                        @if($phoneForOtp)
-                            <form method="POST" action="{{ route('account.phone.verify') }}">
+                        @if(empty($otpStep) || empty($phoneForOtp))
+                            {{-- Langkah 1: input nomor telepon --}}
+                            <form method="POST" action="{{ route('account.phone.sendOtp') }}" class="mb-4">
                                 @csrf
-                                <h6 class="fw-semibold mb-2">2. Verifikasi Kode OTP</h6>
+                                <h6 class="fw-semibold mb-2">1. Masukkan Nomor Telepon</h6>
+                                <p class="small text-muted">Masukkan nomor telepon yang ingin Anda hubungkan ke akun ini. Kami akan mengirim kode OTP untuk verifikasi.</p>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Nomor Telepon</label>
+                                    <input type="tel" name="phone_number" class="form-control form-control-lg @error('phone_number') is-invalid @enderror"
+                                           value="{{ old('phone_number', $user->phone_number) }}" placeholder="Contoh: 0882015043857" required>
+                                    @error('phone_number')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="d-grid mb-3">
+                                    <button type="submit" class="btn btn-dark btn-lg">KIRIM KODE OTP</button>
+                                </div>
+                            </form>
+                        @else
+                            {{-- Langkah 2: input OTP --}}
+                            <form method="POST" action="{{ route('account.phone.verify') }}" class="mb-4">
+                                @csrf
+                                <h6 class="fw-semibold mb-2">2. Masukkan Kode OTP</h6>
                                 <p class="small text-muted">Masukkan kode OTP yang Anda terima untuk nomor <strong>{{ $phoneForOtp }}</strong>.</p>
 
                                 <input type="hidden" name="phone_number" value="{{ $phoneForOtp }}">
@@ -89,6 +91,16 @@
                                     <button type="submit" class="btn btn-gold btn-lg text-dark">VERIFIKASI NOMOR</button>
                                 </div>
                             </form>
+
+                            <div class="d-flex justify-content-between small">
+                                <form method="POST" action="{{ route('account.phone.sendOtp') }}">
+                                    @csrf
+                                    <input type="hidden" name="phone_number" value="{{ $phoneForOtp }}">
+                                    <button type="submit" class="btn btn-link p-0">Kirim ulang kode</button>
+                                </form>
+
+                                <a href="{{ route('account.phone', ['reset' => 1]) }}" class="text-decoration-none">Ubah nomor telepon</a>
+                            </div>
                         @endif
 
                         <div class="text-center small mt-3">
