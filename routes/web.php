@@ -78,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Customer
     Route::get('/my-dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
 
+    // Pengaturan akun customer (profil, keamanan, dll)
+    Route::view('/account/settings', 'customer.settings')->name('account.settings');
+
     // Pengaturan nomor telepon akun
     Route::get('/account/phone', [App\Http\Controllers\Auth\PhoneRegisterController::class, 'showAccountPhoneForm'])
         ->name('account.phone');
