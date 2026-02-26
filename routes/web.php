@@ -78,6 +78,12 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Customer
     Route::get('/my-dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
 
+    // Pesanan Saya (daftar & filter)
+    Route::get('/my-orders', [CustomerController::class, 'orders'])->name('customer.orders');
+
+    // Favorit / Wishlist (placeholder)
+    Route::get('/my-favorites', [CustomerController::class, 'favorites'])->name('customer.favorites');
+
     // Pengaturan akun customer (profil, keamanan, dll)
     Route::view('/account/settings', 'customer.settings')->name('account.settings');
 

@@ -25,7 +25,7 @@
                 </a>
             </li>
             <li class="nav-item mb-1">
-                <a class="nav-link d-flex align-items-center justify-content-between" href="#">
+                <a class="nav-link d-flex align-items-center justify-content-between {{ $active === 'orders' ? 'active' : '' }}" href="{{ route('customer.orders') }}">
                     <span><i class="bi bi-bag-check me-2"></i>Pesanan Saya</span>
                     @if(isset($totalOrders) && $totalOrders > 0)
                         <span class="badge bg-dark-subtle text-dark">{{ $totalOrders }}</span>
@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li class="nav-item mb-1">
-                <a class="nav-link d-flex align-items-center justify-content-between" href="#">
+                <a class="nav-link d-flex align-items-center justify-content-between {{ $active === 'favorites' ? 'active' : '' }}" href="{{ route('customer.favorites') }}">
                     <span><i class="bi bi-heart me-2"></i>Favorit</span>
                     <span class="badge bg-light text-muted">Segera</span>
                 </a>

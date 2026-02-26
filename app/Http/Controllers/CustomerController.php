@@ -22,4 +22,68 @@ class CustomerController extends Controller
 
         return view('customer.dashboard', compact('myOrders'));
     }
+
+    // Halaman "Pesanan Saya" dengan daftar dan filter status
+    public function orders(\Illuminate\Http\Request $request)
+    {
+        $user = Auth::user();
+
+        $statusFilter = $request->query('status', 'all');
+
+        $allOrders = Order::where('user_id', $user->id)
+            ->with('items.product')
+            ->latest()
+            ->get();
+
+        $totalOrders   = $allOrders->count();
+        $unpaidCount   = $allOrders->where('payment_status', 'unpaid')->count();
+        $processingCount = $allOrders->whereIn('order_status', ['pending', 'processing', 'production'])->count();
+        $shippingCount = $allOrders->where('order_status', 'ready_to_ship')->count();
+        $completedCount = $allOrders->where('order_status', 'completed')->count();
+        $cancelledCount = $allOrders->where('order_status', 'cancelled')->count();
+
+        $orders = $allOrders->filter(function ($order) use ($statusFilter) {
+            switch ($statusFilter) {
+                case 'unpaid':
+                    return $order->payment_status === 'unpaid';
+                case 'processing':
+                    return in_array($order->order_status, ['pending', 'processing', 'production']);
+                case 'shipping':
+                    return $order->order_status === 'ready_to_ship';
+                case 'completed':
+                    return $order->order_status === 'completed';
+                case 'cancelled':
+                    return $order->order_status === 'cancelled';
+                case 'all':
+                default:
+                    return true;
+            }
+        });
+
+        $counts = [
+            'all'        => $totalOrders,
+            'unpaid'     => $unpaidCount,
+            'processing' => $processingCount,
+            'shipping'   => $shippingCount,
+            'completed'  => $completedCount,
+            'cancelled'  => $cancelledCount,
+        ];
+
+        return view('customer.orders', [
+            'orders'        => $orders,
+            'statusFilter'  => $statusFilter,
+            'counts'        => $counts,
+            'totalOrders'   => $totalOrders,
+        ]);
+    }
+
+    // Halaman placeholder untuk Favorit / Wishlist
+    public function favorites()
+    {
+        $user = Auth::user();
+
+        return view('customer.favorites', [
+            'user' => $user,
+        ]);
+    }
 }

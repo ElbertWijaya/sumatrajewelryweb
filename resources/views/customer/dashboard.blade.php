@@ -140,7 +140,7 @@
                     @include('customer.partials.sidebar', ['active' => 'dashboard', 'totalOrders' => $totalOrders])
                 </div>
 
-                {{-- Kolom tengah: hero + pesanan aktif + riwayat --}}
+                {{-- Kolom tengah: hero ringkasan saja, detail pesanan dipindah ke "Pesanan Saya" --}}
                 <div class="col-lg-9 col-xl-9">
                     {{-- Hero section (brand color, tanpa ungu) --}}
                     <div class="card customer-hero mb-3">
@@ -180,218 +180,18 @@
                         </div>
                     </div>
 
-                    {{-- Pesanan aktif --}}
-                    <div class="card customer-section-card mb-3">
+                    {{-- Section ringkasan singkat (detail pesanan dipindah ke halaman Pesanan Saya) --}}
+                    <div class="card customer-section-card mt-3">
                         <div class="card-body">
-                            <div class="customer-section-header">
-                                <div class="customer-section-title">Pesanan Aktif</div>
-                                <div class="customer-section-sub">Pesanan yang masih dalam proses.</div>
+                            <div class="customer-section-header mb-1">
+                                <div class="customer-section-title">Ringkasan Pesanan</div>
                             </div>
-
-                            @if($activeOrdersCount > 0)
-                                @foreach($activeOrders as $order)
-                                    @php
-                                        $firstItem = $order->items->first();
-                                    @endphp
-                                    <div class="d-flex align-items-center customer-order-row small">
-                                        <div class="flex-grow-1">
-                                            <div class="fw-semibold">
-                                                <a href="{{ route('order.success', $order->id) }}" class="text-decoration-none">
-                                                    {{ $order->invoice_number }}
-                                                </a>
-                                            </div>
-                                            <div class="text-muted">
-                                                @if($firstItem)
-                                                    {{ $firstItem->product->name }}
-                                                @else
-                                                    Pesanan tanpa item
-                                                @endif
-                                                • {{ $order->created_at->format('d M Y') }}
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="fw-semibold mb-1">Rp {{ number_format($order->total_price, 0, ',', '.') }}</div>
-                                            <span class="badge bg-dark text-white text-capitalize">{{ str_replace('_', ' ', $order->order_status) }}</span>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="text-center py-3 small text-muted">
-                                    Belum ada pesanan aktif. Yuk mulai belanja perhiasan impian Anda.
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    {{-- Riwayat pesanan (tabel penuh) --}}
-                    <div class="card customer-section-card">
-                        <div class="card-body">
-                            <div class="customer-section-header mb-2">
-                                <div>
-                                    <div class="customer-section-title">Riwayat Pesanan</div>
-                                    <div class="customer-section-sub">Detail lengkap semua pesanan Anda.</div>
-                                </div>
-                                <a href="{{ route('catalog.index') }}" class="btn btn-outline-dark btn-sm d-none d-md-inline-flex align-items-center">
-                                    <i class="bi bi-shop me-1"></i> Lihat Katalog
-                                </a>
+                            <div class="customer-section-sub mb-3">
+                                Detail lengkap dan riwayat pesanan kini tersedia di menu <strong>Pesanan Saya</strong> pada sidebar.
                             </div>
-
-                            @if($myOrders->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0 customer-history-table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>No. Invoice</th>
-                                                <th>Tanggal</th>
-                                                <th>Barang</th>
-                                                <th>Total</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($myOrders as $order)
-                                                @php
-                                                    $paymentStatus = $order->payment_status;   // unpaid, paid, failed, ...
-                                                    $orderStatus   = $order->order_status;     // pending, processing, production, ready_to_ship, completed, cancelled
-
-                                                    // Ringkasan barang: ambil item pertama
-                                                    $firstItem = $order->items->first();
-
-                                                    // Mapping badge & teks status
-                                                    $badgeClass = 'bg-secondary';
-                                                    $badgeText  = 'UNKNOWN';
-                                                    $statusText = '';
-
-                                                    if ($paymentStatus === 'unpaid') {
-                                                        $badgeClass = 'bg-danger';
-                                                        $badgeText  = 'BELUM LUNAS';
-
-                                                        if ($order->payment_proof) {
-                                                            $statusText = 'Menunggu verifikasi pembayaran.';
-                                                        } else {
-                                                            $statusText = 'Menunggu pembayaran.';
-                                                        }
-
-                                                    } elseif ($paymentStatus === 'paid') {
-                                                        $badgeClass = 'bg-success';
-
-                                                        if ($orderStatus === 'processing') {
-                                                            $badgeText  = 'SEDANG DIPROSES';
-                                                            $statusText = 'Pesanan sedang diproses oleh toko.';
-                                                        } elseif ($orderStatus === 'production') {
-                                                            $badgeText  = 'DALAM PRODUKSI';
-                                                            $statusText = 'Pesanan sedang diproduksi.';
-                                                        } elseif ($orderStatus === 'ready_to_ship') {
-                                                            $badgeText  = 'DIKIRIM';
-                                                            $statusText = 'Pesanan sedang dikirim ke alamat Anda.';
-                                                        } elseif ($orderStatus === 'completed') {
-                                                            $badgeText  = 'SELESAI';
-                                                            $statusText = 'Pesanan telah diterima.';
-                                                        } elseif ($orderStatus === 'cancelled') {
-                                                            $badgeClass = 'bg-secondary';
-                                                            $badgeText  = 'DIBATALKAN';
-                                                            $statusText = 'Pesanan dibatalkan.';
-                                                        } else {
-                                                            // fallback jika ada status lain
-                                                            $badgeText  = 'DIPROSES';
-                                                            $statusText = 'Pesanan sedang diproses.';
-                                                        }
-
-                                                    } elseif ($paymentStatus === 'failed') {
-                                                        $badgeClass = 'bg-danger';
-                                                        $badgeText  = 'GAGAL';
-                                                        $statusText = 'Pembayaran gagal atau dibatalkan.';
-
-                                                    } else {
-                                                        // 'verified' atau status lain jika suatu saat digunakan
-                                                        $badgeClass = 'bg-success';
-                                                        $badgeText  = strtoupper($paymentStatus);
-                                                        $statusText = 'Status pesanan: ' . $orderStatus;
-                                                    }
-
-                                                    // Flags untuk aksi
-                                                    $canUploadProof = ($paymentStatus === 'unpaid' && $order->payment_method === 'transfer');
-                                                    $canViewDetail  = in_array($orderStatus, ['pending', 'processing', 'production', 'ready_to_ship']);
-                                                    $isCompleted    = ($orderStatus === 'completed');
-                                                    $isCancelled    = ($orderStatus === 'cancelled');
-                                                @endphp
-
-                                                <tr>
-                                                    <td class="fw-semibold">
-                                                        <a href="{{ route('order.success', $order->id) }}" class="text-decoration-none">
-                                                            {{ $order->invoice_number }}
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ $order->created_at->format('d M Y') }}</td>
-                                                    <td>
-                                                        @if($firstItem)
-                                                            {{ $firstItem->product->name }} ({{ $firstItem->product->weight }}gr)
-                                                            @if($order->items->count() > 1)
-                                                                <div class="small text-muted">
-                                                                    + {{ $order->items->count() - 1 }} item lainnya
-                                                                </div>
-                                                            @endif
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-
-                                                    <td>
-                                                        <span class="badge {{ $badgeClass }}">{{ $badgeText }}</span><br>
-                                                        <small class="text-muted">
-                                                            {{ $statusText }}
-                                                            @if($orderStatus === 'ready_to_ship' && $order->tracking_number)
-                                                                <br>
-                                                                <span class="fw-semibold text-dark">
-                                                                    <i class="bi bi-truck"></i> Resi: {{ $order->tracking_number }}
-                                                                </span>
-                                                            @endif
-                                                        </small>
-                                                    </td>
-
-                                                    <td>
-                                                        @if($canUploadProof)
-                                                            <a href="{{ route('order.success', $order->id) }}" class="btn btn-primary btn-sm mb-1">
-                                                                @if($order->payment_proof)
-                                                                    Foto Ulang Bukti Pembayaran
-                                                                @else
-                                                                    Upload Bukti Pembayaran
-                                                                @endif
-                                                            </a>
-                                                        @elseif($canViewDetail)
-                                                            {{-- Bisa lihat detail/tracking --}}
-                                                            <a href="{{ route('order.success', $order->id) }}" class="btn btn-outline-primary btn-sm mb-1">
-                                                                @if($orderStatus === 'ready_to_ship')
-                                                                    Lihat Tracking
-                                                                @else
-                                                                    Lihat Detail
-                                                                @endif
-                                                            </a>
-                                                        @endif
-
-                                                        @if($order->payment_method == 'cash' && $paymentStatus === 'unpaid')
-                                                            <span class="badge bg-secondary">Bayar di Toko</span>
-                                                        @elseif($isCompleted)
-                                                            <button class="btn btn-secondary btn-sm" disabled>Pesanan Selesai</button>
-                                                        @elseif($isCancelled)
-                                                            <button class="btn btn-outline-secondary btn-sm" disabled>Pesanan Dibatalkan</button>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <div class="text-center py-4">
-                                    <p class="text-muted mb-2">Anda belum memiliki pesanan.</p>
-                                    <a href="{{ route('catalog.index') }}" class="btn btn-dark">
-                                        <i class="bi bi-shop me-1"></i> Mulai Belanja
-                                    </a>
-                                </div>
-                            @endif
+                            <a href="{{ route('customer.orders') }}" class="btn btn-outline-dark btn-sm">
+                                Lihat Pesanan Saya
+                            </a>
                         </div>
                     </div>
                 </div>
