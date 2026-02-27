@@ -29,6 +29,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         $statusFilter = $request->query('status', 'all');
+        $searchQuery  = trim($request->query('q', ''));
 
         $allOrders = Order::where('user_id', $user->id)
             ->with('items.product')
@@ -60,6 +61,25 @@ class CustomerController extends Controller
             }
         });
 
+        // Filter tambahan berdasarkan pencarian (invoice, nama produk, atau metode pembayaran)
+        if ($searchQuery !== '') {
+            $queryLower = mb_strtolower($searchQuery);
+
+            $orders = $orders->filter(function ($order) use ($queryLower) {
+                $invoiceNumber = (string) ($order->invoice_number ?? '');
+
+                $firstItem    = $order->items->first();
+                $productName  = $firstItem && $firstItem->product ? (string) $firstItem->product->name : '';
+
+                $paymentMethod = (string) ($order->payment_method ?? '');
+
+                return mb_stripos($invoiceNumber, $queryLower) !== false
+                    || mb_stripos($productName, $queryLower) !== false
+                    || mb_stripos($paymentMethod, $queryLower) !== false;
+            });
+        }
+
+
         $counts = [
             'all'        => $totalOrders,
             'unpaid'     => $unpaidCount,
@@ -74,6 +94,7 @@ class CustomerController extends Controller
             'statusFilter'  => $statusFilter,
             'counts'        => $counts,
             'totalOrders'   => $totalOrders,
+            'searchQuery'   => $searchQuery,
         ]);
     }
 

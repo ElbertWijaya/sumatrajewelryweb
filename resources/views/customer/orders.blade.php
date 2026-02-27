@@ -65,6 +65,15 @@
             padding-top: 0.6rem;
             font-size: 0.85rem;
         }
+
+        .customer-orders-search .form-control {
+            font-size: 0.9rem;
+            padding: 0.55rem 0.9rem;
+        }
+        .customer-orders-search .input-group-text {
+            background-color: #ffffff;
+            padding: 0.55rem 0.75rem;
+        }
     </style>
 @endsection
 
@@ -124,6 +133,35 @@
                             </a>
                         </li>
                     </ul>
+
+                    {{-- Search bar khusus pesanan --}}
+                    <div class="customer-orders-search mb-3">
+                        @php
+                            $currentSearch = $searchQuery ?? request('q');
+                        @endphp
+
+                        <form method="GET" action="{{ route('customer.orders') }}" class="d-flex flex-wrap align-items-center gap-2">
+                            <div class="flex-grow-1">
+                                <div class="input-group w-100">
+                                    <span class="input-group-text border-end-0">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text"
+                                           name="q"
+                                           class="form-control border-start-0"
+                                           placeholder="Cari berdasarkan No. Invoice, Nama Produk, atau Metode Pembayaran"
+                                           value="{{ $currentSearch }}">
+                                    <input type="hidden" name="status" value="{{ $status }}">
+                                </div>
+                            </div>
+
+                            @if(!empty($currentSearch))
+                                <div class="ms-auto">
+                                    <a href="{{ route('customer.orders', ['status' => $status]) }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+                                </div>
+                            @endif
+                        </form>
+                    </div>
 
                     {{-- Daftar pesanan --}}
                     @if($orders->count() > 0)

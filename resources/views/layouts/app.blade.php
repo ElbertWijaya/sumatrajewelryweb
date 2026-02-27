@@ -754,8 +754,13 @@
 
                     {{-- KANAN --}}
                     <div class="navbar-main-right">
+                        @php
+                            $isCustomerArea = request()->routeIs('customer.*') || request()->routeIs('account.*');
+                        @endphp
                         <div class="d-flex align-items-center nav-icons">
-                            <a href="#"><i class="bi bi-search fs-6"></i></a>
+                            @unless($isCustomerArea)
+                                <a href="#"><i class="bi bi-search fs-6"></i></a>
+                            @endunless
                             <a href="#"><i class="bi bi-heart fs-6"></i></a>
                             <a href="#"><i class="bi bi-bag fs-6"></i></a>
 
