@@ -39,15 +39,28 @@
         }
 
         .customer-order-header {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #4b5563;
             border-bottom: 1px solid #f1f5f9;
             padding-bottom: 0.45rem;
             margin-bottom: 0.45rem;
         }
 
-        .customer-order-header strong {
+        .customer-order-store {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 600;
             color: #111827;
+        }
+
+        .customer-order-store i {
+            color: #f59e0b;
+        }
+
+        .customer-order-meta {
+            font-size: 0.78rem;
+            color: #9ca3af;
         }
 
         .customer-order-status-badge {
@@ -57,6 +70,33 @@
 
         .customer-order-body {
             font-size: 0.87rem;
+        }
+
+        .customer-order-product-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #f3f4f6;
+            flex-shrink: 0;
+        }
+
+        .customer-order-product-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .customer-order-product-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .customer-order-product-meta {
+            font-size: 0.8rem;
+            color: #6b7280;
         }
 
         .customer-order-footer {
@@ -172,6 +212,9 @@
                                     $orderStatus   = $order->order_status;     // pending, processing, production, ready_to_ship, completed, cancelled
 
                                     $firstItem = $order->items->first();
+                                    $branchLocation = $firstItem && $firstItem->product && $firstItem->product->branch_location
+                                        ? $firstItem->product->branch_location
+                                        : null;
 
                                     $badgeClass = 'bg-secondary';
                                     $badgeText  = 'UNKNOWN';
@@ -229,30 +272,68 @@
                                 @endphp
 
                                 <div class="customer-order-card p-3">
+                                    {{-- Header toko + invoice & tanggal + status --}}
                                     <div class="d-flex justify-content-between align-items-center customer-order-header">
                                         <div>
-                                            <strong>#{{ $order->invoice_number }}</strong>
-                                            <span class="ms-2 text-muted">{{ $order->created_at->format('d M Y') }}</span>
+                                            <div class="customer-order-store">
+                                                <i class="bi bi-shop"></i>
+                                                <span>
+                                                    Toko Mas Sumatra
+                                                    @if($branchLocation)
+                                                        - {{ $branchLocation }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            <div class="customer-order-meta mt-1">
+                                                #{{ $order->invoice_number }}
+                                                <span class="mx-1">•</span>
+                                                {{ $order->created_at->format('d M Y') }}
+                                            </div>
                                         </div>
-                                        <div>
-                                            <span class="badge customer-order-status-badge {{ $badgeClass }}">{{ $badgeText }}</span>
+                                        <div class="text-end">
+                                            <a href="{{ route('order.success', $order->id) }}"
+                                               class="badge customer-order-status-badge {{ $badgeClass }} text-decoration-none">
+                                                {{ $badgeText }}
+                                            </a>
                                         </div>
                                     </div>
 
-                                    <div class="customer-order-body d-flex justify-content-between align-items-start gap-3">
+                                    {{-- Body: thumbnail + info produk + ringkasan status + total --}}
+                                    <div class="customer-order-body d-flex align-items-start gap-3 pt-2">
+                                        <div class="customer-order-product-thumb">
+                                            @if($firstItem && $firstItem->product && $firstItem->product->image_url)
+                                                <img src="{{ asset('uploads/' . $firstItem->product->image_url) }}" alt="{{ $firstItem->product->name }}">
+                                            @else
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small">
+                                                    No Image
+                                                </div>
+                                            @endif
+                                        </div>
+
                                         <div class="flex-grow-1">
-                                            @if($firstItem)
-                                                <div class="fw-semibold mb-1">{{ $firstItem->product->name }} ({{ $firstItem->product->weight }}gr)</div>
+                                            @if($firstItem && $firstItem->product)
+                                                <div class="customer-order-product-name mb-1">
+                                                    {{ $firstItem->product->name }}
+                                                </div>
+                                                <div class="customer-order-product-meta">
+                                                    {{ $firstItem->product->karat_type ?? '' }}
+                                                    @if(!empty($firstItem->product->karat_type))
+                                                        <span class="mx-1">•</span>
+                                                    @endif
+                                                    {{ $firstItem->product->weight }} gr
+                                                </div>
                                                 @if($order->items->count() > 1)
-                                                    <div class="small text-muted">
-                                                        + {{ $order->items->count() - 1 }} item lainnya
+                                                    <div class="small text-muted mt-1">
+                                                        + {{ $order->items->count() - 1 }} produk lainnya
                                                     </div>
                                                 @endif
                                             @else
-                                                <span class="text-muted">-</span>
+                                                <span class="text-muted">Detail produk tidak tersedia.</span>
                                             @endif
 
-                                            <div class="small text-muted mt-2">{{ $statusText }}</div>
+                                            <div class="small text-muted mt-2">
+                                                {{ $statusText }}
+                                            </div>
 
                                             @if($orderStatus === 'ready_to_ship' && $order->tracking_number)
                                                 <div class="small mt-1">
@@ -269,11 +350,14 @@
                                         </div>
                                     </div>
 
+                                    {{-- Footer: metode pembayaran + aksi --}}
                                     <div class="customer-order-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
-                                        <div class="small text-muted">Metode: {{ strtoupper($order->payment_method) }}</div>
+                                        <div class="small text-muted">
+                                            Metode: {{ strtoupper($order->payment_method) }}
+                                        </div>
                                         <div>
                                             @if($canUploadProof)
-                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-primary btn-sm mb-1">
+                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-dark btn-sm mb-1">
                                                     @if($order->payment_proof)
                                                         Foto Ulang Bukti Pembayaran
                                                     @else
@@ -281,7 +365,7 @@
                                                     @endif
                                                 </a>
                                             @elseif($canViewDetail)
-                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-outline-primary btn-sm mb-1">
+                                                <a href="{{ route('order.success', $order->id) }}" class="btn btn-outline-dark btn-sm mb-1">
                                                     @if($orderStatus === 'ready_to_ship')
                                                         Lihat Tracking
                                                     @else

@@ -19,8 +19,135 @@
     @endif
 @endsection
 
+@section('styles')
+    <style>
+        .order-detail-wrapper {
+            background-color: #f5f5f7;
+        }
+
+        .order-detail-card {
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .order-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-detail-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .order-detail-meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .order-detail-badge {
+            font-size: 0.75rem;
+            border-radius: 999px;
+        }
+
+        .order-summary-box {
+            background-color: #f9fafb;
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .order-summary-label {
+            color: #6b7280;
+        }
+
+        .order-summary-value {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .order-timeline {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-timeline-step {
+            position: relative;
+            padding-left: 1.6rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .order-timeline-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .order-timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.1rem;
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 999px;
+            border: 2px solid #d1d5db;
+            background-color: #f9fafb;
+        }
+
+        .order-timeline-step::before {
+            content: '';
+            position: absolute;
+            left: 0.34rem;
+            top: 0.7rem;
+            width: 2px;
+            height: calc(100% - 0.7rem);
+            background-color: #e5e7eb;
+        }
+
+        .order-timeline-step:last-child::before {
+            display: none;
+        }
+
+        .order-timeline-step.done .order-timeline-dot,
+        .order-timeline-step.active .order-timeline-dot {
+            border-color: #111827;
+            background-color: #111827;
+        }
+
+        .order-timeline-step.done {
+            color: #4b5563;
+        }
+
+        .order-timeline-step.active {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .order-timeline-desc {
+            display: block;
+            font-size: 0.78rem;
+            color: #9ca3af;
+        }
+
+        .order-payment-box {
+            background-color: #fffbeb;
+            border-radius: 12px;
+            border: 1px solid #facc15;
+            padding: 0.9rem 1rem;
+            font-size: 0.85rem;
+        }
+    </style>
+@endsection
+
 @section('content')
-<div class="container py-5">
+<div class="order-detail-wrapper py-5">
+    <div class="container">
     {{-- Alert flash message (upload bukti, dll) --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,148 +158,239 @@
 
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <div class="card shadow-sm">
-                <div class="card-body text-center p-4">
+            <div class="card order-detail-card">
+                <div class="card-body p-4">
                     @php
-                        $isPaid    = $order->payment_status === 'paid';
-                        $isShipped = $order->order_status === 'ready_to_ship';
-                        $hasProof  = !empty($order->payment_proof);
+                        $paymentStatus = $order->payment_status;   // unpaid, paid, failed, ...
+                        $orderStatus   = $order->order_status;     // pending, processing, production, ready_to_ship, completed, cancelled
+                        $hasProof      = !empty($order->payment_proof);
 
-                        // unpaid + sudah kirim bukti
-                        $isWaitingVerification = !$isPaid && !$isShipped && $hasProof;
+                        $isPaid        = $paymentStatus === 'paid';
+                        $isShipped     = $orderStatus === 'ready_to_ship';
+                        $isCompleted   = $orderStatus === 'completed';
+                        $isCancelled   = $orderStatus === 'cancelled' || $paymentStatus === 'failed';
 
-                        // Tentukan emoji & judul utama
-                        if ($isShipped) {
-                            $statusEmoji = '🚚';  // atau '🚢'
-                            $statusTitle = 'Pesanan Sedang Dikirim';
-                        } elseif ($isPaid) {
-                            $statusEmoji = '✅';
-                            $statusTitle = 'Pembayaran Berhasil Diterima';
-                        } elseif ($isWaitingVerification) {
-                            $statusEmoji = '⏳';
-                            $statusTitle = 'Pembayaran Anda Sedang Diverifikasi';
+                        $badgeClass = 'bg-secondary';
+                        $badgeText  = 'UNKNOWN';
+                        $statusText = '';
+
+                        if ($paymentStatus === 'unpaid') {
+                            $badgeClass = 'bg-danger';
+                            $badgeText  = 'BELUM LUNAS';
+
+                            if ($hasProof) {
+                                $statusText = 'Bukti pembayaran sudah diterima dan sedang diverifikasi oleh toko.';
+                            } else {
+                                $statusText = 'Pesanan Anda sudah tercatat, silakan selesaikan pembayaran.';
+                            }
+
+                        } elseif ($paymentStatus === 'paid') {
+                            $badgeClass = 'bg-success';
+
+                            if ($orderStatus === 'processing') {
+                                $badgeText  = 'SEDANG DIPROSES';
+                                $statusText = 'Pembayaran telah diterima. Pesanan sedang diproses oleh toko.';
+                            } elseif ($orderStatus === 'production') {
+                                $badgeText  = 'DALAM PRODUKSI';
+                                $statusText = 'Pesanan sedang diproduksi di workshop.';
+                            } elseif ($orderStatus === 'ready_to_ship') {
+                                $badgeText  = 'DIKIRIM';
+                                $statusText = 'Pesanan telah diserahkan ke kurir dan sedang dikirim.';
+                            } elseif ($orderStatus === 'completed') {
+                                $badgeText  = 'SELESAI';
+                                $statusText = 'Pesanan telah diterima. Terima kasih telah berbelanja di Toko Mas Sumatra.';
+                            } elseif ($orderStatus === 'cancelled') {
+                                $badgeClass = 'bg-secondary';
+                                $badgeText  = 'DIBATALKAN';
+                                $statusText = 'Pesanan ini telah dibatalkan.';
+                            } else {
+                                $badgeText  = 'DIPROSES';
+                                $statusText = 'Pembayaran telah diterima. Pesanan sedang diproses.';
+                            }
+
+                        } elseif ($paymentStatus === 'failed') {
+                            $badgeClass = 'bg-danger';
+                            $badgeText  = 'GAGAL';
+                            $statusText = 'Pembayaran gagal atau dibatalkan. Silakan lakukan pemesanan ulang jika diperlukan.';
+
                         } else {
-                            $statusEmoji = '💰';
-                            $statusTitle = 'Pesanan Berhasil Dibuat';
+                            $badgeClass = 'bg-success';
+                            $badgeText  = strtoupper($paymentStatus);
+                            $statusText = 'Status pesanan: ' . $orderStatus;
                         }
+
+                        // Tahap timeline (0 = dibatalkan/gagal)
+                        $currentStage = 1;
+
+                        if ($isCancelled) {
+                            $currentStage = 0;
+                        } elseif ($paymentStatus === 'unpaid' && ! $hasProof) {
+                            $currentStage = 1; // pesanan dibuat, menunggu pembayaran
+                        } elseif ($paymentStatus === 'unpaid' && $hasProof) {
+                            $currentStage = 2; // menunggu verifikasi pembayaran
+                        } elseif ($paymentStatus === 'paid' && in_array($orderStatus, ['pending', 'processing', 'production'])) {
+                            $currentStage = 3; // pesanan diproses
+                        } elseif ($paymentStatus === 'paid' && $orderStatus === 'ready_to_ship') {
+                            $currentStage = 4; // dikirim
+                        } elseif ($orderStatus === 'completed') {
+                            $currentStage = 5; // selesai
+                        }
+
+                        $steps = [
+                            1 => ['label' => 'Pesanan Dibuat', 'desc' => 'Detail pesanan telah kami terima di sistem.'],
+                            2 => ['label' => 'Menunggu Verifikasi Pembayaran', 'desc' => 'Tim kami sedang memeriksa bukti pembayaran Anda.'],
+                            3 => ['label' => 'Pesanan Diproses', 'desc' => 'Perhiasan sedang disiapkan atau diproduksi oleh toko.'],
+                            4 => ['label' => 'Sedang Dikirim', 'desc' => 'Pesanan telah diserahkan ke kurir dan sedang menuju alamat Anda.'],
+                            5 => ['label' => 'Pesanan Selesai', 'desc' => 'Pesanan telah diterima oleh Anda. Terima kasih!'],
+                        ];
+
+                        $firstItem = $order->items->first();
+                        $branchLocation = $firstItem && $firstItem->product && $firstItem->product->branch_location
+                            ? $firstItem->product->branch_location
+                            : null;
+
+                        $canUploadProof = ($paymentStatus === 'unpaid' && $order->payment_method === 'transfer');
                     @endphp
 
-                    {{-- Icon status dinamis --}}
-                    <div class="mb-3">
-                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10" style="width:70px; height:70px;">
-                            <span style="font-size: 2.2rem;">{{ $statusEmoji }}</span>
-                        </span>
+                    {{-- Header ringkasan pesanan --}}
+                    <div class="order-detail-header">
+                        <div>
+                            <div class="order-detail-title">Detail Pesanan</div>
+                            <div class="order-detail-meta mt-1">
+                                @if($branchLocation)
+                                    Toko Mas Sumatra - {{ $branchLocation }}
+                                    <span class="mx-1">•</span>
+                                @else
+                                    Toko Mas Sumatra
+                                    <span class="mx-1">•</span>
+                                @endif
+                                No. Invoice {{ $order->invoice_number ?? '-' }}
+                                <span class="mx-1">•</span>
+                                {{ $order->created_at->format('d M Y') }}
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge order-detail-badge {{ $badgeClass }}">{{ $badgeText }}</span>
+                        </div>
                     </div>
 
-                    <h3 class="mb-2">{{ $statusTitle }}</h3>
+                    {{-- Ringkasan utama --}}
+                    <div class="order-summary-box">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-sm-6">
+                                <div class="order-summary-label">Nama Pemesan</div>
+                                <div class="order-summary-value">{{ $order->user->name ?? '-' }}</div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="order-summary-label">Metode</div>
+                                <div class="order-summary-value text-uppercase">{{ $order->payment_method ?? '-' }}</div>
+                            </div>
+                            <div class="col-sm-3 text-sm-end">
+                                <div class="order-summary-label">Total Pesanan</div>
+                                <div class="order-summary-value">Rp {{ number_format($order->total_price ?? 0, 0, ',', '.') }}</div>
+                            </div>
+                        </div>
 
-                    {{-- Pesan utama sesuai state --}}
-                    @if($isShipped)
-                        <p class="text-muted mb-3">
-                            Pesanan Anda sudah dikirim. Nomor resi dapat digunakan untuk melacak paket melalui
-                            situs atau aplikasi ekspedisi.
-                        </p>
-                    @elseif($isPaid)
-                        <p class="text-muted mb-3">
-                            Terima kasih, pembayaran Anda sudah kami terima dan pesanan sedang kami proses.
-                        </p>
-                    @elseif($isWaitingVerification)
-                        <p class="text-muted mb-3">
-                            Anda telah mengirimkan bukti pembayaran. Harap menunggu proses verifikasi oleh pihak toko.
-                            Apabila Anda merasa bukti yang sebelumnya kurang jelas atau keliru, Anda dipersilakan
-                            untuk mengirimkan ulang bukti pembayaran yang baru.
-                        </p>
+                        @if(!empty($order->tracking_number))
+                            <div class="mt-2">
+                                <span class="order-summary-label">No. Resi</span>
+                                <span class="order-summary-value ms-1">{{ $order->tracking_number }}</span>
+                            </div>
+                        @endif
+
+                        <div class="mt-2" style="font-size: 0.8rem; color: #6b7280;">
+                            {{ $statusText }}
+                        </div>
+                    </div>
+
+                    {{-- Timeline status --}}
+                    @if(! $isCancelled)
+                        <ul class="order-timeline">
+                            @foreach($steps as $index => $step)
+                                @php
+                                    $stepClasses = '';
+                                    if ($currentStage > $index) {
+                                        $stepClasses = 'done';
+                                    } elseif ($currentStage === $index) {
+                                        $stepClasses = 'active';
+                                    }
+                                @endphp
+                                <li class="order-timeline-step {{ $stepClasses }}">
+                                    <span class="order-timeline-dot"></span>
+                                    {{ $step['label'] }}
+                                    @if(!empty($step['desc']))
+                                        <span class="order-timeline-desc">{{ $step['desc'] }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
                     @else
-                        <p class="text-muted mb-3">
-                            Terima kasih, pesanan Anda sudah kami terima. Silakan selesaikan pembayaran sesuai
-                            instruksi di bawah ini.
-                        </p>
+                        <div class="alert alert-secondary mb-3">
+                            Pesanan ini berstatus <strong>DIBATALKAN</strong> atau pembayaran <strong>GAGAL</strong>.
+                            @if($statusText)
+                                <div class="small mt-1 text-muted">{{ $statusText }}</div>
+                            @endif
+                        </div>
                     @endif
 
-                    {{-- Info ringkas pesanan --}}
-                    <div class="text-start border rounded p-3 mb-3 bg-light">
-                        <p class="mb-1">
-                            <strong>No. Invoice:</strong> {{ $order->invoice_number ?? '-' }}
-                        </p>
-                        <p class="mb-1">
-                            <strong>Nama Pemesan:</strong> {{ $order->user->name ?? '-' }}
-                        </p>
-                        <p class="mb-1">
-                            <strong>Total Harga:</strong>
-                            Rp {{ number_format($order->total_price ?? 0, 0, ',', '.') }}
-                        </p>
-                        @if(!empty($order->tracking_number))
-                            <p class="mb-1">
-                                <strong>No. Resi:</strong> {{ $order->tracking_number }}
-                            </p>
-                        @endif
-                        <p class="mb-0 text-muted">
-                            <small>*Rincian lengkap dapat dilihat di Dashboard Customer.</small>
-                        </p>
-                    </div>
-
+                    {{-- Bagian tindakan / instruksi sesuai status --}}
                     @if($isShipped)
-                        {{-- Sudah dikirim: informasi pengiriman sederhana --}}
-                        <div class="text-start mb-3">
-                            <h5 class="mb-2"><i class="bi bi-truck"></i> Status Pengiriman</h5>
-                            <ul class="list-unstyled ms-1 mb-0">
-                                <li class="mb-1">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                    <strong>Pembayaran diterima</strong>
-                                </li>
-                                <li class="mb-1">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                    <strong>Pesanan dikemas & diserahkan ke kurir</strong>
-                                </li>
-                                <li class="mb-1">
-                                    <i class="bi bi-dot me-1"></i>
-                                    <strong>Dalam perjalanan ke alamat Anda</strong>
-                                    <div class="small text-muted">
-                                        Silakan gunakan nomor resi di atas untuk memantau detail lokasi paket.
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="mt-3">
+                            <h6 class="mb-2"><i class="bi bi-truck"></i> Status Pengiriman</h6>
+                            <p class="small text-muted mb-2">
+                                Pesanan Anda telah diserahkan ke kurir dan sedang dalam perjalanan. Gunakan nomor resi di atas
+                                untuk melacak posisi paket melalui situs atau aplikasi ekspedisi.
+                            </p>
+                        </div>
+                    @elseif($isCompleted)
+                        <div class="alert alert-success mt-2 mb-3">
+                            Pesanan telah selesai dan diterima. Terima kasih telah berbelanja di Toko Mas Sumatra.
                         </div>
                     @elseif($isPaid)
-                        {{-- Sudah dibayar: info + tombol ke dashboard --}}
-                        <div class="alert alert-success">
-                            Pembayaran sudah terverifikasi. Pesanan Anda sedang diproses oleh admin.
+                        <div class="alert alert-success mt-2 mb-3">
+                            Pembayaran Anda sudah kami terima. Pesanan sedang kami proses.
                         </div>
-
-                        <a href="{{ route('customer.dashboard') }}" class="btn btn-primary mt-3">
-                            Cek Status di Dashboard
-                        </a>
-                    @else
-                        {{-- Belum dibayar (dengan atau tanpa bukti): instruksi transfer + upload bukti --}}
-                        <div class="text-start">
-                            <div class="bg-warning bg-opacity-10 p-3 rounded border border-warning mb-3">
-                                <p class="mb-1 fw-bold">Silakan Transfer ke:</p>
-                                <h5 class="mb-0">BCA 123-456-7890 (Toko Mas Sumatra)</h5>
-                            </div>
-
-                            <form action="{{ route('payment.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label class="form-label">
-                                        @if($hasProof)
-                                            Foto Ulang / Ganti Bukti Pembayaran
-                                        @else
-                                            Upload Foto Bukti Pembayaran
-                                        @endif
-                                    </label>
-                                    <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
-                                    <small class="text-muted">
-                                        Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti apabila foto sebelumnya
-                                        kurang jelas atau kurang tepat.
-                                    </small>
+                    @elseif($paymentStatus === 'unpaid')
+                        {{-- Belum dibayar: instruksi transfer + upload bukti (jika transfer) --}}
+                        <div class="mt-3">
+                            @if($order->payment_method === 'transfer')
+                                <div class="order-payment-box mb-3">
+                                    <div class="fw-semibold mb-1">Silakan Transfer ke Rekening Berikut:</div>
+                                    <div>BCA 123-456-7890 a.n. <strong>Toko Mas Sumatra</strong></div>
+                                    <div class="small text-muted mt-1">Mohon transfer sesuai total pesanan di atas.</div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                                    Kirim Bukti Pembayaran
-                                </button>
-                            </form>
+
+                                @if($canUploadProof)
+                                    <form action="{{ route('payment.upload', $order->id) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                @if($hasProof)
+                                                    Foto Ulang / Ganti Bukti Pembayaran
+                                                @else
+                                                    Upload Foto Bukti Pembayaran
+                                                @endif
+                                            </label>
+                                            <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
+                                            <small class="text-muted">
+                                                Format: JPG/PNG. Maks 10MB. Anda dapat mengirim ulang bukti apabila foto sebelumnya
+                                                kurang jelas atau kurang tepat.
+                                            </small>
+                                        </div>
+                                        <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold">
+                                            Kirim Bukti Pembayaran
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <div class="alert alert-warning mt-2 mb-3">
+                                    Metode pembayaran Anda adalah <strong>BAYAR DI TOKO</strong>. Silakan datang ke cabang terkait
+                                    untuk menyelesaikan pembayaran dan pengambilan perhiasan.
+                                </div>
+                            @endif
 
                             <a href="{{ route('customer.dashboard') }}" class="btn btn-outline-secondary w-100 mt-3">
-                                Nanti Saja, Kembali ke Dashboard
+                                Kembali ke Dashboard
                             </a>
                         </div>
                     @endif
